@@ -1,13 +1,25 @@
 import os
 import sys
 
-helpersPath = os.path.expanduser("~/Dropbox (Princeton)/11_Workflow")
+helpersPath = os.path.expanduser("~/Dropbox (Princeton)/14_Software/python/")
 sys.path.insert(1, helpersPath)
 
 import helpers
 
+templatesPath = "~/Dropbox\ \(Princeton\)/8_Templates/"
+softwarePath = "~/Dropbox\ \(Princeton\)/14_Software/"
+
 sectionsPath = "sections/"
-sectionsTemplate = os.path.expanduser("~/Dropbox\ \(Princeton\)/8_Templates/cooley-plain.latex")
+sectionsTemplate = "templates/cooley-plain.latex"
+
+sourcePath = "source/"
+
+def task_source():
+	yield {
+		'name': "initializing environment...",
+		'actions':["cp " + templatesPath + "cooley-plain.latex" + " templates/",
+				   "cp -a " + softwarePath + " source/"]
+	}
 
 def task_sections():
 	sectionsFiles = helpers.getFiles(sectionsPath)
@@ -17,6 +29,6 @@ def task_sections():
 		if suffix == "md":
 			yield {
 				'name': sectionsFiles[i],
-				'actions':["pandoc --template=" + sectionsTemplate + " -o " + 
+				'actions':["pandoc --template=" + sectionsTemplate + " -o " +
 							fName + ".pdf " + sectionsFiles[i]]
 			}

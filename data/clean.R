@@ -1,7 +1,13 @@
-library(tidyverse)
-library(lubridate)
-library(acs)
-library(tigris)
+### SETUP ###
+
+helperPath <- "~/source/R/"
+helperFiles <- list.files(helperPath)
+for (i in helperFiles) {
+  source(paste0(helperPath, i))
+}
+
+libs <- c("tidyverse", "lubridate", "acs", "tigris")
+ipak(libs)
 
 ### Crimes ###
 
@@ -23,6 +29,7 @@ crimes$hnfs <- ifelse(crimes$IUCR %in% hnfs, 1, 0)
 crimes$narcotics <- ifelse(crimes$`FBI Code` == '18', 1, 0)
 
 crimesClean <- crimes %>% filter(hnfs==1 | narcotics==1) %>% filter(!is.na(lat) & !is.na(lng) & lat > 40) %>% select(date, year, month, week, lat, lng, hnfs, narcotics)
+
 write_csv(crimesClean, 'chi_clean.csv')
 
 ### Census ###
