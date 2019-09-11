@@ -2,7 +2,7 @@
 
 # shot spotter data?
 
-### SETUP ### 
+### SETUP ###
 
 library(readr)
 library(tidyverse)
@@ -25,7 +25,7 @@ library(spdep)
 
 ###Start Here###
 city <- c(17,031) # First pick a city from the following, entering the number of the fips code
-               #(Baltimore (24,510), Chicago (17,031), St. Louis (29,510)) 
+               #(Baltimore (24,510), Chicago (17,031), St. Louis (29,510))
 tract.type <- "Tracts" # Second, pick the desired census unit from the following (Tracts, Block Groups)
 micro.length <- 7 # Third, pick the desired length of micro-period from the following (e.g. 7,14,30)
 
@@ -42,8 +42,8 @@ raw.data <- function(city){
     # cpdURL <- 'https://data.cityofchicago.org/api/views/ijzp-q8t2/rows.csv?accessType=DOWNLOAD'
     # crimes <- read_csv(cpdURL)
     # write_csv(crimes, 'chi_crimes.csv')
-    
-    datas <- read_csv('chi_crimes.csv')
+
+    datas <- read_csv('data/chi_crimes.csv')
   }
   return(datas)
 }
@@ -56,10 +56,10 @@ crime.data <- function(city){
   hnfs.data <- crimes %>% filter(IUCR %in% hnfs)
   colnames(hnfs.data)[colnames(hnfs.data) %in% c('Latitude', 'Longitude')] <- c('lat', 'lng')
   if(city[2] == 31){
-    hnfs.data <- hnfs.data %>% filter(!is.na(lat) & !is.na(lng) & lat > 40)  # filter ungeotagged and nonsensical events  
+    hnfs.data <- hnfs.data %>% filter(!is.na(lat) & !is.na(lng) & lat > 40)  # filter ungeotagged and nonsensical events
   }
   else{
-    hnfs.data <- hnfs.data %>% filter(!is.na(lat) & !is.na(lng))  # filter ungeotagged and nonsensical events 
+    hnfs.data <- hnfs.data %>% filter(!is.na(lat) & !is.na(lng))  # filter ungeotagged and nonsensical events
   }
 }
 
@@ -83,27 +83,27 @@ census.data <- function(city,tract.type){
   # What did we get? (It's a list, not a dataframe)
   #names(attributes(income))
   # convert to a data.frame for merging
-  income_df <- data.frame(paste0(str_pad(income@geography$state, 2, "left", pad="0"), 
-                                 str_pad(income@geography$county, 3, "left", pad="0"), 
+  income_df <- data.frame(paste0(str_pad(income@geography$state, 2, "left", pad="0"),
+                                 str_pad(income@geography$county, 3, "left", pad="0"),
                                  str_pad(income@geography$tract, 6, "left", pad="0"),
                                  str_pad(income@geography$blockgroup, 1, "left", pad="0")),
                           income@estimate,
                           stringsAsFactors = FALSE)
-  
+
   rownames(income_df)<-1:nrow(income_df)
-  names(income_df)<-c("GEOID", "total", "less_10" , "between_10-15", "between_15-20", "between20-25", 
+  names(income_df)<-c("GEOID", "total", "less_10" , "between_10-15", "between_15-20", "between20-25",
                       "between_25-30", "between_30-35", "between_35-40", "between_40-45",
                       "between_45-50", "between_50-60", "between_60-75", "between_75-100",
                       "between_100-125", "between_125-150", "between_150-200" ,"over_200")
-  
+
   # Next recall the per-capita income data
   capita <- acs.fetch(endyear = 2016, span = 5, geography = geo,
                       table.number = c("B19301"), col.names = "pretty")
-  
+
   income_df$capita <- as.numeric(capita@estimate)
   income_df$capita[income_df$capita <0] <- 0
   income_df <- income_df %>% as_tibble()
-  
+
   # Next merge the geographic boundaries dataset with the ACS data
   income_merged <- geo_join(city.blocks, income_df, "GEOID", "GEOID")
   # There are some tracts with no land that we should exclude
@@ -118,16 +118,16 @@ combined.data <- function(city, tract.type) {
   #First transforming crime into spatial data that matches the CRS of the income merged data
   coordinates(hnfs.data) <- ~lng+lat
   proj4string(hnfs.data) <- proj4string(income_merged)
-  
+
   #Mapping crime events to districts
   crime_income_merged <- over(hnfs.data, income_merged)
   crime_income_merged <- spCbind(hnfs.data, crime_income_merged)
-  
+
   #So how many violent events total per district?
   total <- unique(crime_income_merged$GEOID)
   district <- vector()
   count <- vector()
-  
+
   for (i in 1:length(total)) {
     district[i] <- total[i]
     count[i] <- sum(crime_income_merged$GEOID==district[i])
@@ -136,7 +136,7 @@ combined.data <- function(city, tract.type) {
   violence <- data.frame(district)
   colnames(violence)[colnames(violence)=="district"] <- "GEOID"
   violence$event.count <- count
-  
+
   ##This bit is likely CHICAGO SPECIFIC
   #Find the earliest date in the data and the latest
   crime_income_merged$just.date <- crime_income_merged$Date
@@ -146,10 +146,10 @@ combined.data <- function(city, tract.type) {
   crime_income_merged$just.date <- format(as.POSIXct(crime_income_merged$just.date,format='%m/%d/%Y %H:%M:%S'),
                                           format='%m/%d/%Y')
   crime_income_merged$just.date <- as.Date(crime_income_merged$just.date, format="%m/%d/%Y")
-  
+
   #Now to actually find the earliest date
   dates <- seq(min(crime_income_merged$just.date), max(crime_income_merged$just.date), by="days")
-  
+
   #Now, to make the data
   for(i in 1:length(dates)){
     day <- dates[i]
@@ -160,11 +160,11 @@ combined.data <- function(city, tract.type) {
     violence$container <- container
     names(violence)[names(violence) == "container"] <- paste(day)
   }
-  
+
   #Add the income variables back to data (CHICAGO SPECIFIC)
   violence <- full_join(income_df, violence, by = "GEOID")
-  violence$event.count[is.na(violence$event.count)] <- 0 
-  violence[, 21:ncol(violence)][is.na(violence[, 21:ncol(violence)])] <- 0 
+  violence$event.count[is.na(violence$event.count)] <- 0
+  violence[, 21:ncol(violence)][is.na(violence[, 21:ncol(violence)])] <- 0
   return(violence)
 }
 
@@ -191,7 +191,3 @@ final.data <-function(city,tract.type,micro.length){
   }
   return(construction)
 }
-
-
-
-  
