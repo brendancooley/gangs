@@ -1,7 +1,13 @@
 import os
 import sys
 
-templatesPath = "~/Dropbox (Princeton)/8_Templates/"
+helpersPath = os.path.expanduser("~/Dropbox (Princeton)/14_Software/python/")
+sys.path.insert(1, helpersPath)
+
+import helpers
+
+templatesPath = "~/Dropbox\ \(Princeton\)/8_Templates/"
+softwarePath = "~/Dropbox\ \(Princeton\)/14_Software/"
 
 sectionsPath = "sections/"
 sectionsTemplate = "templates/cooley-plain.latex"
@@ -11,7 +17,8 @@ sourcePath = "source/"
 def task_source():
 	yield {
 		'name': "initializing environment...",
-		'actions':["cp " + templatesPath + "cooley-plain.latex" + " templates/"]
+		'actions':["cp " + templatesPath + "cooley-plain.latex" + " templates/",
+				   "cp -a " + softwarePath + " source/"]
 	}
 
 def task_sections():
