@@ -1,0 +1,182 @@
+### SETUP ###
+
+library(tidyverse)
+library(Rmosek)
+library(parallel)
+library(Matrix)
+library(extraDistr)
+
+### SIMULATION ###
+
+P <- 100 # number of periods
+N <- 20 # number of districts
+popR <- rpois(20, 10) # population of randos in each district
+J <- 3 # number of groups
+popJ <- list()
+
+# for (i in 1:J) {
+#   popJ[[i]] <- rpois(20, 5)
+#   zeros <- rbinom(20, 1, .2)  # each group active in 20 percent of districts on average
+#   popJ[[i]] <- popJ[[i]] * zeros
+# }
+
+# initialize group vectors
+for (j in 1:J) {
+  popJ[[j]] <- rep(0, N)
+}
+
+# enforce that at least one group in every district and non-overlapping
+cluster <- rep(0, N)
+for (i in 1:N) {
+  # randomly select a group
+  u <- runif(1)
+  g <- ceiling(u * J)
+  print(g)
+  for (j in 1:J) {
+    if (j==g) {
+      popJ[[j]][i] <- rtpois(1, 5, a=1)  # at least one member
+      cluster[i] <- j
+    } else {
+      popJ[[j]][i] <- 0
+    }
+  }
+}
+popJ
+
+eta <- .05 # probability of random killing in each period
+beta <- 10 # second parameter on beta distribution
+  
+Time <- c()
+District <- c()
+Attacks <- c()
+
+for (t in 1:P) {
+  eJ <- rbeta(J, 2, beta) # attack probabilities for each period
+  for (n in 1:N) {
+    aR <- rbinom(1, popR[n], eta)
+    
+    aJ <- c()
+    for (j in 1:J) {
+      aj <- rbinom(1, popJ[[j]][n], eJ[j])
+      aJ <- c(aJ, aj)
+    }
+    
+    a <- c(aR, aJ)
+    
+    Time <- c(Time, t)
+    District <- c(District, n)
+    Attacks <- c(Attacks, sum(a))
+    
+  }
+}
+
+DF <- cbind(Time, District, Attacks) %>% as_tibble()
+# DF %>% print(n=100)
+DFS <- DF %>% spread(District, Attacks) %>% select(-Time)
+COV <- cov(DFS)
+
+COVzd <- COV
+for (i in 1:nrow(COV)) {
+  COVzd[i, i] <- 0
+}
+
+colSums(COVzd) %>% mean() # should be positive on average due to presence of organized groups
+
+
+
+### TW ALGORITHM ###
+Y <- COV
+Y <- read_csv("covA.csv", col_names=FALSE) %>% as.matrix()
+
+CORES <- detectCores()
+
+mos <- list(sense="min")
+mos$iparam$MSK_IPAR_NUM_THREADS <- CORES
+
+mos$bardim <- c(N)
+
+mos$barA$i <- numeric(0)
+
+mos$barA$j <- rep(1, N*(N-1)/2 + N)
+mos$barA$k <- numeric(0)
+mos$barA$l <- numeric(0)
+mos$barA$v <- rep(1, N*(N-1)/2 + N)
+b <- numeric(0)
+
+## constrain each entry of the off-diagonal separately...
+idx <- 1 
+for(l in 1:(N-1))
+  for(k in (l+1):N) {
+    mos$barA$i[idx] <- idx
+    mos$barA$k[idx] <- k
+    mos$barA$l[idx] <- l
+    b[idx] <- 2*Y[k,l]
+    idx <- idx+1
+  }
+for(d in 1:N) {
+  mos$barA$i[idx] <- idx
+  mos$barA$k[idx] <- d
+  mos$barA$l[idx] <- d
+  b[idx] <- Y[d,d]
+  idx <- idx+1
+}
+
+len <- idx - 1
+
+## minimize the diagonal
+mos$barc$j <- rep(1, N)
+mos$barc$k <- 1:N
+mos$barc$l <- 1:N
+
+mos$barc$v <- rep(1, nrow(Y))
+
+
+mos$A <- Matrix(0, ncol=1, nrow=len, sparse=TRUE)
+mos$c <- 0
+
+blc <- b
+blc[N*(N-1)/2 + (1:N)] <- 0  # diagonal has only upper bound
+mos$bc <- rBind(blc=blc, buc=b)
+
+mos$bx <- rBind(blx=0, bux=0)  # looks like it's needed to avoid a pointless error message...
+
+barx <- 1.0 * bandSparse(N, k=0:(1-N), symm=TRUE)
+
+mos.out <- mosek(mos)
+
+
+
+barx@x <- mos.out$sol$itr$barx[[1]]  # this has 210 entries, why?
+
+rownames(barx) <- rownames(Y)
+colnames(barx) <- colnames(Y)
+
+gammaD <- Y - barx  # super small numbers off diagonal, one very small negative entry on diagonal, otherwise looks good
+for(i in 1:nrow(gammaD)) {
+  for (j in 1:nrow(gammaD)) {
+    if (i != j) {
+      gammaD[i, j] <- 0
+    }
+  }
+}
+gammaL <- Y - gammaD
+sum(diag(gammaL))
+sum(diag(Y))
+# successfully reduced the trace
+
+offdiag.err <- Y - barx
+diag(offdiag.err) <- 0
+summary(c(as.matrix(offdiag.err)))
+sort(diag(Y - barx))
+
+### K-MEANS CLUSTERING ###
+
+library(skmeans)
+
+gammaLn <- as.matrix(gammaL)
+gammaLskm <- skmeans(gammaLn, J, method="genetic")
+
+gammaLskm$cluster
+cluster
+# seems to work pretty freakin well
+

@@ -1,0 +1,22 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1557361315834.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "3925526742",
+    "id" : "4B86D787",
+    "lastKnownWriteTime" : 1558459046,
+    "last_content_update" : 1558459046253,
+    "path" : "~/Dropbox/drugs/gammaSim/gammaSimWars.R",
+    "project_path" : "gammaSimWars.R",
+    "properties" : {
+        "cursorPosition" : "1,15",
+        "scrollLine" : "1"
+    },
+    "relative_order" : 2,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}

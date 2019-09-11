@@ -1,0 +1,22 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1555954550885.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "3950711248",
+    "id" : "BCFC547D",
+    "lastKnownWriteTime" : 1556827749,
+    "last_content_update" : 1556827749,
+    "path" : "~/Dropbox (Princeton)/2_Projects/drugs/gammaSim/gammaSim.R",
+    "project_path" : "gammaSim.R",
+    "properties" : {
+        "cursorPosition" : "6,0",
+        "scrollLine" : "0"
+    },
+    "relative_order" : 1,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}
