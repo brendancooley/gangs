@@ -31,13 +31,49 @@ plt.imshow(mapT.gridA, cmap="hot", interpolation="nearest")
 
 sim = mapT.sim(15)
 sim_covM = mapT.covMat(sim)
+plt.imshow(sim_covM, cmap="hot", interpolation="nearest")
 
+# Yuan et al method
 ngL = mapT.ngL(sim_covM)
 L = mapT.L(sim_covM)
 Kr = np.linalg.inv(L)
 Y = mapT.Y(Kr, alpha=10000)
 
-mapT.spect_clust(Y, M).reshape((mapT.N, mapT.N))
+# replot covariance matrix with permutation
+# TODO this still doesn't seem to be working exactly right
+clusters = mapT.spect_clust(sim_covM, M)
+clusters
+covMP = mapT.permute_covM(sim_covM, clusters)
+plt.imshow(covMP, cmap="hot", interpolation="nearest")
+
+
+test = np.array([[1, 2, 3], [4, 5, 6], [7, 8, 9]])
+test[np.ix_([2, 1, 0],[2, 1, 0])]
+
+
+
+# trace minimization
+np.trace(sim_covM)
+# Gamma_L = mapT.traceMin(sim_covM)
+# np.trace(Gamma_L)
+# plt.imshow(Gamma_L, cmap="hot", interpolation="nearest")
+
+
+
+np.trace(Y)  # compare trace to traceMin...not comparable because we've converted to distance matrix
+plt.imshow(Y, cmap="hot", interpolation="nearest")
+
+mapT.spect_clust(sim_covM, M).reshape((mapT.N, mapT.N))  # raw matrix
+mapT.spect_clust(Y, M).reshape((mapT.N, mapT.N))  # Yuan matrix
+mapT.spect_clust(Gamma_L, M).reshape((mapT.N, mapT.N))  # trace-minimized matrix
+
+
+
+
+
+
+
+
 # actually works very well at finding noise cluster, so long as alpha > 1 or so
 # doesn't require trace minimization
 # what do eigengaps look like?

@@ -511,3 +511,51 @@ class map:
         km = cluster.k_means(kv.transpose(), n_clusters=M+1)
         km_lab = km[1]
         return(km_lab)
+
+    def permute_covM(self, covM, clusters):
+        """reorder covariance matrix to correspond to clustering output
+
+        """
+
+        counts = np.bincount(clusters)
+
+        # identify noise cluster
+        # NOTE: doesn't work when this assigns district to unique cluster
+        V = []
+        for i in range(len(counts)):
+            indices = np.where(clusters==i)[0]
+            N = len(indices)
+            blockM = covM[indices,:][:,indices]
+            for j in range(blockM.shape[0]):
+                blockM[j, j] = 0  # zero out diagonal
+            v = np.sum(blockM) / N
+            V.append(v)
+        nc = np.argmin(V)
+        print(V)
+
+        # reassign noise cluster to last index
+        print(clusters)
+        clustersP = np.copy(clusters)
+        M = np.max(clusters)
+        print(M)
+        print(nc)
+        for i in range(len(clustersP)):
+            # flip noise cluster and last cluster
+            if clustersP[i] == nc:
+                clustersP[i] = M
+            else:
+                if clustersP[i] == M:
+                    clustersP[i] = nc
+        print(clustersP)
+
+        covMC = np.copy(covM)
+        indices = np.repeat(0, len(clustersP))
+        tick = 0
+        for i in range(len(counts)):
+            for j in range(len(indices)):
+                if clustersP[j] == i:
+                    indices[j] = tick
+                    tick += 1
+        print(indices)
+
+        return(covMC[np.ix_(indices, indices)])
