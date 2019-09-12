@@ -4,6 +4,7 @@ import scipy.stats as stats
 import matplotlib.pyplot as plt
 from sklearn import cluster
 import scipy
+import itertools
 
 import map
 
@@ -30,12 +31,34 @@ params = {"sigma":sigma, "eta":eta, "beta1":beta1, "beta2":beta2, "rho":rho, "ba
 imp.reload(map)
 mapT = map.map(N, M, params)
 plt.imshow(mapT.gridA, cmap="hot", interpolation="nearest")
-mapT.gridA
-mapT.Q()
 
-sim = mapT.sim(10000)
+sim = mapT.sim(1000)
 sim_covM = mapT.covMat(sim)
-plt.imshow(sim_covM, cmap="hot", interpolation="nearest")
+clusters1 = mapT.spect_clust(sim_covM, M)
+
+np.reshape(clusters1, (mapT.N, mapT.N))
+mapT.score_cluster(mapT.gridIDs.ravel(), clusters1, mapT.M+1)
+
+Gamma_L = mapT.traceMin(sim_covM)
+clusters2 = mapT.spect_clust(Gamma_L, M)
+np.reshape(clusters2, (mapT.N, mapT.N))
+mapT.score_cluster(mapT.gridIDs.ravel(), clusters2, mapT.M+1)
+
+
+
+
+
+
+pmts = itertools.permutations(np.arange(0,4))
+for p in pmts:
+    print(p)
+
+p[1]
+
+for i in range(4):
+    print(i)
+
+# plt.imshow(sim_covM, cmap="hot", interpolation="nearest")
 
 # Yuan et al method
 # ngL = mapT.ngL(sim_covM)
@@ -48,7 +71,6 @@ Gamma_L = mapT.traceMin(sim_covM)
 np.trace(Gamma_L)
 
 # replot covariance matrix with permutation
-clusters = mapT.spect_clust(Gamma_L, M)
 clusters.reshape(mapT.N, mapT.N)
 # trace minimization helps immensely in a setting with no noise...helps reduce within-district variance
 # just converting to correlation matrix would also probably help...what's the logic here?
@@ -62,7 +84,7 @@ plt.imshow(Gamma_L, cmap="hot", interpolation="nearest")
 plt.imshow(covMP, cmap="hot", interpolation="nearest")
 
 
-
+list(itertools.permutations(np.array([0,1,2])))
 
 
 

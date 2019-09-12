@@ -8,6 +8,7 @@ import timeit
 import time
 import copy
 import matplotlib.pyplot as plt
+import itertools
 
 class map:
 
@@ -52,10 +53,13 @@ class map:
         self.coords, self.C =  self.grid_to_C()
 
         self.gridA = np.copy(self.gridBase)  # total population on each cell
+        self.gridIDs = np.empty_like(self.gridBase, dtype=int)
+        self.gridIDs.fill(self.M)  # last id for unoccupied territory...replace below if occupied
 
         self.gridsM = []
         self.aM = np.zeros(M)
 
+        id = 0
         for i in range(self.M):
 
             grid_i = np.copy(self.gridBase)
@@ -72,6 +76,7 @@ class map:
             sd = self.bar_a * self.var_scale
             draw = stats.truncnorm.rvs(0, np.inf, loc=self.bar_a, scale=sd)
             grid_i[centroid[0], centroid[1]] = np.floor(draw)
+            self.gridIDs[centroid[0], centroid[1]] = id
             f.add(active_cell)
 
             while len(f) < self.N**2:
@@ -94,6 +99,7 @@ class map:
                                     draw = stats.truncnorm.rvs(0, np.inf, loc=mean_n, scale=sd_n)
                                     if draw >= min_m:
                                         grid_i[n[0], n[1]] = np.floor(draw)  # update group grid
+                                        self.gridIDs[n[0], n[1]] = id
                                         self.aM[i] += np.floor(draw)  # update group total strength
                                     else:
                                         grid_i[n[0], n[1]] = 0
@@ -106,6 +112,7 @@ class map:
 
             self.gridsM.append(grid_i)
             self.gridA += grid_i  # update master grid
+            id += 1
 
         # populate randos
         sd_r = self.bar_b * self.var_scale
@@ -211,6 +218,19 @@ class map:
         return(sampleGrid.ravel() / np.sum(sampleGrid))
 
     def sim(self, T):
+        """Simulate T periods of violence
+
+        Parameters
+        ----------
+        T : int
+            Number of periods to simulate
+
+        Returns
+        -------
+        A
+            N**2 \times T matrix of shooting counts
+
+        """
 
         A = np.zeros((self.N**2, T))  # initialize attack matrix
         Q = self.Q()  # violence potential
@@ -445,6 +465,44 @@ class map:
         km = cluster.k_means(kv.transpose(), n_clusters=M+1)
         km_lab = km[1]
         return(km_lab)
+
+    def score_cluster(self, truth, cluster, M):
+        """produce a score for how closely a cluster vector matches the truth vector
+
+        Parameters
+        ----------
+        truth : vector
+            vector length N ** 2 of true cluster assignments
+        cluster : vector
+            vector length N ** 2 of output cluster assignments
+        M : int
+            Number of clusters (self.M + 1)
+
+        Returns
+        -------
+        type
+            Description of returned object.
+
+        """
+
+        ids = np.arange(0, M)
+        pmts = itertools.permutations(ids)
+
+        scores = []
+        for p in pmts:
+            c = np.copy(cluster)
+            # permute entry
+            for i in range(len(c)):
+                for j in range(len(p)):
+                    if c[i] == j:
+                        c[i] = p[j]
+                        break
+            # calculate score
+            diff = np.where(truth - c == 0, 0, 1)
+            scores.append(np.sum(diff))
+
+        return(np.min(scores))
+
 
     def permute_covM(self, covM, clusters):
         """reorder covariance matrix to correspond to clustering output
