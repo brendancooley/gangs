@@ -339,22 +339,3 @@ def neighbors(coords):
     return(neighbors)
 
 neighbors_a = neighbors((5,5))
-
-for n in neighbors_a:
-    print(n)
-    if 0 <= n[0] < N:
-        if 0 <= n[1] < N:  # check bounds
-            neighbors_n = neighbors(n) # get neighbors of n
-            alphas_n = []
-            for m in neighbors_n:
-                if m in f:
-                    alphas_n.append(grid_i[m[0], m[1]])
-            mean_n = np.mean(alphas_n) * rho
-            var_n = mean_n / vFactor
-            eps = stats.truncnorm.rvs(-mean_n/var_n, mean_n/var_n)
-            # print(mean_n)
-            # print(eps)
-            draw = mean_n + eps
-            grid_i[n[0], n[1]] = draw
-            f.add(n)
-            active_cell = n
