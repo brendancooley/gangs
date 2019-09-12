@@ -50,12 +50,6 @@ clusters3 = mapT.spect_clust(Gamma_L, M)
 np.reshape(clusters3, (mapT.N, mapT.N))
 mapT.score_cluster(mapT.gridIDs.ravel(), clusters3, mapT.M+1)
 
-# Li et al method
-ngL = mapT.ngL(sim_covM)
-L = mapT.L(sim_covM)
-Kr = np.linalg.inv(L)
-Y = mapT.Y(Kr, alpha=1)
-
 clusters4 = mapT.spect_clust(Y, M)
 np.reshape(clusters4, (mapT.N, mapT.N))
 mapT.score_cluster(mapT.gridIDs.ravel(), clusters4, mapT.M+1)

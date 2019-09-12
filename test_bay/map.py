@@ -436,7 +436,31 @@ class map:
 
         return(out)
 
-    def spect_clust(self, gammaL, M, delta=None, eig_plot=True):
+    def nr_spect_clust(self, covM, M, alpha):
+        """Implement method in Li et al
+
+        Parameters
+        ----------
+        covM : type
+            Description of parameter `covM`.
+        M : type
+            Description of parameter `M`.
+        alpha : type
+            Description of parameter `alpha`.
+
+        Returns
+        -------
+        type
+            Description of returned object.
+
+        """
+        ngL = self.ngL(covM)
+        L = self.L(covM)
+        Kr = np.linalg.inv(L)
+        Y = self.Y(Kr, alpha=alpha)
+        return(self.spect_clust(Y, M))
+
+    def spect_clust(self, covM, M, delta=None, eig_plot=False):
         """Conduct spectral clustering on trace-minimized covariance matrix
 
         Parameters
@@ -454,10 +478,10 @@ class map:
             Cluster ids for each district.
 
         """
-        G = gammaL
+        G = covM
         if delta is not None:
             S = mapT.C_bin_kernel(delta)  # TODO: provide option for exp kernel
-            G = S * Gamma_L
+            G = S * covM
 
         # extract eigenvectors
         # w, v = np.linalg.eig(G)
