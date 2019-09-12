@@ -353,7 +353,7 @@ class map:
             gammaL = X.level().reshape(N, N)
         return(gammaL)
 
-    def covMat(self, A, zero=True):
+    def covMat(self, A, zero=True, cor=False):
         """Short summary.
 
         Parameters
@@ -362,6 +362,8 @@ class map:
             N times T matrix of attack vectors stacked rowwise, each row denoting attacks per period in an unraveled district.
         zero : bool
             convert negative covariance entries to zero?
+        cor : bool
+            convert to correlation matrix?
 
         Returns
         -------
@@ -369,13 +371,17 @@ class map:
             N times N matrix of covariances
 
         """
-        covA = np.cov(A)
-        # correct for floating point problems with positive semi definiteness, see:
-        # https://stackoverflow.com/questions/41515522/numpy-positive-semi-definite-warning
-        min_eig = np.min(np.real(np.linalg.eigvals(covA)))
-        if min_eig < 0:
-            covA -= 10*min_eig * np.eye(*covA.shape)
-        # zero out negative covariances
+        if cor is True:
+            A[:,0] += .001  # add small value to first period to eliminate zeros
+            covA = np.corrcoef(A)
+        else:
+            covA = np.cov(A)
+            # correct for floating point problems with positive semi definiteness, see:
+            # https://stackoverflow.com/questions/41515522/numpy-positive-semi-definite-warning
+            min_eig = np.min(np.real(np.linalg.eigvals(covA)))
+            if min_eig < 0:
+                covA -= 10*min_eig * np.eye(*covA.shape)
+        # zero out negative values
         if zero is True:
             for i in range(len(covA)):
                 for j in range(len(covA)):
@@ -430,7 +436,7 @@ class map:
 
         return(out)
 
-    def spect_clust(self, gammaL, M, delta=None):
+    def spect_clust(self, gammaL, M, delta=None, eig_plot=True):
         """Conduct spectral clustering on trace-minimized covariance matrix
 
         Parameters
@@ -458,8 +464,8 @@ class map:
         w, v = np.linalg.eigh(G) # NOTE: was getting complex eigenvalues using linalg.eig
         kw = np.flip(np.argsort(w))[0:M+1]
         kv = v.T[kw]  # NOTE: need to transpose eigenvectors
-        print("eigenvalues 0-M+5:")
-        print(w[np.flip(np.argsort(w))[0:M+5]])
+        if eig_plot is True:
+            plt.plot(w[np.flip(np.argsort(w))], "r+")
 
         # cluster first M+1 eigenvectors
         km = cluster.k_means(kv.transpose(), n_clusters=M+1)
@@ -480,8 +486,8 @@ class map:
 
         Returns
         -------
-        type
-            Description of returned object.
+        int
+            Number of districts for which proposed cluster disagrees with truth
 
         """
 
@@ -498,7 +504,7 @@ class map:
                         c[i] = p[j]
                         break
             # calculate score
-            diff = np.where(truth - c == 0, 0, 1)
+            diff = np.where(truth - c == 0, 0, 1) # how many entries disagree?
             scores.append(np.sum(diff))
 
         return(np.min(scores))

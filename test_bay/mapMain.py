@@ -15,7 +15,7 @@ M = 3
 T = 100
 
 sigma = .5
-eta = 0  # attack probabilities for randos (noise)
+eta = .1  # attack probabilities for randos (noise)
 beta1 = .5
 beta2 = 5
 rho = .6
@@ -34,18 +34,31 @@ plt.imshow(mapT.gridA, cmap="hot", interpolation="nearest")
 
 sim = mapT.sim(1000)
 sim_covM = mapT.covMat(sim)
+
 clusters1 = mapT.spect_clust(sim_covM, M)
-
 np.reshape(clusters1, (mapT.N, mapT.N))
-mapT.score_cluster(mapT.gridIDs.ravel(), clusters1, mapT.M+1)
+mapT.score_cluster(mapT.gridIDs.ravel(), clusters1, mapT.M+1)  # using correlation matrix works nicely
 
-Gamma_L = mapT.traceMin(sim_covM)
-clusters2 = mapT.spect_clust(Gamma_L, M)
+sim_corM = mapT.covMat(sim, cor=True)
+clusters2 = mapT.spect_clust(sim_corM, M)
 np.reshape(clusters2, (mapT.N, mapT.N))
 mapT.score_cluster(mapT.gridIDs.ravel(), clusters2, mapT.M+1)
 
 
+Gamma_L = mapT.traceMin(sim_covM)
+clusters3 = mapT.spect_clust(Gamma_L, M)
+np.reshape(clusters3, (mapT.N, mapT.N))
+mapT.score_cluster(mapT.gridIDs.ravel(), clusters3, mapT.M+1)
 
+# Li et al method
+ngL = mapT.ngL(sim_covM)
+L = mapT.L(sim_covM)
+Kr = np.linalg.inv(L)
+Y = mapT.Y(Kr, alpha=1)
+
+clusters4 = mapT.spect_clust(Y, M)
+np.reshape(clusters4, (mapT.N, mapT.N))
+mapT.score_cluster(mapT.gridIDs.ravel(), clusters4, mapT.M+1)
 
 
 
@@ -60,11 +73,7 @@ for i in range(4):
 
 # plt.imshow(sim_covM, cmap="hot", interpolation="nearest")
 
-# Yuan et al method
-# ngL = mapT.ngL(sim_covM)
-# L = mapT.L(sim_covM)
-# Kr = np.linalg.inv(L)
-# Y = mapT.Y(Kr, alpha=10000)
+
 
 np.trace(sim_covM)
 Gamma_L = mapT.traceMin(sim_covM)
