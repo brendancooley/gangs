@@ -525,10 +525,13 @@ class map:
         for i in range(len(counts)):
             indices = np.where(clusters==i)[0]
             N = len(indices)
-            blockM = covM[indices,:][:,indices]
+            blockM = np.copy(covM)[indices,:][:,indices]
             for j in range(blockM.shape[0]):
                 blockM[j, j] = 0  # zero out diagonal
-            v = np.sum(blockM) / N
+            if N != 1:
+                v = np.sum(blockM) / (N ** 2 - N)
+            else:
+                v = np.sum(blockM) / N
             V.append(v)
         nc = np.argmin(V)
         print(V)

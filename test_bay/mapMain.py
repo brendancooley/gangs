@@ -7,8 +7,10 @@ import scipy
 
 import map
 
-N = 12
-M = 5
+# N = 12
+# M = 5
+N = 7
+M = 3
 T = 100
 
 sigma = .5
@@ -39,22 +41,23 @@ L = mapT.L(sim_covM)
 Kr = np.linalg.inv(L)
 Y = mapT.Y(Kr, alpha=10000)
 
+Gamma_L = mapT.traceMin(sim_covM)
+
 # replot covariance matrix with permutation
 # TODO this still doesn't seem to be working exactly right
-clusters = mapT.spect_clust(sim_covM, M)
-clusters
-covMP = mapT.permute_covM(sim_covM, clusters)
+clusters = mapT.spect_clust(Gamma_L, M)
+clusters.reshape(mapT.N, mapT.N)
+covMP = mapT.permute_covM(Gamma_L, clusters)
 plt.imshow(covMP, cmap="hot", interpolation="nearest")
 
 
-test = np.array([[1, 2, 3], [4, 5, 6], [7, 8, 9]])
-test[np.ix_([2, 1, 0],[2, 1, 0])]
+# test = np.array([[1, 2, 3], [4, 5, 6], [7, 8, 9]])
+# test[np.ix_([2, 1, 0],[2, 1, 0])]
 
 
 
 # trace minimization
 np.trace(sim_covM)
-# Gamma_L = mapT.traceMin(sim_covM)
 # np.trace(Gamma_L)
 # plt.imshow(Gamma_L, cmap="hot", interpolation="nearest")
 
