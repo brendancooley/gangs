@@ -9,7 +9,7 @@ import time
 
 class map:
 
-    def __init__(self, N, M, params, overlap=False):
+    def __init__(self, N, M, params, overlap=False, min_m=10):
         """Short summary.
 
         Parameters
@@ -90,8 +90,11 @@ class map:
                                         mean_n = .01
                                     sd_n = mean_n * self.var_scale
                                     draw = stats.truncnorm.rvs(0, np.inf, loc=mean_n, scale=sd_n)
-                                    grid_i[n[0], n[1]] = np.floor(draw)  # update group grid
-                                    self.aM[i] += np.floor(draw)  # update group total strength
+                                    if draw >= min_m:
+                                        grid_i[n[0], n[1]] = np.floor(draw)  # update group grid
+                                        self.aM[i] += np.floor(draw)  # update group total strength
+                                    else:
+                                        grid_i[n[0], n[1]] = 0
                                     f.add(n)
                             else:
                                 grid_i[n[0], n[1]] = 0

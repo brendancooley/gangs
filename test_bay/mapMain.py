@@ -9,18 +9,18 @@ import map
 
 # N = 12
 # M = 5
-N = 7
+N = 10
 M = 3
 T = 100
 
 sigma = .5
-eta = .1  # attack probabilities for randos (noise)
+eta = 0  # attack probabilities for randos (noise)
 beta1 = .5
 beta2 = 5
-rho = .3
+rho = .6
 
-bar_a = 20  # average number of gang members at centroid
-bar_b = 20  # average number of violent randos per block
+bar_a = 30  # average number of gang members at centroid
+bar_b = 30  # average number of violent randos per block
 var_scale = .25  # standard deviation of trunnorm as a percentage of mean
 
 p_war = .5
@@ -30,8 +30,10 @@ params = {"sigma":sigma, "eta":eta, "beta1":beta1, "beta2":beta2, "rho":rho, "ba
 imp.reload(map)
 mapT = map.map(N, M, params)
 plt.imshow(mapT.gridA, cmap="hot", interpolation="nearest")
+mapT.gridA
+mapT.Q()
 
-sim = mapT.sim(100)
+sim = mapT.sim(10000)
 sim_covM = mapT.covMat(sim)
 plt.imshow(sim_covM, cmap="hot", interpolation="nearest")
 
@@ -41,13 +43,12 @@ plt.imshow(sim_covM, cmap="hot", interpolation="nearest")
 # Kr = np.linalg.inv(L)
 # Y = mapT.Y(Kr, alpha=10000)
 
-Gamma_L = mapT.traceMin(sim_covM)
+# Gamma_L = mapT.traceMin(sim_covM)
 
 # replot covariance matrix with permutation
-# TODO this still doesn't seem to be working exactly right
 clusters = mapT.spect_clust(sim_covM, M)
 clusters.reshape(mapT.N, mapT.N)
-covMP = mapT.permute_covM(Gamma_L, clusters)
+covMP = mapT.permute_covM(sim_covM, clusters)
 plt.imshow(covMP, cmap="hot", interpolation="nearest")
 
 
