@@ -43,13 +43,25 @@ plt.imshow(sim_covM, cmap="hot", interpolation="nearest")
 # Kr = np.linalg.inv(L)
 # Y = mapT.Y(Kr, alpha=10000)
 
-# Gamma_L = mapT.traceMin(sim_covM)
+np.trace(sim_covM)
+Gamma_L = mapT.traceMin(sim_covM)
+np.trace(Gamma_L)
 
 # replot covariance matrix with permutation
-clusters = mapT.spect_clust(sim_covM, M)
+clusters = mapT.spect_clust(Gamma_L, M)
 clusters.reshape(mapT.N, mapT.N)
-covMP = mapT.permute_covM(sim_covM, clusters)
+# trace minimization helps immensely in a setting with no noise...helps reduce within-district variance
+
+
+
+covMP = mapT.permute_covM(Gamma_L, clusters)
+# NOTE: blockM seems to be working fine...problem comes somewhere in permuting the whole matrix
+
+
+
+plt.imshow(Gamma_L, cmap="hot", interpolation="nearest")
 plt.imshow(covMP, cmap="hot", interpolation="nearest")
+
 
 
 # test = np.array([[1, 2, 3], [4, 5, 6], [7, 8, 9]])

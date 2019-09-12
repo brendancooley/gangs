@@ -6,6 +6,7 @@ from mosek.fusion import *
 from sklearn import cluster
 import timeit
 import time
+import copy
 
 class map:
 
@@ -458,6 +459,8 @@ class map:
             indices = np.where(clusters==i)[0]
             N = len(indices)
             blockM = np.copy(covM)[indices,:][:,indices]
+            print('blockM:')
+            print(blockM)
             for j in range(blockM.shape[0]):
                 blockM[j, j] = 0  # zero out diagonal
             if N != 1:
@@ -492,5 +495,7 @@ class map:
                     indices[j] = tick
                     tick += 1
         print(indices)
+        covMC[:,:] = covMC[indices,:]
+        covMC[:,:] = covMC[:,indices]
 
-        return(covMC[np.ix_(indices, indices)])
+        return(covMC)
