@@ -17,6 +17,7 @@ library (maptools)
 library(spdep)
 
 
+
 ###Begin by loading the data
 
 violence <- read_csv("violence_tracts.csv")
@@ -27,6 +28,13 @@ violence$dummy <- ifelse(violence$event.count > 0,1,0)
 cook.blocks <-  tracts("Illinois",county = "031", year = "2016")
 violence.geo <- geo_join(cook.blocks, violence, "GEOID", "GEOID")
 
+###Just Chicago
+require(rgdal)
+Chicago <- readOGR(".","Chicago")
+
+
+###Adjacency Matrix
+adjacency <- gTouches(cook.blocks,byid = T)
 
 ##Violence Dummy Map
 popup <- paste0("GEOID: ", violence.geo$GEOID, "<br>", "Violence Present", violence.geo$dummy)
