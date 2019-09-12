@@ -51,12 +51,11 @@ np.trace(Gamma_L)
 clusters = mapT.spect_clust(Gamma_L, M)
 clusters.reshape(mapT.N, mapT.N)
 # trace minimization helps immensely in a setting with no noise...helps reduce within-district variance
-
+# just converting to correlation matrix would also probably help...what's the logic here?
 
 
 covMP = mapT.permute_covM(Gamma_L, clusters)
 # NOTE: blockM seems to be working fine...problem comes somewhere in permuting the whole matrix
-
 
 
 plt.imshow(Gamma_L, cmap="hot", interpolation="nearest")
@@ -64,6 +63,17 @@ plt.imshow(covMP, cmap="hot", interpolation="nearest")
 
 
 
+
+
+
+
+test = np.copy(Gamma_L)
+p = np.flip(np.arange(0, len(clusters)))
+plt.imshow(test, cmap="hot", interpolation="nearest")
+test[:,:] = test[p,:]
+plt.imshow(test, cmap="hot", interpolation="nearest")
+test[:,:] = test[:,p]
+plt.imshow(test, cmap="hot", interpolation="nearest")
 # test = np.array([[1, 2, 3], [4, 5, 6], [7, 8, 9]])
 # test[np.ix_([2, 1, 0],[2, 1, 0])]
 

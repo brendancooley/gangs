@@ -7,6 +7,7 @@ from sklearn import cluster
 import timeit
 import time
 import copy
+import matplotlib.pyplot as plt
 
 class map:
 
@@ -459,8 +460,6 @@ class map:
             indices = np.where(clusters==i)[0]
             N = len(indices)
             blockM = np.copy(covM)[indices,:][:,indices]
-            print('blockM:')
-            print(blockM)
             for j in range(blockM.shape[0]):
                 blockM[j, j] = 0  # zero out diagonal
             if N != 1:
@@ -469,14 +468,10 @@ class map:
                 v = np.sum(blockM) / N
             V.append(v)
         nc = np.argmin(V)
-        print(V)
 
         # reassign noise cluster to last index
-        print(clusters)
         clustersP = np.copy(clusters)
         M = np.max(clusters)
-        print(M)
-        print(nc)
         for i in range(len(clustersP)):
             # flip noise cluster and last cluster
             if clustersP[i] == nc:
@@ -484,18 +479,16 @@ class map:
             else:
                 if clustersP[i] == M:
                     clustersP[i] = nc
-        print(clustersP)
 
         covMC = np.copy(covM)
-        indices = np.repeat(0, len(clustersP))
-        tick = 0
+        plt.imshow(covMC, cmap="hot", interpolation="nearest")
+        p = []
         for i in range(len(counts)):
-            for j in range(len(indices)):
+            for j in range(len(clustersP)):
                 if clustersP[j] == i:
-                    indices[j] = tick
-                    tick += 1
-        print(indices)
-        covMC[:,:] = covMC[indices,:]
-        covMC[:,:] = covMC[:,indices]
+                    p.append(j)
+        covMC[:,:] = covMC[p,:]
+        plt.imshow(covMC, cmap="hot", interpolation="nearest")
+        covMC[:,:] = covMC[:,p]
 
         return(covMC)
