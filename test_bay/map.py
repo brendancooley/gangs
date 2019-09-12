@@ -481,14 +481,12 @@ class map:
                     clustersP[i] = nc
 
         covMC = np.copy(covM)
-        plt.imshow(covMC, cmap="hot", interpolation="nearest")
         p = []
         for i in range(len(counts)):
             for j in range(len(clustersP)):
                 if clustersP[j] == i:
                     p.append(j)
         covMC[:,:] = covMC[p,:]
-        plt.imshow(covMC, cmap="hot", interpolation="nearest")
         covMC[:,:] = covMC[:,p]
 
         return(covMC)
