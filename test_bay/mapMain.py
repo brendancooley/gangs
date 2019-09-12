@@ -14,40 +14,38 @@ M = 3
 T = 100
 
 sigma = .5
-eta = .3
-beta = 5
+eta = .1  # attack probabilities for randos (noise)
+beta1 = .5
+beta2 = 5
 rho = .3
 
-bar_a = 60  # average number of gang members at centroid
-bar_b = 60  # average number of violent randos per block
+bar_a = 20  # average number of gang members at centroid
+bar_b = 20  # average number of violent randos per block
 var_scale = .25  # standard deviation of trunnorm as a percentage of mean
 
 p_war = .5
 
-params = {"sigma":sigma, "eta":eta, "beta":beta, "rho":rho, "bar_a":bar_a, "bar_b":bar_b, "var_scale":var_scale, "p_war":p_war}
+params = {"sigma":sigma, "eta":eta, "beta1":beta1, "beta2":beta2, "rho":rho, "bar_a":bar_a, "bar_b":bar_b, "var_scale":var_scale, "p_war":p_war}
 
 imp.reload(map)
-mapT = map.map(N, M, T, params)
-mapT.gridsM[2]
-mapT.gridA
-
+mapT = map.map(N, M, params)
 plt.imshow(mapT.gridA, cmap="hot", interpolation="nearest")
 
-sim = mapT.sim(15)
+sim = mapT.sim(100)
 sim_covM = mapT.covMat(sim)
 plt.imshow(sim_covM, cmap="hot", interpolation="nearest")
 
 # Yuan et al method
-ngL = mapT.ngL(sim_covM)
-L = mapT.L(sim_covM)
-Kr = np.linalg.inv(L)
-Y = mapT.Y(Kr, alpha=10000)
+# ngL = mapT.ngL(sim_covM)
+# L = mapT.L(sim_covM)
+# Kr = np.linalg.inv(L)
+# Y = mapT.Y(Kr, alpha=10000)
 
 Gamma_L = mapT.traceMin(sim_covM)
 
 # replot covariance matrix with permutation
 # TODO this still doesn't seem to be working exactly right
-clusters = mapT.spect_clust(Gamma_L, M)
+clusters = mapT.spect_clust(sim_covM, M)
 clusters.reshape(mapT.N, mapT.N)
 covMP = mapT.permute_covM(Gamma_L, clusters)
 plt.imshow(covMP, cmap="hot", interpolation="nearest")
@@ -76,7 +74,7 @@ mapT.spect_clust(Gamma_L, M).reshape((mapT.N, mapT.N))  # trace-minimized matrix
 
 
 
-
+np.random.binomial([10,10], .5)
 
 
 # actually works very well at finding noise cluster, so long as alpha > 1 or so

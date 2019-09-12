@@ -9,7 +9,7 @@ import time
 
 class map:
 
-    def __init__(self, N, M, T, params, overlap=False):
+    def __init__(self, N, M, params, overlap=False):
         """Short summary.
 
         Parameters
@@ -32,12 +32,12 @@ class map:
 
         self.N = N  # number of territories
         self.M = M  # number of groups
-        self.T = T  # number of periods in macro period
 
         # Parameters
         self.sigma = params["sigma"]  # elasticity of substitution violence production function
         self.eta = params["eta"]  # probability of random killing
-        self.beta = params["beta"]  # second parameter of beta dist, governs group attack probabilities
+        self.beta1 = params["beta1"]
+        self.beta2 = params["beta2"]
         self.rho = params["rho"]  # loss of strength gradient for gang territories
         self.bar_a = params["bar_a"]
         self.bar_b = params["bar_b"]
@@ -205,31 +205,42 @@ class map:
         sampleGrid[sampleGrid > 1] = 0
         return(sampleGrid.ravel() / np.sum(sampleGrid))
 
-    def rand_S(self, pWar):
-        """Draw random wars each with probability Pwar and return symmetric war matrix
+    def sim(self, T):
 
-        Parameters
-        ----------
-        pWar : scalar
-            \in [0,1]
+        A = np.zeros((self.N**2, T))  # initialize attack matrix
+        Q = self.Q()  # violence potential
 
-        Returns
-        -------
-        matrix
-            M times M symmetric matrix of active wars
+        for t in range(T):
+            # initialize attack vector
+            a = np.zeros(self.N**2, dtype=int)
+            # draw conflict shocks
+            shocks = np.random.beta(self.beta1, self.beta2, int((self.M ** 2 - self.M) / 2))  # one for each dyad
+            # populate symmetric matrix of shocks
+            shocksM = np.zeros((self.M, self.M))
+            tick = 0
+            for i in range(self.M):
+                for j in range(self.M):
+                    if j > i:
+                        shocksM[i, j] = shocks[tick]
+                        shocksM[j, i] = shocks[tick]
+                        tick += 1
+            for q in Q.keys():
+                # q[0] - defender
+                # q[1] - attacker
+                # get shock
+                eps = shocksM[q[0], q[1]]
+                x_ij = np.random.binomial(Q[q].ravel(), eps)
+                a += x_ij
 
-        """
-        S = np.zeros((self.M, self.M))
-        for i in range(self.M):
-            for j in range(i+1, self.M):
-                draw = np.random.uniform()
-                if draw < pWar:
-                    S[i, j] = 1
-                    S[j, i] = 1
-        return(S)
+            # random violence
+            y = np.random.binomial(self.gridR.ravel(), self.eta)  # random attacks
+            a += y
+            A[:, t] = a
 
-    def simT(self, S):
-        """Simulate a "macro-period" of T periods
+        return(A)
+
+    def Q(self):
+        """Violence potential function.
 
         Parameters
         ----------
@@ -239,35 +250,42 @@ class map:
         Returns
         -------
         list
-            Length T list of attack vectors, corresponding to unraveled grid
+            list of N times N matrices of organized violence potential for each war
 
         """
 
-        A = np.zeros((self.N**2, self.T))
-        Q = self.Q(S)
+        Q = dict()
 
-        for t in range(self.T):
-            a = np.zeros(self.N**2)
-            for q in Q:
-                eJ = np.random.beta(2, self.beta) # draw q-specific attack probabilities
-                eM = np.random.binomial(q.ravel(), eJ)
-                a += eM
-            eR = np.random.binomial(self.gridR.ravel(), self.eta)
-            a += eR
-            A[:, t] = a
+        for i in range(self.M):  # for each defender
+            for j in range(self.M):  # for each attacker
+                if i != j:
+                    q_ij = np.zeros_like(self.gridA, dtype=int)  # initialize violence potential grid
+                    M_j = self.aM[j]  # get attacker's total strength
+                    for k in range(len(self.coords)):
+                        coord = self.coords[k]
+                        m_ik = self.gridsM[i][coord[0], coord[1]]  # get defender's strength in district k
+                        a = np.array([m_ik, M_j])
+                        q_ij[coord[0], coord[1]] = np.floor(self.cd(a, self.alpha))
+                    Q[(i, j)] = q_ij  # violence potential on defender i's territory from attacks by j
+        return(Q)
 
-        return(A)
+    def cd(self, a, alpha):
+        """
 
-    def sim(self, P):
+        Parameters
+        ----------
+        a : list
+            2d list of vpf inputs
+        alpha : scalar
+            cd shares of local strength, total enemy strength
 
-        A = np.zeros((self.N**2, self.T*P))
-        for p in range(P):  # for each macro-period
-            # draw wars
-            S = self.rand_S(self.p_war)
-            A_p = self.simT(S)
-            A[:,self.T*p:self.T*(p+1)] = A_p
+        Returns
+        -------
+        scalar
+            violence potential
 
-        return(A)
+        """
+        return(a[0]**(1-self.alpha) * a[1]**self.alpha)
 
     def traceMin(self, covA):
         with Model("sdo1") as M:
@@ -309,100 +327,6 @@ class map:
 
             gammaL = X.level().reshape(N, N)
         return(gammaL)
-
-
-    def Q(self, S):
-        """Violence potential function.
-
-        Parameters
-        ----------
-        S : matrix
-            M times M symmetric matrix of active wars
-
-        Returns
-        -------
-        list
-            list of N times N matrices of organized violence potential for each war
-
-        """
-
-        Q = []
-        Sdict = self.S_to_dict(S)
-
-        for s in Sdict.keys():
-            q = np.zeros_like(self.gridA)
-            war = Sdict[s]
-            m = war[0]
-            n = war[1]
-            a_m = self.aM[m]
-            a_n = self.aM[n]
-            for i in range(len(self.coords)):
-                coord = self.coords[i]
-                a_im = self.gridsM[m][coord[0], coord[1]]
-                a_in = self.gridsM[n][coord[0], coord[1]]
-                a0 = np.array([a_im, a_n])
-                a1 = np.array([a_in, a_m])
-                q[coord[0], coord[1]] += self.cd(a0, self.alpha)
-                q[coord[0], coord[1]] += self.cd(a1, self.alpha)
-            Q.append(np.floor(q).astype(int))
-        return(Q)
-
-    def S_to_dict(self, S):
-        """Convert war matrix to dictionary mapping unique wars to identities of belligerents
-
-        Parameters
-        ----------
-        S : matrix
-            M times M symmetric matrix of active wars
-
-        Returns
-        -------
-        dict
-            Dictionary mapping war ids to belligerent ids
-
-        """
-        Sdict = dict()
-        c = 0
-        for i in range(S.shape[0]):
-            for j in range(i+1, S.shape[0]):
-                if S[i, j] == 1:
-                    Sdict[c] = (i, j)
-                    c += 1
-        return(Sdict)
-
-    def cd(self, a, alpha):
-        """
-
-        Parameters
-        ----------
-        a : list
-            2d list of vpf inputs
-        alpha : scalar
-            cd shares of local strength, total enemy strength
-
-        Returns
-        -------
-        scalar
-            violence potential
-
-        """
-        return(a[0]**(1-self.alpha) * a[1]**self.alpha)
-
-    def sig_norm(self, x, sigma):
-        """
-
-        Parameters
-        ----------
-        x : 1d numpy array
-        sigma : positive scalar
-
-        Returns
-        -------
-        scalar
-            "sigma norm" of vector x
-
-        """
-        return(np.sum(x**sigma)**(1/sigma))
 
     def covMat(self, A, zero=True):
         """Short summary.
