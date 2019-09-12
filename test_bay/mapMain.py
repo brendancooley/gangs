@@ -16,7 +16,7 @@ T = 100
 sigma = .5
 eta = .3
 beta = 5
-rho = .5
+rho = .3
 
 bar_a = 60  # average number of gang members at centroid
 bar_b = 60  # average number of violent randos per block
@@ -28,6 +28,8 @@ params = {"sigma":sigma, "eta":eta, "beta":beta, "rho":rho, "bar_a":bar_a, "bar_
 
 imp.reload(map)
 mapT = map.map(N, M, T, params)
+mapT.gridsM[2]
+mapT.gridA
 
 plt.imshow(mapT.gridA, cmap="hot", interpolation="nearest")
 

@@ -9,7 +9,7 @@ import time
 
 class map:
 
-    def __init__(self, N, M, T, params):
+    def __init__(self, N, M, T, params, overlap=False):
         """Short summary.
 
         Parameters
@@ -20,6 +20,8 @@ class map:
             number of gangs
         T : int
         params : dict
+        overlap : bool
+            allow territories to overlap?
 
         Returns
         -------
@@ -36,7 +38,7 @@ class map:
         self.sigma = params["sigma"]  # elasticity of substitution violence production function
         self.eta = params["eta"]  # probability of random killing
         self.beta = params["beta"]  # second parameter of beta dist, governs group attack probabilities
-        self.rho = params["rho"]
+        self.rho = params["rho"]  # loss of strength gradient for gang territories
         self.bar_a = params["bar_a"]
         self.bar_b = params["bar_b"]
         self.var_scale = params["var_scale"]
@@ -68,7 +70,6 @@ class map:
             sd = self.bar_a * self.var_scale
             draw = stats.truncnorm.rvs(0, np.inf, loc=self.bar_a, scale=sd)
             grid_i[centroid[0], centroid[1]] = np.floor(draw)
-            self.gridA[centroid[0], centroid[1]] += np.floor(draw)  # update master grid
             f.add(active_cell)
 
             while len(f) < self.N**2:
@@ -77,25 +78,29 @@ class map:
                 for n in neighbors_a:
                     if 0 <= n[0] < N:
                         if 0 <= n[1] < N:  # check bounds
-                            if n not in f:
-                                neighbors_n = self.neighbors(n) # get neighbors of n
-                                alphas_n = []
-                                for m in neighbors_n:
-                                    if m in f:
-                                        alphas_n.append(grid_i[m[0], m[1]])
-                                mean_n = np.mean(alphas_n) * self.rho
-                                if mean_n==0:
-                                    mean_n = .01
-                                sd_n = mean_n * self.var_scale
-                                draw = stats.truncnorm.rvs(0, np.inf, loc=mean_n, scale=sd_n)
-                                grid_i[n[0], n[1]] = np.floor(draw)  # update group grid
-                                self.gridA[n[0], n[1]] += np.floor(draw)  # update master grid
-                                self.aM[i] += np.floor(draw)  # update group total strength
+                            if overlap is False and self.gridA[n[0], n[1]] == 0:  # if territory not already occupied
+                                if n not in f:  # if territory has not already been populated in this cycle
+                                    neighbors_n = self.neighbors(n) # get neighbors of n
+                                    alphas_n = []
+                                    for m in neighbors_n:
+                                        if m in f:
+                                            alphas_n.append(grid_i[m[0], m[1]])
+                                    mean_n = np.mean(alphas_n) * self.rho
+                                    if mean_n == 0:
+                                        mean_n = .01
+                                    sd_n = mean_n * self.var_scale
+                                    draw = stats.truncnorm.rvs(0, np.inf, loc=mean_n, scale=sd_n)
+                                    grid_i[n[0], n[1]] = np.floor(draw)  # update group grid
+                                    self.aM[i] += np.floor(draw)  # update group total strength
+                                    f.add(n)
+                            else:
+                                grid_i[n[0], n[1]] = 0
                                 f.add(n)
                             candidates.append(n)
                             active_cell = random.choice(candidates)
 
             self.gridsM.append(grid_i)
+            self.gridA += grid_i  # update master grid
 
         # populate randos
         sd_r = self.bar_b * self.var_scale
@@ -188,7 +193,7 @@ class map:
         return(bin)
 
     def Tweights(self):
-        """weights for sampling centroids
+        """weights for sampling centroids (prevents draws from occupied areas)
 
         Returns
         -------
@@ -196,12 +201,12 @@ class map:
             Length N**2, entry i, j = 1 / gridA[i, j]
 
         """
-        gridA = self.gridA + 1
-        weights = 1 / gridA
-        return(weights.ravel() / np.sum(weights))
+        sampleGrid = self.gridA + 1
+        sampleGrid[sampleGrid > 1] = 0
+        return(sampleGrid.ravel() / np.sum(sampleGrid))
 
     def rand_S(self, pWar):
-        """Draw random wars each with prbability Pwar and return symmetric war matrix
+        """Draw random wars each with probability Pwar and return symmetric war matrix
 
         Parameters
         ----------
