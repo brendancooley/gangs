@@ -70,4 +70,4 @@ for i in range(len(eta_vals)):
 
     S[:,i] = np.mean(scores, axis=1)
 
-np.savetxt("noiseSimResults.csv", S, delimiter=",")
+np.savetxt("output/noiseSimResults.csv", S, delimiter=",")
