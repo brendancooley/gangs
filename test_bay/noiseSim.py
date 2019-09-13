@@ -68,6 +68,6 @@ for i in range(len(eta_vals)):
             s = env.score_cluster(env.gridIDs.ravel(), clusters, env.M+1)
             scores[3+a, j] = s
 
-    S[:,j] = np.mean(scores, axis=1)
+    S[:,i] = np.mean(scores, axis=1)
 
 np.savetxt("noiseSimResults.csv", S, delimiter=",")
