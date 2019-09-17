@@ -34,6 +34,9 @@ plt.imshow(mapT.gridA, cmap="hot", interpolation="nearest")
 
 sim = mapT.sim(1000)
 sim_covM = mapT.covMat(sim)
+sim_covM
+mapT.covMtoCorM(sim_covM)
+
 
 clusters1 = mapT.spect_clust(sim_covM, M)
 np.reshape(clusters1, (mapT.N, mapT.N))
@@ -67,6 +70,9 @@ for i in range(4):
 
 # plt.imshow(sim_covM, cmap="hot", interpolation="nearest")
 
+
+A = np.array([])
+np.vstack([A, [1, 2, 3]])
 
 
 np.trace(sim_covM)

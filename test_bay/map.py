@@ -353,7 +353,7 @@ class map:
             gammaL = X.level().reshape(N, N)
         return(gammaL)
 
-    def covMat(self, A, zero=True, cor=False):
+    def covMat(self, A, zero=False, cor=False):
         """Short summary.
 
         Parameters
@@ -378,16 +378,41 @@ class map:
             covA = np.cov(A)
             # correct for floating point problems with positive semi definiteness, see:
             # https://stackoverflow.com/questions/41515522/numpy-positive-semi-definite-warning
-            min_eig = np.min(np.real(np.linalg.eigvals(covA)))
-            if min_eig < 0:
-                covA -= 10*min_eig * np.eye(*covA.shape)
         # zero out negative values
         if zero is True:
             for i in range(len(covA)):
                 for j in range(len(covA)):
                     if covA[i, j] < 0:
                         covA[i, j] = 0
+            min_eig = np.min(np.real(np.linalg.eigvals(covA)))
+            if min_eig < 0:
+                covA -= 10*min_eig * np.eye(*covA.shape)
+        else:
+            min_eig = np.min(np.real(np.linalg.eigvals(covA)))
+            if min_eig < 0:
+                covA -= 10*min_eig * np.eye(*covA.shape)
         return(covA)
+
+    def covMtoCorM(self, covM):
+        """covert covariance matrix to correlation matrix
+
+        Parameters
+        ----------
+        covM : type
+            Description of parameter `covM`.
+
+        Returns
+        -------
+        type
+            Description of returned object.
+
+        """
+
+        D = np.diag(np.sqrt(np.diag(covM)))
+        Dinv = np.linalg.inv(D)
+        corM = np.matmul(np.matmul(Dinv, covM), Dinv)
+
+        return(corM)
 
     def L(self, W):
         """Short summary.
@@ -425,7 +450,7 @@ class map:
         L = I - W
         D = np.sum(W, axis=1)
 
-        ngL = np.matmul(np.matmul(np.diag(D ** (-1/2)), L), np.diag(D ** (-1/2)))
+        ngL = I - np.matmul(np.matmul(np.diag(D ** (-1/2)), W), np.diag(D ** (-1/2)))
 
         return(ngL)
 
