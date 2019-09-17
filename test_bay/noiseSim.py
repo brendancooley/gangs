@@ -27,6 +27,7 @@ nSims = 10
 alphas = [.5, 1, 100, 10000]  # alpha trial values for nr_spect_clust
 
 S = None
+col = 0
 
 for T in Times:
 
@@ -106,13 +107,13 @@ for T in Times:
             scores = np.zeros((row, nSims))
 
         scores[:,j] = scores_j
-        print(scores)
 
     if S is None:
         S = np.zeros((row, len(Times)))
     else:
         pass
 
-    S[:,i] = np.mean(scores, axis=1)
+    S[:,col] = np.mean(scores, axis=1)
+    col += 1
 
 np.savetxt("output/noiseSimResults.csv", S, delimiter=",")
