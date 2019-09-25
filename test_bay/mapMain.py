@@ -4,6 +4,7 @@ import scipy.stats as stats
 import matplotlib.pyplot as plt
 from sklearn import cluster
 import scipy
+import itertools
 
 import map
 
@@ -14,7 +15,7 @@ M = 3
 T = 100
 
 sigma = .5
-eta = 0  # attack probabilities for randos (noise)
+eta = .2  # attack probabilities for randos (noise)
 beta1 = .5
 beta2 = 5
 rho = .6
@@ -30,25 +31,65 @@ params = {"sigma":sigma, "eta":eta, "beta1":beta1, "beta2":beta2, "rho":rho, "ba
 imp.reload(map)
 mapT = map.map(N, M, params)
 plt.imshow(mapT.gridA, cmap="hot", interpolation="nearest")
-mapT.gridA
-mapT.Q()
+# plt.imshow(mapT.gridR, cmap="hot", interpolation="nearest")
 
-sim = mapT.sim(10000)
+sim = mapT.sim(T)
 sim_covM = mapT.covMat(sim)
-plt.imshow(sim_covM, cmap="hot", interpolation="nearest")
+sim_corM = mapT.covMtoCorM(sim_covM)
 
-# Yuan et al method
-# ngL = mapT.ngL(sim_covM)
-# L = mapT.L(sim_covM)
-# Kr = np.linalg.inv(L)
-# Y = mapT.Y(Kr, alpha=10000)
+clusters = mapT.k_means(sim_corM, M)
+np.reshape(clusters, (mapT.N, mapT.N))
+mapT.score_cluster(mapT.gridIDs.ravel(), clusters, mapT.M+1)
+
+Gamma_L = mapT.traceMin(sim_covM)
+Gamma_Lcor = mapT.covMtoCorM(Gamma_L)
+clusters = mapT.k_means(Gamma_Lcor, M)
+np.reshape(clusters, (mapT.N, mapT.N))
+mapT.score_cluster(mapT.gridIDs.ravel(), clusters, mapT.M+1)
+
+
+clusters1 = mapT.spect_clust(sim_covM, M)
+np.reshape(clusters1, (mapT.N, mapT.N))
+mapT.score_cluster(mapT.gridIDs.ravel(), clusters1, mapT.M+1)  # using correlation matrix works nicely
+
+sim_corM = mapT.covMat(sim, cor=True)
+clusters2 = mapT.spect_clust(sim_corM, M)
+np.reshape(clusters2, (mapT.N, mapT.N))
+mapT.score_cluster(mapT.gridIDs.ravel(), clusters2, mapT.M+1)
+
+
+Gamma_L = mapT.traceMin(sim_covM)
+clusters3 = mapT.spect_clust(Gamma_L, M)
+np.reshape(clusters3, (mapT.N, mapT.N))
+mapT.score_cluster(mapT.gridIDs.ravel(), clusters3, mapT.M+1)
+
+clusters4 = mapT.spect_clust(Y, M)
+np.reshape(clusters4, (mapT.N, mapT.N))
+mapT.score_cluster(mapT.gridIDs.ravel(), clusters4, mapT.M+1)
+
+
+
+pmts = itertools.permutations(np.arange(0,4))
+for p in pmts:
+    print(p)
+
+p[1]
+
+for i in range(4):
+    print(i)
+
+# plt.imshow(sim_covM, cmap="hot", interpolation="nearest")
+
+
+A = np.array([])
+np.vstack([A, [1, 2, 3]])
+
 
 np.trace(sim_covM)
 Gamma_L = mapT.traceMin(sim_covM)
 np.trace(Gamma_L)
 
 # replot covariance matrix with permutation
-clusters = mapT.spect_clust(Gamma_L, M)
 clusters.reshape(mapT.N, mapT.N)
 # trace minimization helps immensely in a setting with no noise...helps reduce within-district variance
 # just converting to correlation matrix would also probably help...what's the logic here?
@@ -62,7 +103,7 @@ plt.imshow(Gamma_L, cmap="hot", interpolation="nearest")
 plt.imshow(covMP, cmap="hot", interpolation="nearest")
 
 
-
+list(itertools.permutations(np.array([0,1,2])))
 
 
 

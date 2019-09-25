@@ -8,6 +8,7 @@ import timeit
 import time
 import copy
 import matplotlib.pyplot as plt
+import itertools
 
 class map:
 
@@ -52,10 +53,13 @@ class map:
         self.coords, self.C =  self.grid_to_C()
 
         self.gridA = np.copy(self.gridBase)  # total population on each cell
+        self.gridIDs = np.empty_like(self.gridBase, dtype=int)
+        self.gridIDs.fill(self.M)  # last id for unoccupied territory...replace below if occupied
 
         self.gridsM = []
         self.aM = np.zeros(M)
 
+        id = 0
         for i in range(self.M):
 
             grid_i = np.copy(self.gridBase)
@@ -72,6 +76,7 @@ class map:
             sd = self.bar_a * self.var_scale
             draw = stats.truncnorm.rvs(0, np.inf, loc=self.bar_a, scale=sd)
             grid_i[centroid[0], centroid[1]] = np.floor(draw)
+            self.gridIDs[centroid[0], centroid[1]] = id
             f.add(active_cell)
 
             while len(f) < self.N**2:
@@ -94,6 +99,7 @@ class map:
                                     draw = stats.truncnorm.rvs(0, np.inf, loc=mean_n, scale=sd_n)
                                     if draw >= min_m:
                                         grid_i[n[0], n[1]] = np.floor(draw)  # update group grid
+                                        self.gridIDs[n[0], n[1]] = id
                                         self.aM[i] += np.floor(draw)  # update group total strength
                                     else:
                                         grid_i[n[0], n[1]] = 0
@@ -106,6 +112,7 @@ class map:
 
             self.gridsM.append(grid_i)
             self.gridA += grid_i  # update master grid
+            id += 1
 
         # populate randos
         sd_r = self.bar_b * self.var_scale
@@ -211,6 +218,19 @@ class map:
         return(sampleGrid.ravel() / np.sum(sampleGrid))
 
     def sim(self, T):
+        """Simulate T periods of violence
+
+        Parameters
+        ----------
+        T : int
+            Number of periods to simulate
+
+        Returns
+        -------
+        A
+            N**2 \times T matrix of shooting counts
+
+        """
 
         A = np.zeros((self.N**2, T))  # initialize attack matrix
         Q = self.Q()  # violence potential
@@ -333,7 +353,7 @@ class map:
             gammaL = X.level().reshape(N, N)
         return(gammaL)
 
-    def covMat(self, A, zero=True):
+    def covMat(self, A, zero=False, cor=False):
         """Short summary.
 
         Parameters
@@ -342,6 +362,8 @@ class map:
             N times T matrix of attack vectors stacked rowwise, each row denoting attacks per period in an unraveled district.
         zero : bool
             convert negative covariance entries to zero?
+        cor : bool
+            convert to correlation matrix?
 
         Returns
         -------
@@ -349,19 +371,48 @@ class map:
             N times N matrix of covariances
 
         """
-        covA = np.cov(A)
-        # correct for floating point problems with positive semi definiteness, see:
-        # https://stackoverflow.com/questions/41515522/numpy-positive-semi-definite-warning
-        min_eig = np.min(np.real(np.linalg.eigvals(covA)))
-        if min_eig < 0:
-            covA -= 10*min_eig * np.eye(*covA.shape)
-        # zero out negative covariances
+        if cor is True:
+            A[:,0] += .001  # add small value to first period to eliminate zeros
+            covA = np.corrcoef(A)
+        else:
+            covA = np.cov(A)
+            # correct for floating point problems with positive semi definiteness, see:
+            # https://stackoverflow.com/questions/41515522/numpy-positive-semi-definite-warning
+        # zero out negative values
         if zero is True:
             for i in range(len(covA)):
                 for j in range(len(covA)):
                     if covA[i, j] < 0:
                         covA[i, j] = 0
+            min_eig = np.min(np.real(np.linalg.eigvals(covA)))
+            if min_eig < 0:
+                covA -= 10*min_eig * np.eye(*covA.shape)
+        else:
+            min_eig = np.min(np.real(np.linalg.eigvals(covA)))
+            if min_eig < 0:
+                covA -= 10*min_eig * np.eye(*covA.shape)
         return(covA)
+
+    def covMtoCorM(self, covM):
+        """covert covariance matrix to correlation matrix
+
+        Parameters
+        ----------
+        covM : type
+            Description of parameter `covM`.
+
+        Returns
+        -------
+        type
+            Description of returned object.
+
+        """
+
+        D = np.diag(np.sqrt(np.diag(covM)))
+        Dinv = np.linalg.inv(D)
+        corM = np.matmul(np.matmul(Dinv, covM), Dinv)
+
+        return(corM)
 
     def L(self, W):
         """Short summary.
@@ -399,7 +450,7 @@ class map:
         L = I - W
         D = np.sum(W, axis=1)
 
-        ngL = np.matmul(np.matmul(np.diag(D ** (-1/2)), L), np.diag(D ** (-1/2)))
+        ngL = I - np.matmul(np.matmul(np.diag(D ** (-1/2)), W), np.diag(D ** (-1/2)))
 
         return(ngL)
 
@@ -410,7 +461,31 @@ class map:
 
         return(out)
 
-    def spect_clust(self, gammaL, M, delta=None):
+    def nr_spect_clust(self, covM, M, alpha):
+        """Implement method in Li et al
+
+        Parameters
+        ----------
+        covM : type
+            Description of parameter `covM`.
+        M : type
+            Description of parameter `M`.
+        alpha : type
+            Description of parameter `alpha`.
+
+        Returns
+        -------
+        type
+            Description of returned object.
+
+        """
+        ngL = self.ngL(covM)
+        L = self.L(covM)
+        Kr = np.linalg.inv(L)
+        Y = self.Y(Kr, alpha=alpha)
+        return(self.spect_clust(Y, M))
+
+    def spect_clust(self, covM, M, delta=None, eig_plot=False):
         """Conduct spectral clustering on trace-minimized covariance matrix
 
         Parameters
@@ -428,23 +503,66 @@ class map:
             Cluster ids for each district.
 
         """
-        G = gammaL
+        G = covM
         if delta is not None:
             S = mapT.C_bin_kernel(delta)  # TODO: provide option for exp kernel
-            G = S * Gamma_L
+            G = S * covM
 
         # extract eigenvectors
         # w, v = np.linalg.eig(G)
         w, v = np.linalg.eigh(G) # NOTE: was getting complex eigenvalues using linalg.eig
         kw = np.flip(np.argsort(w))[0:M+1]
         kv = v.T[kw]  # NOTE: need to transpose eigenvectors
-        print("eigenvalues 0-M+5:")
-        print(w[np.flip(np.argsort(w))[0:M+5]])
+        if eig_plot is True:
+            plt.plot(w[np.flip(np.argsort(w))], "r+")
 
         # cluster first M+1 eigenvectors
         km = cluster.k_means(kv.transpose(), n_clusters=M+1)
         km_lab = km[1]
         return(km_lab)
+
+    def k_means(self, corM, M):
+        km = cluster.k_means(corM, M+1)
+        km_lab = km[1]
+        return(km_lab)
+
+    def score_cluster(self, truth, cluster, M):
+        """produce a score for how closely a cluster vector matches the truth vector
+
+        Parameters
+        ----------
+        truth : vector
+            vector length N ** 2 of true cluster assignments
+        cluster : vector
+            vector length N ** 2 of output cluster assignments
+        M : int
+            Number of clusters (self.M + 1)
+
+        Returns
+        -------
+        int
+            Number of districts for which proposed cluster disagrees with truth
+
+        """
+
+        ids = np.arange(0, M)
+        pmts = itertools.permutations(ids)
+
+        scores = []
+        for p in pmts:
+            c = np.copy(cluster)
+            # permute entry
+            for i in range(len(c)):
+                for j in range(len(p)):
+                    if c[i] == j:
+                        c[i] = p[j]
+                        break
+            # calculate score
+            diff = np.where(truth - c == 0, 0, 1) # how many entries disagree?
+            scores.append(np.sum(diff))
+
+        return(np.min(scores))
+
 
     def permute_covM(self, covM, clusters):
         """reorder covariance matrix to correspond to clustering output
@@ -481,14 +599,12 @@ class map:
                     clustersP[i] = nc
 
         covMC = np.copy(covM)
-        plt.imshow(covMC, cmap="hot", interpolation="nearest")
         p = []
         for i in range(len(counts)):
             for j in range(len(clustersP)):
                 if clustersP[j] == i:
                     p.append(j)
         covMC[:,:] = covMC[p,:]
-        plt.imshow(covMC, cmap="hot", interpolation="nearest")
         covMC[:,:] = covMC[:,p]
 
         return(covMC)
