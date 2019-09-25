@@ -1,6 +1,6 @@
 ## Model
 
-There are $J$ districts in the city ($i, j \in \mathcal{J} = \left\{1, ..., J \right\}$). $N_i$ residents live in each district. The city is also inhabited by $K$ gangs ($k, \ell \in \mathcal{K} = \left\{1, ..., K \right\}$). Each gang is endowed with a $M_k$ soldiers that are spread across territories they control. Gang $k$'s footprint in territory $i$ is $m_{ki}$ where $\sum_i m_{ki} = M_k$. A partition function $\pi : \mathcal{N} \rightarrow \left\{ 0, \mathcal{K} \right\}$ assigns territories to the gangs that control them, where $\pi(i) = 0$ indicates the absence of any gang activity. Gangs do not allocate soldiers to territories they do not control, $\pi(i) = k \implies m_{\ell i} = 0$ for all $\ell \neq k$.
+There are $J$ districts in the city ($i, j \in \mathcal{J} = \left\{1, ..., J \right\}$). $N_i$ residents live in each district. The city is also inhabited by $K$ gangs ($k, \ell \in \mathcal{K} = \left\{1, ..., K \right\}$). Each gang is endowed with a $M_k$ soldiers that are spread across territories they control. Gang $k$'s footprint in territory $i$ is $m_{ki}$ where $\sum_i m_{ki} = M_k$. A partition function $\pi : \mathcal{N} \rightarrow \left\{ \emptyset, \mathcal{K} \right\}$ assigns territories to the gangs that control them, where $\pi(i) = 0$ indicates the absence of any gang activity. Gangs do not allocate soldiers to territories they do not control, $\pi(i) = k \implies m_{\ell i} = 0$ for all $\ell \neq k$.
 
 We observe data on geo-located shootings for $T$ periods, indexed $\left\{ 1, ..., T \right\}$. We (counterfactually) hold the above quantities constant over time. There are two types of shootings that occur in the city -- gang related and non-gang related. The probability that a resident commits a shooting in any periods is $\eta$, meaning the expected number of shootings in district $i$ is $y_i = \eta N_i$ with variance $\eta (1 - \eta) N_i$.^[In other words, random shootings are distributed i.i.d. Binomial.]
   
@@ -28,17 +28,20 @@ v_{it} = x_{it} + y_{it}
 
 The dyadic shocks produce positive correlations in violence across districts controlled by the same gang and gangs find themselves in conflict. In the Appendix, we show the covariance in shootings between districts $i$ and $j$ is
 $$
-\Cov [v_{it}, v_{jt}] = \begin{cases}
-\sum_k \Var [ \epsilon_{\pi(i), k}^t ] Q_i(\pi(i), k) Q_j(\pi(j), k) & \text{if } \pi(i) = \pi(j) \\
+\varphi_{ij} = \Cov [v_{it}, v_{jt}] = \begin{cases}
 \sum_k \Var [ \epsilon_{\pi(i), k}^t ] Q_i(\pi(i), k)^2 + \eta (1 - \eta) N_i & \text{if } i = j \\
-\Var[ \epsilon_{\pi(i), \pi(j)}^t ] Q_i(\pi(i), \pi(j)) Q_j(\pi(j), \pi(i)) & \text{if } \pi(i) \neq \pi(j)
+\sum_k \Var [ \epsilon_{\pi(i), k}^t ] Q_i(\pi(i), k) Q_j(\pi(j), k) & \text{if } \pi(i) = \pi(j) \\
+\Var[ \epsilon_{\pi(i), \pi(j)}^t ] Q_i(\pi(i), \pi(j)) Q_j(\pi(j), \pi(i)) & \text{if } \pi(i) \neq \pi(j) \text{ and } \pi(i), \pi(j) \neq \emptyset \\
+0 & \text{otherwise}
 \end{cases}
 $$
 In the first case, the same gang owns both districts. The magnitude of the covariance depends on the variance of the conflict shocks this gang experiences with all other gangs and the violence potential of both territories. The second case is simply the within-district variance, which is also affected by the variance in resident violence. The last case captures covariance across gang territories, which is affected by the variance of the dyadic violence shocks between gangs $\pi(i)$ and $\pi(j)$.
 
 **Corollary X:** $\pi(i) = \pi(j) \implies \Cov [v_{it}, v_{jt}] > \Cov [v_{it}, v_{kt}]$ for all districts $k \neq \pi(i)$.
 
-Corollary X states that the covariance in shootings within a gang's set of territories is greater in expectation than the covariance in shootings across gang territories. If the partition function is known, then the covariance matrix can be organized as shown in Figure X, where districts are sorted according to the partition function.
+Corollary X states that the covariance in shootings within a gang's set of territories is greater in expectation than the covariance in shootings across gang territories. 
+
+Let $\rho: \mathcal{J} \rightarrow \mathcal{J}$ be a permutation on the set of districts such that $\rho(i) < \rho(j) \iff \pi(i) < \pi(j)$ and $\rho(i) < \rho(j)$ if $\pi(i) \neq \emptyset$ and $\pi(j) = \emptyset$. Let $J_k$ denote the number of districts belonging to gang $k$ where $J_\emptyset$ is the number of districts districts without gang activity. Then, the covariance matrix $\bm{A}_{\rho} = \left( \varphi_{i, j} \right) \in \mathbb{R}_{+}^{J \times J}$ can written in block diagonal form as shown in Figure X.
 
 ## Appendix
 

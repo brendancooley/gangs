@@ -292,6 +292,17 @@ $endif$
 \newcommand{\Var}{\mathrm{Var}}
 \newcommand{\Cov}{\mathrm{Cov}}
 
+% brackets on top/bottom of block matrix
+\newcommand\overmat[2]{% http://tex.stackexchange.com/a/102468/5764
+  \makebox[0pt][l]{$$\smash{\overbrace{\phantom{%
+    \begin{matrix}#2\end{matrix}}}^{\text{$$#1$$}}}$$}#2}
+\newcommand\undermat[2]{% http://tex.stackexchange.com/a/102468/5764
+  \makebox[0pt][l]{$$\smash{\underbrace{\phantom{%
+    \begin{matrix}#2\end{matrix}}}_{\text{$$#1$$}}}$$}#2}
+
+% nice matrix package
+\usepackage{nicematrix}
+
 %%%
 
 % set default figure placement to htbp
