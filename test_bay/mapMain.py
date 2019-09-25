@@ -15,7 +15,7 @@ M = 3
 T = 100
 
 sigma = .5
-eta = .1  # attack probabilities for randos (noise)
+eta = .2  # attack probabilities for randos (noise)
 beta1 = .5
 beta2 = 5
 rho = .6
@@ -31,11 +31,21 @@ params = {"sigma":sigma, "eta":eta, "beta1":beta1, "beta2":beta2, "rho":rho, "ba
 imp.reload(map)
 mapT = map.map(N, M, params)
 plt.imshow(mapT.gridA, cmap="hot", interpolation="nearest")
+# plt.imshow(mapT.gridR, cmap="hot", interpolation="nearest")
 
-sim = mapT.sim(1000)
+sim = mapT.sim(T)
 sim_covM = mapT.covMat(sim)
-sim_covM
-mapT.covMtoCorM(sim_covM)
+sim_corM = mapT.covMtoCorM(sim_covM)
+
+clusters = mapT.k_means(sim_corM, M)
+np.reshape(clusters, (mapT.N, mapT.N))
+mapT.score_cluster(mapT.gridIDs.ravel(), clusters, mapT.M+1)
+
+Gamma_L = mapT.traceMin(sim_covM)
+Gamma_Lcor = mapT.covMtoCorM(Gamma_L)
+clusters = mapT.k_means(Gamma_Lcor, M)
+np.reshape(clusters, (mapT.N, mapT.N))
+mapT.score_cluster(mapT.gridIDs.ravel(), clusters, mapT.M+1)
 
 
 clusters1 = mapT.spect_clust(sim_covM, M)

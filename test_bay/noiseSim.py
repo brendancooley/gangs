@@ -42,51 +42,52 @@ for T in Times:
 
         row = 0
 
-        # raw covariance matrix
+        # hold environment fixed
         env = map.map(N, M, params)
         A = env.sim(T)
         covM = env.covMat(A)
+        corM = env.covMtoCorM(covM)
+        Gamma_L = env.traceMin(covM)
+        Gamma_Lcor = env.covMtoCorM(Gamma_L)
+
+        # raw covariance matrix
         clusters = env.spect_clust(covM, M)
         s = env.score_cluster(env.gridIDs.ravel(), clusters, env.M+1)
         scores_j.append(s)
         row += 1
 
         # correlation matrix
-        env = map.map(N, M, params)
-        A = env.sim(T)
-        covM = env.covMat(A)
-        corM = env.covMtoCorM(covM)
         clusters = env.spect_clust(corM, M)
         s = env.score_cluster(env.gridIDs.ravel(), clusters, env.M+1)
         scores_j.append(s)
         row += 1
 
+        # k-means (raw)
+        clusters = env.k_means(corM, M)
+        s = env.score_cluster(env.gridIDs.ravel(), clusters, env.M+1)
+        scores_j.append(s)
+        row += 1
+
         # trace minimization (cov)
-        env = map.map(N, M, params)
-        A = env.sim(T)
-        covM = env.covMat(A)
-        Gamma_L = env.traceMin(covM)
         clusters = env.spect_clust(Gamma_L, M)
         s = env.score_cluster(env.gridIDs.ravel(), clusters, env.M+1)
         scores_j.append(s)
         row += 1
 
         # trace minimization (cor)
-        env = map.map(N, M, params)
-        A = env.sim(T)
-        covM = env.covMat(A)
-        Gamma_L = env.traceMin(covM)
-        Gamma_Lcor = env.covMtoCorM(Gamma_L)
         clusters = env.spect_clust(Gamma_Lcor, M)
+        s = env.score_cluster(env.gridIDs.ravel(), clusters, env.M+1)
+        scores_j.append(s)
+        row += 1
+
+        # k-means (trace minimization)
+        clusters = env.k_means(Gamma_Lcor, M)
         s = env.score_cluster(env.gridIDs.ravel(), clusters, env.M+1)
         scores_j.append(s)
         row += 1
 
         # noise-robust (cov)
         for a in range(len(alphas)):
-            env = map.map(N, M, params)
-            A = env.sim(T)
-            covM = env.covMat(A)
             clusters = env.nr_spect_clust(covM, M, alpha=alphas[a])
             s = env.score_cluster(env.gridIDs.ravel(), clusters, env.M+1)
             scores_j.append(s)
@@ -94,10 +95,6 @@ for T in Times:
 
         # noise-robust (cor)
         for a in range(len(alphas)):
-            env = map.map(N, M, params)
-            A = env.sim(T)
-            covM = env.covMat(A)
-            corM = env.covMtoCorM(covM)
             clusters = env.nr_spect_clust(corM, M, alpha=alphas[a])
             s = env.score_cluster(env.gridIDs.ravel(), clusters, env.M+1)
             scores_j.append(s)

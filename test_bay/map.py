@@ -521,6 +521,11 @@ class map:
         km_lab = km[1]
         return(km_lab)
 
+    def k_means(self, corM, M):
+        km = cluster.k_means(corM, M+1)
+        km_lab = km[1]
+        return(km_lab)
+
     def score_cluster(self, truth, cluster, M):
         """produce a score for how closely a cluster vector matches the truth vector
 
