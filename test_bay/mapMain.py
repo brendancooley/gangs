@@ -46,6 +46,7 @@ Gamma_Lcor = mapT.covMtoCorM(Gamma_L)
 clusters = mapT.k_means(Gamma_Lcor, M)
 np.reshape(clusters, (mapT.N, mapT.N))
 mapT.score_cluster(mapT.gridIDs.ravel(), clusters, mapT.M+1)
+# can find examples in which trace minimization helps a lot
 
 
 clusters1 = mapT.spect_clust(sim_covM, M)
@@ -58,10 +59,12 @@ np.reshape(clusters2, (mapT.N, mapT.N))
 mapT.score_cluster(mapT.gridIDs.ravel(), clusters2, mapT.M+1)
 
 
-Gamma_L = mapT.traceMin(sim_covM)
-clusters3 = mapT.spect_clust(Gamma_L, M)
+# Gamma_L = mapT.traceMin(sim_covM)
+clusters3 = mapT.spect_clust(Gamma_Lcor, M)
 np.reshape(clusters3, (mapT.N, mapT.N))
 mapT.score_cluster(mapT.gridIDs.ravel(), clusters3, mapT.M+1)
+# but interesting that spectral clustering seems to perform better on Gamma_L rather than Gamma_Lcor
+# spectral clustering of Gamma_L is most principled way to go I think
 
 clusters4 = mapT.spect_clust(Y, M)
 np.reshape(clusters4, (mapT.N, mapT.N))
