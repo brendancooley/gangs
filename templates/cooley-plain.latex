@@ -1,8 +1,6 @@
 \PassOptionsToPackage{unicode=true}{hyperref} % options for packages loaded elsewhere
 \PassOptionsToPackage{hyphens}{url}
-$if(colorlinks)$
-\PassOptionsToPackage{dvipsnames,svgnames*,x11names*}{xcolor}
-$endif$$if(dir)$$if(latex-dir-rtl)$
+$if(dir)$$if(latex-dir-rtl)$
 \PassOptionsToPackage{RTLdocument}{bidi}
 $endif$$endif$%
 \documentclass[$if(fontsize)$$fontsize$,$endif$$if(lang)$$babel-lang$,$endif$$if(papersize)$$papersize$paper,$endif$$if(beamer)$ignorenonframetext,$if(handout)$handout,$endif$$if(aspectratio)$aspectratio=$aspectratio$,$endif$$endif$$for(classoption)$$classoption$$sep$,$endfor$]{$documentclass$}
@@ -166,9 +164,6 @@ $endif$
 $if(verbatim-in-note)$
 \usepackage{fancyvrb}
 $endif$
-$if(colorlinks)$
-\usepackage{xcolor}
-$endif$
 \usepackage{hyperref}
 \hypersetup{
 $if(title-meta)$
@@ -271,6 +266,11 @@ $endif$
 
 %%% Cooley adds %%%
 
+% xcolor
+\usepackage[table]{xcolor}% http://ctan.org/pkg/xcolor
+\def\cca#1{\cellcolor{black!#10}\color{black!#10}{#1}}
+
+% bold
 \usepackage{bm}
 
 % conditionally include solutions
