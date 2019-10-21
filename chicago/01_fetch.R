@@ -14,9 +14,10 @@ for (i in helperFiles) {
 libs <- c("tidyverse", "lubridate", "acs", "tigris")
 ipak(libs)
 
-### Crimes ###
-
 crimes_raw_url <- "https://www.dropbox.com/s/h7da81i9qt876tf/chi_crimes.csv?dl=1"
+ss_raw_url <- "https://www.dropbox.com/s/3qfruwbsg1t7g23/shotspotter.csv?dl=1"
+
+### Victim-Based Crime Reports ###
 
 crimes <- read_csv(crimes_raw_url)
 
@@ -29,7 +30,13 @@ crimes$year <- as.Date(paste0(crimes$Year, "-01-01"))
 crimes$lat <- crimes$Latitude
 crimes$lng <- crimes$Longitude
 
-hnfs <- c("0110", "0130", "041A", "041B")
+hnfs <- c("0110", "0130", "041A", "041B")  # First and Second degree homicide and Aggravated Battery with a handgun or other firearm
+# NOTE: see codes: https://data.cityofchicago.org/Public-Safety/Chicago-Police-Department-Illinois-Uniform-Crime-R/c7ck-438e/data
+# NOTE: does not include aggravated assault: threat/display of firearm (0450, 0451)
+# NOTE: does not include aggravated battery against protected employee by firearm (0480, 0481)
+# NOTE: does not include ritual mutilation by firearm (0490, 0491)
+# NOTE: does not include weapons violation, unlawful use of firearm (0141A, 0141B)
+
 crimes$hnfs <- ifelse(crimes$IUCR %in% hnfs, 1, 0)
 crimes$narcotics <- ifelse(crimes$`FBI Code` == '18', 1, 0)
 
@@ -37,6 +44,17 @@ crimesClean <- crimes %>% filter(hnfs==1 | narcotics==1) %>% filter(!is.na(lat) 
 
 write_csv(crimesClean, 'data/chi_clean.csv')  # to data folder
 write_csv(crimesClean, 'shiny/chi_clean.csv') # to shiny folder
+
+### Shotspotter ###
+
+# NOTE: not completely rolled out yet, biased coverage
+
+ss <- read_csv(ss_raw_url, col_types = cols(day="c", month="c", year="c", yearmonth="c"))
+ss <- ss %>% filter(day!="#VALUE!")
+ss$day <- as.integer(ss$day)
+ss$month <- as.integer(ss$month)
+ss$year <- as.integer(ss$year)
+ss$yearmonth <- as.integer(ss$yearmonth)
 
 ### Census ###
 
@@ -62,14 +80,10 @@ for (i in years) {
   # income2016 <- acs.fetch(endyear = 2016, span = 5, geography = geo,
   #                         table.number = c("B19001"), col.names = "pretty")
 
-
   # Per capita income given by , "B19301"
-
   # What did we get? (It's a list, not a dataframe)
-
-  names(attributes(income))
-
-  attr(income, "acs.colnames")
+  # names(attributes(income))
+  # attr(income, "acs.colnames")
 
   # Converting the Data to a Dataframe for Merging
   # convert to a data.frame for merging
@@ -80,8 +94,8 @@ for (i in years) {
                           income@estimate,
                           stringsAsFactors = FALSE)
 
-  rownames(income_df)<-1:nrow(income_df)
-  names(income_df)<-c("GEOID", "total", "less_10" , "between_10-15", "between_15-20", "between20-25",
+  rownames(income_df) <- 1:nrow(income_df)
+  names(income_df) <- c("GEOID", "total", "less_10" , "between_10-15", "between_15-20", "between20-25",
                       "between_25-30", "between_30-35", "between_35-40", "between_40-45",
                       "between_45-50", "between_50-60", "between_60-75", "between_75-100",
                       "between_100-125", "between_125-150", "between_150-200" ,"over_200")
