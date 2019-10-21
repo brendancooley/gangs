@@ -7,11 +7,15 @@
 if (!'chicago' %in% strsplit(getwd(), "/")[[1]]) {
   setwd('chicago')
 }
-# getwd()
 
-library(tidyverse)
+helperPath <- "../source/R/"
+helperFiles <- list.files(helperPath)
+for (i in helperFiles) {
+  source(paste0(helperPath, i))
+}
 
-source("unified.data.R")
+libs <- c("tidyverse")
+ipak(libs)
 
 ###
 
