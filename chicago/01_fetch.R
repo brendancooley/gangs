@@ -11,7 +11,7 @@ for (i in helperFiles) {
   source(paste0(helperPath, i))
 }
 
-libs <- c("tidyverse", "lubridate", "acs", "tigris")
+libs <- c("tidyverse", "lubridate", "acs", "tigris", "sp", "rgdal", "tigris", "raster", "leaflet", "leaflet.extras")
 ipak(libs)
 
 crimes_raw_url <- "https://www.dropbox.com/s/h7da81i9qt876tf/chi_crimes.csv?dl=1"
@@ -19,6 +19,9 @@ ss_raw_url <- "https://www.dropbox.com/s/3qfruwbsg1t7g23/shotspotter.csv?dl=1"
 
 years <- c(2009, 2016)  # years for which to get census data
 aggregation <- "week"
+
+# Reading in Census Tract Boundaries
+cook.blocks <-  block_groups("Illinois", county = "031", year = "2016")   #Cook County Block Groups
 
 ### Victim-Based Crime Reports ###
 
@@ -62,9 +65,6 @@ ss$yearmonth <- as.integer(ss$yearmonth)
 ### GET CENSUS DATA ###
 
 for (i in years) {
-
-  # Reading in Census Tract Boundaries
-  cook.blocks <-  block_groups("Illinois", county = "031", year = "2016")   #Cook County Block Groups
 
   # Obtaining the ACS Data begins with inputting the multi-use key
   api.key.install(key="9e14fb5cda17c74f8b723def3de2ada902631d4c")
@@ -136,35 +136,43 @@ chi_shots$GEOID <- chi_shots_geoids$GEOID  # append geoids to chi_shots
 
 # summarize counts
 chi_shots_agg <- chi_shots %>% as_tibble() %>% group_by_("GEOID", aggregation) %>%
-  summarise(hnfs=n())
+  summarise(hnfs=n()) %>% ungroup()
 chi_shots_agg %>% summary()
 
 # cook_shots <- geo_join(cook.blocks, chi_shots_agg, "GEOID", "GEOID")
 
-Chicago <- readOGR(".","Chicago")
+Chicago <- readOGR(".", "Chicago")
 Chicago <- spTransform(Chicago, proj4string(cook.blocks))  # match CRS 
-# proj4string(Chicago)
-# proj4string(cook_shots)
 chi_blocks <- intersect(cook.blocks, Chicago)
 
 GEOID <- chi_blocks$GEOID
 unit <- chi_shots[[aggregation]] %>% unique() %>% sort()
 chi_blank <- crossing(GEOID, unit)
 colnames(chi_blank)[colnames(chi_blank)=="unit"] <- aggregation
-chi_blank$hnfs <- 0
+chi_blank$hnfs <- NA
+chi_blank$hnfs <- as.integer(chi_blank$hnfs)
 
-anti_join(chi_shots_agg, chi_blank)
+detach("package:raster", unload=TRUE)
+chi_all <- chi_blank %>% left_join(chi_shots_agg, by=c("GEOID", aggregation)) %>% 
+  mutate(hnfs = coalesce(hnfs.x, hnfs.y)) %>% 
+  select(-hnfs.x, -hnfs.y)
 
+chi_all$hnfs <- ifelse(is.na(chi_all$hnfs), 0, chi_all$hnfs)
+
+
+
+chi_test <- chi_all %>% filter(week=="2000-12-31")
+chi_test_geo <- geo_join(chi_blocks, chi_test, "GEOID", "GEOID")
 # chi_shots$dummy <- 1
 # proj4string(Chicago) <- proj4string(cook_shots)  #Changing the CRS to match
-popup <- paste0("GEOID: ", chi_shots$GEOID, "<br>", "Violence Present", chi_shots$hnfs)
+popup <- paste0("GEOID: ", chi_test_geo$GEOID, "<br>", "Shootings: ", chi_test_geo$hnfs)
 pal <- colorNumeric(
   palette = "YlGnBu",
-  domain = chi_shots$hnfs)
+  domain = chi_test_geo$hnfs)
 
 mapChicago2 <- leaflet() %>%
   addProviderTiles(providers$CartoDB.Positron) %>%
-  addPolygons(data = chi_shots, 
+  addPolygons(data = chi_test_geo, 
               fillColor = ~pal(hnfs), 
               color = "#b2aeae", # you need to use hex colors
               fillOpacity = 0.7, 
