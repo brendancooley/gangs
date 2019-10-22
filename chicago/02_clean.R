@@ -7,7 +7,7 @@ if (!'chicago' %in% strsplit(getwd(), "/")[[1]]) {
 source("params.R")
 source("helpers.R")
 
-libs <- c("tidyverse", "sp")
+libs <- c("tidyverse", "sp", "rgdal", "rgeos")
 ipak(libs)
 
 chi_clean <- read_csv(chi_clean_path) %>% filter(hnfs==1)
@@ -36,3 +36,10 @@ chi_geoid <- chi_agg %>% spread(week, count) %>% select(GEOID)
 
 write_csv(chi_mat, chi_matrix_path)
 write_csv(chi_geoid, chi_geoid_path)
+
+### CONSTRUCT ADJACENCY MATRIX ###
+
+adjacency <- gTouches(chi_tracts, byid=T) * 1
+# to confirm, see cell (1, 2):
+  # https://www.chicagocityscape.com/maps/index.php?place=censustract-17031221000
+  # https://www.chicagocityscape.com/maps/index.php?place=censustract-17031221100

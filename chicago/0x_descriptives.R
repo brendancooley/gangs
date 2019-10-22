@@ -6,7 +6,8 @@ if (!'chicago' %in% strsplit(getwd(), "/")[[1]]) {
 
 source("params.R")
 
-libs <- c("tidyverse", "leaflet", "leaflet.extras")
+libs <- c("tidyverse", "tigris", "leaflet", "leaflet.extras")
+ipak(libs)
 
 ### SHOOTINGS BY TRACT (ALL) ###
 
