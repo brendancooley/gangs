@@ -1,46 +1,38 @@
-### TODO ###
-
-# write csv for violence_tracts
-
 ### SETUP ###
 
 if (!'chicago' %in% strsplit(getwd(), "/")[[1]]) {
   setwd('chicago')
 }
 
-helperPath <- "../source/R/"
-helperFiles <- list.files(helperPath)
-for (i in helperFiles) {
-  source(paste0(helperPath, i))
-}
+source("params.R")
+source("helpers.R")
 
-libs <- c("tidyverse")
+libs <- c("tidyverse", "sp")
 ipak(libs)
 
-###
+chi_clean <- read_csv(chi_clean_path) %>% filter(hnfs==1)
+chi_tracts <- readOGR(chi_tracts_path)
 
-# chi <- final.data(city, tract.type, micro.length)
-violence <- read_csv("data/violence_tracts.csv")
+# week, month, year, all
+aggregation <- "week"
+chi_clean$all <- "all"
 
-first.year<- as.numeric(substring(names(violence[22]),1,4))
-last.year <- as.numeric(substring(names(violence[ncol(violence)]),1,4))-1
-construction <- violence[,c(1:21)] #the new dataset being constructed
-for(i in first.year:last.year) {
-  first.day <- ifelse(i==first.year,22,ifelse((i-1)%%4==0,first.day+367,first.day+366)) #determine first day of the year (column)
-  last.day <- ifelse(i%%4==0,first.day+366,first.day+365) #determine last day of the year (column)
-  iterations <- 365%/%micro.length #number of internal loops to run
-  for(j in 1:iterations) {
-    currentmarker <- ifelse(j==1,first.day,currentmarker+micro.length)#first column to be dealt with
-    to.be.added <- ifelse(j!=iterations,colnames(violence[c(currentmarker:(currentmarker+micro.length-1))]),
-                          colnames(violence[c(currentmarker:last.day)])) #takes one micro-length worth of days to aggregate
-    construction$place.holder <- rowSums(violence[to.be.added]) #aggregation step
-    names(construction)[names(construction) == "place.holder"] <- paste(i,".",j,sep = "") #rename variable
-  }
-}
+### TAG CRIMES TO TRACTS ###
 
-matrix <- construction[,seq(22, ncol(construction))]
-ids <- construction[,1]
-# colSums(matrix)
-# rowSums(matrix)
-write_csv(matrix, "output/chi_matrix.csv")
-write_csv(ids, "output/chi_ids.csv")
+chi_clean <- tag_crimes(chi_clean, chi_tracts)
+# chi_clean %>% filter(is.na(GEOID))  # 41 events untagged
+chi_clean <- chi_clean %>% filter(!is.na(GEOID))  # drop these from data
+
+# all events
+chi_all <- agg_crimes(chi_clean, "all")
+write_csv(chi_all, chi_tsa_path)
+
+# by aggregation
+chi_agg <- agg_crimes(chi_clean, aggregation)
+
+# convert to matrix and vector storing geoid
+chi_mat <- chi_agg %>% spread(week, count) %>% select(-GEOID)
+chi_geoid <- chi_agg %>% spread(week, count) %>% select(GEOID)
+
+write_csv(chi_mat, chi_matrix_path)
+write_csv(chi_geoid, chi_geoid_path)

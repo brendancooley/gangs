@@ -1,3 +1,7 @@
+### TODO ###
+
+# start with block groups and use regionalization to aggregate, gives finer footprint in important regions
+
 ### SETUP ###
 
 if (!'chicago' %in% strsplit(getwd(), "/")[[1]]) {
@@ -5,23 +9,31 @@ if (!'chicago' %in% strsplit(getwd(), "/")[[1]]) {
 }
 # getwd()
 
-helperPath <- "../source/R/"
-helperFiles <- list.files(helperPath)
-for (i in helperFiles) {
-  source(paste0(helperPath, i))
-}
+source("params.R")
 
-libs <- c("tidyverse", "lubridate", "acs", "tigris", "sp", "rgdal", "tigris", "raster", "leaflet", "leaflet.extras")
+libs <- c("tidyverse", "lubridate", "acs", "tigris", "sp", "rgdal", "tigris", "leaflet", "leaflet.extras")
 ipak(libs)
-
-crimes_raw_url <- "https://www.dropbox.com/s/h7da81i9qt876tf/chi_crimes.csv?dl=1"
-ss_raw_url <- "https://www.dropbox.com/s/3qfruwbsg1t7g23/shotspotter.csv?dl=1"
 
 years <- c(2009, 2016)  # years for which to get census data
 aggregation <- "week"
 
 # Reading in Census Tract Boundaries
-cook.blocks <-  block_groups("Illinois", county = "031", year = "2016")   #Cook County Block Groups
+cook.tracts <-  tracts("Illinois", county = "031", year = 2016, refresh=TRUE)   #Cook County Block Groups
+
+### SUBSET CHICAGO TRACTS ###
+
+chi_shp <- readOGR(chi_shape_path, "Chicago")
+chi_shp <- spTransform(chi_shp, proj4string(cook.tracts))  # match CRS 
+proj4string(chicago_shp) <- proj4string(cook.tracts)
+library(raster)
+chi_tracts <- intersect(cook.tracts, chi_shp)
+detach("package:raster", unload=TRUE)  # masks select from dplyr
+
+if (!dir.exists(chi_tracts_path)) {
+  mkdir(chi_tracts_path)
+  writeOGR(chi_tracts, chi_tracts_path, driver="ESRI Shapefile", layer='chi_tracts')
+  # NOTE: warnings ok, see https://github.com/r-spatial/sf/issues/306
+}
 
 ### Victim-Based Crime Reports ###
 
@@ -48,7 +60,7 @@ crimes$narcotics <- ifelse(crimes$`FBI Code` == '18', 1, 0)
 
 crimesClean <- crimes %>% filter(hnfs==1 | narcotics==1) %>% filter(!is.na(lat) & !is.na(lng) & lat > 40) %>% select(date, year, month, week, lat, lng, hnfs, narcotics)
 
-write_csv(crimesClean, 'data/chi_clean.csv')  # to data folder
+write_csv(crimesClean, chi_clean_path)  # to data folder
 write_csv(crimesClean, 'shiny/chi_clean.csv') # to shiny folder
 
 ### Shotspotter ###
@@ -119,120 +131,3 @@ for (i in years) {
   write_csv(income_df, paste0("shiny/income", i, "_clean.csv"))
 }
 
-### MAP SHOOTINGS TO CENSUS BLOCKS ###
-
-chi_shots <- crimesClean %>% filter(hnfs==1)
-# nrow(chi_shots)  # ~46,000 hnfs
-
-# income_merged <- geo_join(cook.blocks, income_df, "GEOID", "GEOID")
-
-# transform crime into spatial data that matches the CRS of the income merged data
-coordinates(chi_shots) <- ~lng+lat
-proj4string(chi_shots) <- proj4string(cook.blocks)
-
-# Mapping crime events to districts
-chi_shots_geoids <- over(chi_shots, cook.blocks) %>% as_tibble()
-chi_shots$GEOID <- chi_shots_geoids$GEOID  # append geoids to chi_shots
-
-# summarize counts
-chi_shots_agg <- chi_shots %>% as_tibble() %>% group_by_("GEOID", aggregation) %>%
-  summarise(hnfs=n()) %>% ungroup()
-chi_shots_agg %>% summary()
-
-# cook_shots <- geo_join(cook.blocks, chi_shots_agg, "GEOID", "GEOID")
-
-Chicago <- readOGR(".", "Chicago")
-Chicago <- spTransform(Chicago, proj4string(cook.blocks))  # match CRS 
-chi_blocks <- intersect(cook.blocks, Chicago)
-
-GEOID <- chi_blocks$GEOID
-unit <- chi_shots[[aggregation]] %>% unique() %>% sort()
-chi_blank <- crossing(GEOID, unit)
-colnames(chi_blank)[colnames(chi_blank)=="unit"] <- aggregation
-chi_blank$hnfs <- NA
-chi_blank$hnfs <- as.integer(chi_blank$hnfs)
-
-detach("package:raster", unload=TRUE)
-chi_all <- chi_blank %>% left_join(chi_shots_agg, by=c("GEOID", aggregation)) %>% 
-  mutate(hnfs = coalesce(hnfs.x, hnfs.y)) %>% 
-  select(-hnfs.x, -hnfs.y)
-
-chi_all$hnfs <- ifelse(is.na(chi_all$hnfs), 0, chi_all$hnfs)
-
-
-
-chi_test <- chi_all %>% filter(week=="2000-12-31")
-chi_test_geo <- geo_join(chi_blocks, chi_test, "GEOID", "GEOID")
-# chi_shots$dummy <- 1
-# proj4string(Chicago) <- proj4string(cook_shots)  #Changing the CRS to match
-popup <- paste0("GEOID: ", chi_test_geo$GEOID, "<br>", "Shootings: ", chi_test_geo$hnfs)
-pal <- colorNumeric(
-  palette = "YlGnBu",
-  domain = chi_test_geo$hnfs)
-
-mapChicago2 <- leaflet() %>%
-  addProviderTiles(providers$CartoDB.Positron) %>%
-  addPolygons(data = chi_test_geo, 
-              fillColor = ~pal(hnfs), 
-              color = "#b2aeae", # you need to use hex colors
-              fillOpacity = 0.7, 
-              weight = 1, 
-              smoothFactor = 0.2,
-              popup = popup)
-mapChicago2
-# clearly some districts are being double counted
-
-
-
-
-
-
-# calculate number of violent events total per district?
-total <- unique(chi_shots_geoids$GEOID)
-district <- vector()
-count <- vector()
-
-for (i in 1:length(total)) {
-  district[i] <- total[i]
-  count[i] <- sum(chi_shots_geoids$GEOID==district[i])
-}
-# length(unique(chi_shots_geoids$GEOID)) # 1905 districts with a shooting
-
-
-# convert to data frame, each row is a district, each column a daily count
-violence <- data.frame(district)
-colnames(violence)[colnames(violence)=="district"] <- "GEOID"
-violence$shootings <- count
-violence %>% summary()
-
-write_csv(violence, "output/tracts_shootings.csv")
-
-##This bit is likely CHICAGO SPECIFIC
-#Find the earliest date in the data and the latest
-crime_income_merged$just.date <- crime_income_merged$Date
-#Remove AM, PM strings, then hours, minutes, seconds
-crime_income_merged$just.date <- gsub(x=crime_income_merged$just.date,pattern=" PM",replacement="",fixed=T)
-crime_income_merged$just.date <- gsub(x=crime_income_merged$just.date,pattern=" AM",replacement="",fixed=T)
-crime_income_merged$just.date <- format(as.POSIXct(crime_income_merged$just.date,format='%m/%d/%Y %H:%M:%S'),
-                                        format='%m/%d/%Y')
-crime_income_merged$just.date <- as.Date(crime_income_merged$just.date, format="%m/%d/%Y")
-
-#Now to actually find the earliest date
-dates <- seq(min(crime_income_merged$just.date), max(crime_income_merged$just.date), by="days")
-
-#Now, to make the data
-for(i in 1:length(dates)){
-  day <- dates[i]
-  container <- vector()
-  for(j in 1:length(total)){
-    container[j] <- sum(crime_income_merged$just.date == day & crime_income_merged$GEOID == total[j])
-  }
-  violence$container <- container
-  names(violence)[names(violence) == "container"] <- paste(day)
-}
-
-#Add the income variables back to data (CHICAGO SPECIFIC)
-violence <- full_join(income_df, violence, by = "GEOID")
-violence$event.count[is.na(violence$event.count)] <- 0
-violence[, 21:ncol(violence)][is.na(violence[, 21:ncol(violence)])] <- 0
-return(violence)
