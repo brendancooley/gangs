@@ -37,8 +37,8 @@ chi_agg <- agg_crimes(chi_clean, aggregation)
 chi_mat <- chi_agg %>% spread_(aggregation, "count") %>% select(-GEOID)
 chi_geoid <- chi_agg %>% spread_(aggregation, "count") %>% select(GEOID)
 
-write_csv(chi_mat, chi_matrix_path)
-write_csv(chi_geoid, chi_tgeoid_path)
+write_csv(chi_mat, chi_tmatrix_path, col_names=FALSE)
+write_csv(chi_geoid, chi_tgeoid_path, col_names=FALSE)
 
 ### CONSTRUCT ADJACENCY MATRIX ###
 
@@ -62,6 +62,8 @@ chi_distr_ids <- chi_all %>% select(id, GEOID)
 
 c <- 0
 
+# TODO: alternative merge criterion - only combine if proposed district is smaller than certain upper limite
+  # will enforce more homogeneity between districts than we currently have
 while(nrow(chi_distr_counts) > target) {
   
   chi_distr_counts <- chi_distr_counts %>% arrange(count)
@@ -116,13 +118,13 @@ write_csv(chi_distr_ids, chi_geoid_cor_path)  # correspondence between ids
 # recompute panel for districts
 chi_agg <- chi_agg %>% left_join(chi_distr_ids)
 chi_dagg <- chi_agg %>% group_by_("id", aggregation) %>% 
-  summarise(count=n()) %>% ungroup()
+  summarise(count=sum(count)) %>% ungroup()
 chi_dmat <- chi_dagg %>% spread_(aggregation, "count") %>% select(-id)
 chi_dids <- chi_dagg %>% spread_(aggregation, "count") %>% select(id)
 
 # export
-write_csv(chi_dmat, chi_dmatrix_path)  # district counts
-write_csv(chi_dids, chi_dgeoid_path)  # district geoids
+write_csv(chi_dmat, chi_dmatrix_path, col_names=FALSE)  # district counts
+write_csv(chi_dids, chi_dgeoid_path, col_names=FALSE)  # district geoids
 
 # export new geography
 chi_tracts <- geo_join(chi_tracts, chi_distr_ids, "GEOID", "GEOID")
