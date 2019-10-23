@@ -34,20 +34,18 @@ write_csv(chi_all, chi_tsa_path)
 chi_agg <- agg_crimes(chi_clean, aggregation)
 
 # convert to matrix and vector storing geoid
-chi_mat <- chi_agg %>% spread(week, count) %>% select(-GEOID)
-chi_geoid <- chi_agg %>% spread(week, count) %>% select(GEOID)
+chi_mat <- chi_agg %>% spread_(aggregation, "count") %>% select(-GEOID)
+chi_geoid <- chi_agg %>% spread_(aggregation, "count") %>% select(GEOID)
 
 write_csv(chi_mat, chi_matrix_path)
-write_csv(chi_geoid, chi_geoid_path)
+write_csv(chi_geoid, chi_tgeoid_path)
 
 ### CONSTRUCT ADJACENCY MATRIX ###
 
 adjacency <- gTouches(chi_tracts, byid=T) * 1
 colnames(adjacency) <- seq(1, nrow(chi_all))
 rownames(adjacency) <- seq(1, nrow(chi_all))
-# to confirm, see cell (1, 2):
-  # https://www.chicagocityscape.com/maps/index.php?place=censustract-17031221000
-  # https://www.chicagocityscape.com/maps/index.php?place=censustract-17031221100
+write_csv(adjacency %>% as.data.frame(), chi_tadjacency_path, col_names=FALSE)
 
 chi_all$id <- seq(1, nrow(chi_all))
 
@@ -101,30 +99,33 @@ while(nrow(chi_distr_counts) > target) {
   
 }
 
-chi_distr_counts %>% arrange(count) %>% pull(id) %>% sort()
-chi_distr_ids %>% pull(id) %>% unique() %>% sort() %>% length()
-# TODO: lengths don't match...don't seem to be updating chi_distr_ids properly
+# reconvert adjacency matrix to binary
+adjacency[adjacency > 1] <- 1
+
+# exports
+write_csv(chi_distr_counts, chi_dsa_path)  # counts
+write_csv(adjacency %>% as.data.frame(), chi_dadjacency_path, col_names=FALSE)  # reduced adjacency matrix
+write_csv(chi_distr_ids, chi_geoid_cor_path)  # correspondence between ids
+
+# recompute panel for districts
+chi_agg <- chi_agg %>% left_join(chi_distr_ids)
+chi_dagg <- chi_agg %>% group_by_("id", aggregation) %>% 
+  summarise(count=n()) %>% ungroup()
+chi_dmat <- chi_dagg %>% spread_(aggregation, "count") %>% select(-id)
+chi_dids <- chi_dagg %>% spread_(aggregation, "count") %>% select(id)
+
+# export
+write_csv(chi_dmat, chi_dmatrix_path)  # district counts
+write_csv(chi_dids, chi_dgeoid_path)  # district geoids
+
+# export new geography
 chi_tracts <- geo_join(chi_tracts, chi_distr_ids, "GEOID", "GEOID")
+chi_districts <- gUnaryUnion(chi_tracts, chi_tracts$id)
+chi_districts <- as(chi_districts, "SpatialPolygonsDataFrame")
 
-chi_tracts_union <- unionSpatialPolygons(chi_tracts, chi_tracts$id.3)
-
-popup <- paste0("GEOID: ", chi_tracts_union$id.3)
-
-map1 <- leaflet() %>%
-  addProviderTiles(providers$CartoDB.Positron) %>%
-  addPolygons(data = chi_tracts, 
-              color = "#b2aeae", # you need to use hex colors
-              fillOpacity = 0.7, 
-              weight = 1, 
-              smoothFactor = 0.2)
-map1
-
-map2 <- leaflet() %>%
-  addProviderTiles(providers$CartoDB.Positron) %>%
-  addPolygons(data = chi_tracts_union, 
-              color = "#b2aeae", # you need to use hex colors
-              fillOpacity = 0.7, 
-              weight = 1, 
-              smoothFactor = 0.2)
-map2
+if (!dir.exists(chi_districts_path)) {
+  mkdir(chi_districts_path)
+  writeOGR(chi_districts, chi_districts_path, driver="ESRI Shapefile", layer='chi_districts')
+  # NOTE: warnings ok, see https://github.com/r-spatial/sf/issues/306
+}
 
