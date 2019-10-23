@@ -42,8 +42,11 @@ write_csv(chi_geoid, chi_tgeoid_path)
 
 ### CONSTRUCT ADJACENCY MATRIX ###
 
-# test <- poly2nb(chi_tracts, queen=FALSE)  # queen allows corner merges
-adjacency <- gTouches(chi_tracts, byid=T) * 1 # TODO: currently allowing corner merges, need to convert neighbors code if we use poly2nb
+adjacency <- poly2nb(chi_tracts, queen=FALSE)  # queen allows corner merges
+adjacency <- nb2mat(adjacency)
+adjacency[adjacency > 0] <- 1
+# adjacency <- gTouches(chi_tracts, byid=T) * 1 # TODO: currently allowing corner merges, need to convert neighbors code if we use poly2nb
+
 geoid_order <- chi_tracts@data$GEOID
 id_df <- data.frame(geoid_order, seq(1, nrow(chi_all)))
 colnames(id_df) <- c("GEOID", "id")
