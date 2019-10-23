@@ -20,7 +20,7 @@ chi_clean$all <- "all"
 # number of districts at end of aggregation
 target <- 200
 
-### TAG CRIMES TO TRACTS ###
+### TAG CRIMES TO TRACTS (ALL) ###
 
 chi_clean <- tag_crimes(chi_clean, chi_tracts)
 # chi_clean %>% filter(is.na(GEOID))  # 41 events untagged
@@ -43,6 +43,8 @@ write_csv(chi_geoid, chi_geoid_path)
 ### CONSTRUCT ADJACENCY MATRIX ###
 
 adjacency <- gTouches(chi_tracts, byid=T) * 1
+colnames(adjacency) <- seq(1, nrow(chi_all))
+rownames(adjacency) <- seq(1, nrow(chi_all))
 # to confirm, see cell (1, 2):
   # https://www.chicagocityscape.com/maps/index.php?place=censustract-17031221000
   # https://www.chicagocityscape.com/maps/index.php?place=censustract-17031221100
@@ -57,10 +59,9 @@ c <- 0
 while(nrow(chi_distr_counts) > target) {
   
   chi_distr_counts <- chi_distr_counts %>% arrange(count)
+  print(c)
   
   for (i in 1:nrow(chi_distr_counts)) {
-    
-    print(c)
     
     if (i <= nrow(chi_distr_counts)) {
       # loop through each district
@@ -71,7 +72,7 @@ while(nrow(chi_distr_counts) > target) {
         
         # TODO this is the problem...need to update which districts adjacency matrix grabs
         # perhaps solution is to just collapse it whenever we strike a district
-        neighbors <- which(adjacency[id, ] == 1) %>% as.numeric()  # get neighbors
+        neighbors <- rownames(adjacency)[which(adjacency[rownames(adjacency)==id, ] >= 1)] %>% as.numeric()  # get neighbors
         chi_distr_n <- chi_distr_counts %>% filter(id %in% neighbors)
         
         if (nrow(chi_distr_n) > 0) {
@@ -79,16 +80,14 @@ while(nrow(chi_distr_counts) > target) {
             count_n <- chi_distr_n[j, ]$count
             if (count_n <= c) {  # if neighbor count is low enough...
               id_n <- chi_distr_n[j, ]$id  # get id
-              chi_distr_counts$count[i] <- chi_distr_counts$count[i] + count_n  # increase count for district "id"
-              print("id_n:")
-              print(chi_distr_ids[chi_distr_ids$id == id_n, ])
-              print("id:")
-              print(chi_distr_ids[chi_distr_ids$id == id, ])
+              chi_distr_counts[chi_distr_counts$id == id, ]$count <- chi_distr_counts[chi_distr_counts$id == id, ]$count + count_n  # increase count for district "id"
               chi_distr_ids[chi_distr_ids$id == id_n, ]$id <- id  # associate district "id_n" GEOID with "id"
-              print("id:")
-              print(chi_distr_ids[chi_distr_ids$id == id, ])
               chi_distr_counts <- chi_distr_counts %>% filter(id != id_n)  # remove district "id_n" from chi_distr_counts
-              adjacency[id, ] <- adjacency[id, ] + adjacency[id_n, ]  # udpate adjacency matrix
+              adjacency[rownames(adjacency)==id, ] <- adjacency[rownames(adjacency)==id, ] + adjacency[rownames(adjacency)==id_n, ]  # udpate adjacency matrix
+              adjacency[ ,colnames(adjacency)==id] <- adjacency[ ,colnames(adjacency)==id] + adjacency[ ,colnames(adjacency)==id_n]  # udpate adjacency matrix
+              adjacency <- adjacency[rownames(adjacency) != id_n, ]
+              adjacency <- adjacency[ ,colnames(adjacency) != id_n]
+              adjacency[rownames(adjacency)==id, colnames(adjacency)==id] <- 0
             }
           }
         }
@@ -103,20 +102,29 @@ while(nrow(chi_distr_counts) > target) {
 }
 
 chi_distr_counts %>% arrange(count) %>% pull(id) %>% sort()
-chi_distr_ids %>% pull(id) %>% unique() %>% sort()
+chi_distr_ids %>% pull(id) %>% unique() %>% sort() %>% length()
 # TODO: lengths don't match...don't seem to be updating chi_distr_ids properly
 chi_tracts <- geo_join(chi_tracts, chi_distr_ids, "GEOID", "GEOID")
 
-chi_tracts_union <- unionSpatialPolygons(chi_tracts, chi_tracts$id)
-chi_tracts_union$id <- chi_tracts$id
+chi_tracts_union <- unionSpatialPolygons(chi_tracts, chi_tracts$id.3)
 
-popup <- paste0("GEOID: ", chi_tracts_union$id)
+popup <- paste0("GEOID: ", chi_tracts_union$id.3)
 
-map <- leaflet() %>%
+map1 <- leaflet() %>%
   addProviderTiles(providers$CartoDB.Positron) %>%
   addPolygons(data = chi_tracts, 
               color = "#b2aeae", # you need to use hex colors
               fillOpacity = 0.7, 
               weight = 1, 
               smoothFactor = 0.2)
-map
+map1
+
+map2 <- leaflet() %>%
+  addProviderTiles(providers$CartoDB.Positron) %>%
+  addPolygons(data = chi_tracts_union, 
+              color = "#b2aeae", # you need to use hex colors
+              fillOpacity = 0.7, 
+              weight = 1, 
+              smoothFactor = 0.2)
+map2
+
