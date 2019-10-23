@@ -7,7 +7,7 @@ if (!'chicago' %in% strsplit(getwd(), "/")[[1]]) {
 source("params.R")
 source("helpers.R")
 
-libs <- c("tidyverse", "sp", "rgdal", "rgeos", "maptools", "tigris", "leaflet", "leaflet.extras")
+libs <- c("tidyverse", "sp", "rgdal", "rgeos", "maptools", "tigris", "leaflet", "leaflet.extras", "spdep")
 ipak(libs)
 
 chi_clean <- read_csv(chi_clean_path) %>% filter(hnfs==1)
@@ -42,12 +42,17 @@ write_csv(chi_geoid, chi_tgeoid_path)
 
 ### CONSTRUCT ADJACENCY MATRIX ###
 
-adjacency <- gTouches(chi_tracts, byid=T) * 1
+# test <- poly2nb(chi_tracts, queen=FALSE)  # queen allows corner merges
+adjacency <- gTouches(chi_tracts, byid=T) * 1 # TODO: currently allowing corner merges, need to convert neighbors code if we use poly2nb
+geoid_order <- chi_tracts@data$GEOID
+id_df <- data.frame(geoid_order, seq(1, nrow(chi_all)))
+colnames(id_df) <- c("GEOID", "id")
+
 colnames(adjacency) <- seq(1, nrow(chi_all))
 rownames(adjacency) <- seq(1, nrow(chi_all))
 write_csv(adjacency %>% as.data.frame(), chi_tadjacency_path, col_names=FALSE)
 
-chi_all$id <- seq(1, nrow(chi_all))
+chi_all <- chi_all %>% left_join(id_df)
 
 chi_distr_counts <- chi_all %>% select(id, count)
 chi_distr_ids <- chi_all %>% select(id, GEOID)
@@ -68,9 +73,7 @@ while(nrow(chi_distr_counts) > target) {
 
       if (count <= c) {  # if count is low enough...
         
-        # TODO this is the problem...need to update which districts adjacency matrix grabs
-        # perhaps solution is to just collapse it whenever we strike a district
-        neighbors <- rownames(adjacency)[which(adjacency[rownames(adjacency)==id, ] >= 1)] %>% as.numeric()  # get neighbors
+        neighbors <- rownames(adjacency)[which(adjacency[rownames(adjacency)==id, ] >= 1)] %>% as.numeric()  # get neighbors (gTouches)
         chi_distr_n <- chi_distr_counts %>% filter(id %in% neighbors)
         
         if (nrow(chi_distr_n) > 0) {
@@ -122,15 +125,6 @@ write_csv(chi_dids, chi_dgeoid_path)  # district geoids
 chi_tracts <- geo_join(chi_tracts, chi_distr_ids, "GEOID", "GEOID")
 chi_districts <- raster::aggregate(chi_tracts, by="id")
 
-if (!dir.exists(chi_districts_path)) {
-  mkdir(chi_districts_path)
-  writeOGR(chi_districts, chi_districts_path, driver="ESRI Shapefile", layer='chi_districts')
-  # NOTE: warnings ok, see https://github.com/r-spatial/sf/issues/306
-}
-
-
-### TEST BAY ###
-
-chi_all <- chi_all %>% select(-id)
-chi_all <- chi_all %>% left_join(chi_distr_ids)
-chi_all %>% filter(id==667)
+mkdir(chi_districts_path)
+writeOGR(chi_districts, chi_districts_path, driver="ESRI Shapefile", layer='chi_districts', overwrite_layer=TRUE)
+# NOTE: warnings ok, see https://github.com/r-spatial/sf/issues/306
