@@ -120,8 +120,7 @@ write_csv(chi_dids, chi_dgeoid_path)  # district geoids
 
 # export new geography
 chi_tracts <- geo_join(chi_tracts, chi_distr_ids, "GEOID", "GEOID")
-chi_districts <- gUnaryUnion(chi_tracts, chi_tracts$id)
-chi_districts <- as(chi_districts, "SpatialPolygonsDataFrame")
+chi_districts <- raster::aggregate(chi_tracts, by="id")
 
 if (!dir.exists(chi_districts_path)) {
   mkdir(chi_districts_path)
@@ -129,3 +128,9 @@ if (!dir.exists(chi_districts_path)) {
   # NOTE: warnings ok, see https://github.com/r-spatial/sf/issues/306
 }
 
+
+### TEST BAY ###
+
+chi_all <- chi_all %>% select(-id)
+chi_all <- chi_all %>% left_join(chi_distr_ids)
+chi_all %>% filter(id==667)
