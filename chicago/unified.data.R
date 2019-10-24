@@ -1,34 +1,22 @@
-### TODOs ###
-
-# shot spotter data?
-
 ### SETUP ###
 
-library(readr)
-library(tidyverse)
-library(lubridate)
-library(leaflet)
-library(leaflet.extras)
-library(htmltools)
-library(htmlwidgets)
-library(mapview)
-library(tigris)
-library(acs)
-library(stringr)
-library(sf)
-library(sp)
-library(rgeos)
-library(rgdal)
-library (maptools)
-library(spdep)
+helperPath <- "../source/R/"
+helperFiles <- list.files(helperPath)
+for (i in helperFiles) {
+  source(paste0(helperPath, i))
+}
+
+libs <- c("tidyverse", "leaflet", "leaflet.extras", "htmltools", "htmlwidgets", "mapview", "tigris",
+          "acs", "stringr", "sf", "sp", "rgeos", "rgdal", "maptools", "spdep")
+ipak(libs)
 
 
-###Start Here###
-city <- c(17,031) # First pick a city from the following, entering the number of the fips code
-               #(Baltimore (24,510), Chicago (17,031), St. Louis (29,510))
+### CHOOSE CITY ###
+
+city <- c(17, 031) # First pick a city from the following, entering the number of the fips code
+                   #(Baltimore (24,510), Chicago (17,031), St. Louis (29,510))
 tract.type <- "Tracts" # Second, pick the desired census unit from the following (Tracts, Block Groups)
-micro.length <- 7 # Third, pick the desired length of micro-period from the following (e.g. 7,14,30)
-
+# micro.length <- 7 # Third, pick the desired length of micro-period from the following (e.g. 7,14,30)
 
 ### Checking the tract data
 # tract.type <- "Tracts"
@@ -42,9 +30,11 @@ raw.data <- function(city){
     # crimes <- read_csv(cpdURL)
     # write_csv(crimes, 'chi_crimes.csv')
 
-    datas <- read_csv('data/chi_crimes.csv')
+raw.data <- function(city) {
+  if(city[2]==31) {
+    data <- read_csv('data/chi_crimes.csv')
   }
-  return(datas)
+  return(data)
 }
 
 #Then reduce it to homicides and non-fatal shootings

@@ -268,7 +268,7 @@ $endif$
 
 % xcolor
 \usepackage[table]{xcolor}% http://ctan.org/pkg/xcolor
-\def\cca#1{\cellcolor{black!#10}\color{black!#10}{#1}}
+\def\cca#1{\cellcolor{black!#10}\textcolor{black!#10}{#1}} % shade block by number and match text to color so it doesn't appear
 
 % bold
 \usepackage{bm}

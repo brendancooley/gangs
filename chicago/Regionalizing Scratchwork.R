@@ -86,7 +86,7 @@ mapChicago <- leaflet() %>%
 mapChicago
 
 ###Attempt at removing non-intersecting parts of Cook County (raster)
-spTransform(violence.geo,proj4string(Chicago))  #slightly confused as to whether this works or not?
+spTransform(violence.geo, proj4string(Chicago))  #slightly confused as to whether this works or not?
 proj4string(Chicago) <- proj4string(violence.geo)  #Changing the CRS to match
 violence.Chicago <- intersect(violence.geo,Chicago)  ##reduces number of blocks from 1319 to 870
 sum(violence.Chicago$dummy) ##down to 787 total tracts with violence, don't quite see how though... look at map
