@@ -18,7 +18,7 @@ aggregation <- "week"
 chi_clean$all <- "all"
 
 # number of districts at end of aggregation
-target <- 250
+target <- 200
 
 ### TAG CRIMES TO TRACTS (ALL) ###
 
