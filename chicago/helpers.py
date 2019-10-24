@@ -23,7 +23,7 @@ def covMat(A, zero=False, cor=False):
 
     """
     if cor is True:
-        A[:,0] += .001  # add small value to first period to eliminate zeros
+        # A[:,0] += .001  # add small value to first period to eliminate zeros
         covA = np.corrcoef(A)
     else:
         covA = np.cov(A)
@@ -38,10 +38,11 @@ def covMat(A, zero=False, cor=False):
                 if covA[i, j] < 0:
                     covA[i, j] = 0
                     z += 1
+        print(str(z) + " of " + str(covA.shape[0] ** 2) + " negative entries found and converted to zeros")
         min_eig = np.min(np.real(np.linalg.eigvals(covA)))
         if min_eig < 0:
             covA -= 10*min_eig * np.eye(*covA.shape)
-        print(str(z) + " of " + str(covA.shape[0] ** 2) + " negative entries found and converted to zeros")
+            print("minimum eigenvalue: " + str(min_eig))
     else:
         min_eig = np.min(np.real(np.linalg.eigvals(covA)))
         if min_eig < 0:
@@ -157,8 +158,8 @@ def permute_covM(covM, clusters, visualize=False, print_nc=False):
             v = np.sum(blockM) / (N ** 2 - N)
         else:
             v = np.sum(blockM) / N
+        # TODO: normalizing by sqrt might be more principled...see Lei and Rinaldo
         V.append(v)
-    print(V)
     nc = np.argmin(V)
     if print_nc is True:
         print("Cluster id " + str(nc) + " is the noise cluster.")

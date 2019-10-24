@@ -19,7 +19,10 @@ chi_dadjacency_path = paths['chi_dadjacency_path'].iloc[0, 0]
 C = np.genfromtxt(chi_dadjacency_path, delimiter=",")  # adjacency matrix
 
 counts = np.genfromtxt(chi_dmatrix_path, delimiter=",")
-covM = helpers.covMat(counts, zero=True)  # construct covariance matrix
+covM = helpers.covMat(counts, zero=False, cor=False)  # construct covariance matrix
+
+### working... ###
+
 
 ### TRACE MINIMIZATION ###
 if not os.path.exists(gammaL_path):
@@ -31,17 +34,18 @@ if not os.path.exists(gammaL_path):
 
 # diagnostics
 gammaL = np.genfromtxt(gammaL_path, delimiter=",")
+gammaL_cor = np.corrcoef(gammaL)
 np.trace(covM)
 np.trace(gammaL)
 
 ### CLUSTERING ###
-M = 2
-# clusters = helpers.spect_clust(gammaL, M, delta=1, C=C, eig_plot=True)  # regionalization version
-clusters = helpers.spect_clust(gammaL, M, eig_plot=True)
+M = 4
+clusters = helpers.spect_clust(gammaL_cor, M, delta=3, C=C, eig_plot=True)  # regionalization version
+# clusters = helpers.spect_clust(gammaL_cor, M, eig_plot=True)
 
 np.savetxt(clusters_path, clusters, delimiter=",")
 
 
 ### ANALYSIS ###
 
-helpers.permute_covM(gammaL, clusters, visualize=True, print_nc=True)
+helpers.permute_covM(gammaL_cor, clusters, visualize=True, print_nc=True)

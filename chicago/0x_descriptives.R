@@ -69,7 +69,7 @@ colnames(clusters) <- c("cluster", "id")
 chi_clusters_geo <- geo_join(chi_districts, clusters, "id", "id")
 
 popup <- paste0("GEOID: ", chi_clusters_geo$id, "<br>", "Cluster: ", chi_clusters_geo$cluster)
-factpal <- colorFactor(brewer.pal(5, "Set1"), chi_clusters_geo$cluster)
+factpal <- colorFactor(brewer.pal(6, "Set1"), chi_clusters_geo$cluster)
 
 chi_clusters_map <- leaflet() %>%
   addProviderTiles(providers$CartoDB.Positron) %>%
