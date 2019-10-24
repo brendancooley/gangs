@@ -22,7 +22,13 @@ tract.type <- "Tracts" # Second, pick the desired census unit from the following
 # tract.type <- "Tracts"
 # test.data <- combined.data(city,tract.type)
 
-### ACQUIRE CRIME DATA ###
+###Acquiring the Crime Data###
+#Start by acquring the raw crime data
+raw.data <- function(city){
+  if(city[2]==31){
+    # cpdURL <- 'https://data.cityofchicago.org/api/views/ijzp-q8t2/rows.csv?accessType=DOWNLOAD'
+    # crimes <- read_csv(cpdURL)
+    # write_csv(crimes, 'chi_crimes.csv')
 
 raw.data <- function(city) {
   if(city[2]==31) {
@@ -157,10 +163,11 @@ final.data <-function(city,tract.type,micro.length){
   #first figure out start and endyear for data
   first.year<- as.numeric(substring(names(violence[22]),1,4))
   last.year <- as.numeric(substring(names(violence[ncol(violence)]),1,4))-1
-  construction <- violence[,c(1:21)] #the new dataset being constructed
+  construction <- violence[,c(1:20)] #the new dataset being constructed
+  ###Always a good idea to check that it grabs the right columns
   for(i in first.year:last.year)
   {
-    first.day <- ifelse(i==first.year,22,ifelse((i-1)%%4==0,first.day+367,first.day+366)) #determine first day of the year (column)
+    first.day <- ifelse(i==first.year,21,ifelse((i-1)%%4==0,first.day+367,first.day+366)) #determine first day of the year (column)
     last.day <- ifelse(i%%4==0,first.day+366,first.day+365) #determine last day of the year (column)
     iterations <- 365%/%micro.length #number of internal loops to run
     for(j in 1:iterations)
