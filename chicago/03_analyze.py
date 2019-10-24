@@ -9,8 +9,9 @@ import helpers
 imp.reload(helpers)
 
 gammaL_path = "output/gammaL.csv"
+chi_dmatrix_path = "output/chi_dmatrix.csv"
 
-counts = np.genfromtxt("output/chi_dmatrix.csv", delimiter=",")
+counts = np.genfromtxt(chi_dmatrix_path, delimiter=",")
 covM = helpers.covMat(counts, zero=True)  # construct covariance matrix
 
 ### TRACE MINIMIZATION ###
@@ -20,3 +21,10 @@ if not os.path.exists(gammaL_path):
     print("trace minimization completed in %s seconds" % (time.time() - start_time))
     # (N=200): trace minimization completed in 2218.314126968384 seconds
     np.savetxt(gammaL_path, gammaL, delimiter=",")
+
+# diagnostics
+gammaL = np.genfromtxt(gammaL_path, delimiter=",")
+np.trace(covM)
+np.trace(gammaL)
+
+### CLUSTERING ###
