@@ -1,5 +1,7 @@
 ### SETUP ###
 
+rm(list = ls())
+
 if (!'chicago' %in% strsplit(getwd(), "/")[[1]]) {
   setwd('chicago')
 }
@@ -14,7 +16,7 @@ chi_clean <- read_csv(chi_clean_path) # %>% filter(hnfs==1)
 chi_tracts <- readOGR(chi_tracts_path)
 
 # week, month, year, all
-aggregation <- "week"
+aggregation <- "month"
 chi_clean$all <- "all"
 
 # number of districts at end of district aggregation

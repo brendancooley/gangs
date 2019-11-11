@@ -4,6 +4,8 @@
 
 ### SETUP ###
 
+rm(list = ls())
+
 if (!'chicago' %in% strsplit(getwd(), "/")[[1]]) {
   setwd('chicago')
 }
