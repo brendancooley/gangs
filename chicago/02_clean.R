@@ -12,14 +12,14 @@ source("helpers.R")
 libs <- c("tidyverse", "sp", "rgdal", "rgeos", "maptools", "tigris", "leaflet", "leaflet.extras", "spdep")
 ipak(libs)
 
-chi_clean <- read_csv(chi_clean_path) %>% filter(hnfs==1)
+chi_clean <- read_csv(chi_clean_path) # %>% filter(hnfs==1)
 chi_tracts <- readOGR(chi_tracts_path)
 
 # week, month, year, all
 aggregation <- "month"
 chi_clean$all <- "all"
 
-# number of districts at end of aggregation
+# number of districts at end of district aggregation
 target <- 200
 
 ### TAG CRIMES TO TRACTS (ALL) ###
@@ -29,10 +29,13 @@ chi_clean <- tag_crimes(chi_clean, chi_tracts)
 chi_clean <- chi_clean %>% filter(!is.na(GEOID))  # drop these from data
 
 # all events
-chi_all <- agg_crimes(chi_clean, "all")
-write_csv(chi_all, chi_tsa_path)
+chi_all_s <- agg_crimes(chi_clean %>% filter(hnfs==1), "all")
+chi_all_n <- agg_crimes(chi_clean %>% filter(narcotics==1), "all")
+write_csv(chi_all_s, chi_tsa_path)
+write_csv(chi_all_n, chi_tna_path)
 
 # by aggregation
+# TODO group by hnfs versus narcotics as above under "all events"
 chi_agg <- agg_crimes(chi_clean, aggregation)
 
 # convert to matrix and vector storing geoid
