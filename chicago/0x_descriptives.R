@@ -6,17 +6,18 @@ if (!'chicago' %in% strsplit(getwd(), "/")[[1]]) {
 
 source("params.R")
 
-libs <- c("tidyverse", "tigris", "leaflet", "leaflet.extras")
+libs <- c("tidyverse", "tigris", "leaflet", "leaflet.extras", "tmap", "rgdal")
 ipak(libs)
 
 ### SHOOTINGS BY TRACT (ALL) ###
 
 chi_tsa <- read_csv(chi_tsa_path)
 chi_tracts <- readOGR(chi_tracts_path)
-sum(chi_tsa$count)
+# sum(chi_tsa$count)
 
 chi_tsa_geo <- geo_join(chi_tracts, chi_tsa, "GEOID", "GEOID")
 
+# leaflet (interactive) version
 popup <- paste0("GEOID: ", chi_tsa_geo$GEOID, "<br>", "Shootings: ", chi_tsa_geo$count)
 pal <- colorNumeric(
   palette = "YlGnBu",
@@ -32,6 +33,11 @@ chi_tsa_map <- leaflet() %>%
               smoothFactor = 0.2,
               popup = popup)
 chi_tsa_map
+
+# tmap (static) version
+tmap_style("classic")
+tm_shape(chi_tsa_geo) +
+  tm_polygons("count")
 
 ### SHOOTINGS BY DISTRICT (ALL) ###
 
