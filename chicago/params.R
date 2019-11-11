@@ -24,3 +24,9 @@ chi_dadjacency_path <- "output/chi_dadjacency.csv"
 
 crimes_raw_url <- "https://www.dropbox.com/s/h7da81i9qt876tf/chi_crimes.csv?dl=1"
 ss_raw_url <- "https://www.dropbox.com/s/3qfruwbsg1t7g23/shotspotter.csv?dl=1"
+
+gammaL_path = "output/gammaL.csv"
+clusters_path = "output/clusters.csv"
+
+save.image('params.Rdata')
+
