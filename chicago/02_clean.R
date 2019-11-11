@@ -16,11 +16,27 @@ chi_clean <- read_csv(chi_clean_path) # %>% filter(hnfs==1)
 chi_tracts <- readOGR(chi_tracts_path)
 
 # week, month, year, all
-aggregation <- "month"
 chi_clean$all <- "all"
 
 # number of districts at end of district aggregation
 target <- 200
+
+pop20102018 <- read_csv("https://www.dropbox.com/s/76t3iddlrtupul0/census20102018.csv?dl=1", skip=1)
+pop20002010 <- read_csv("https://www.dropbox.com/s/oy1gtu7marwwoht/census20002010.csv?dl=1")
+
+### POPULATION DATA ###
+
+chicago_id <- 1714000
+pop20002010$id <- paste0(pop20002010$STATE, pop20002010$PLACE)
+pop20102018$id <- pop20102018$`Target Geo Id2`
+
+chi_pop20002009 <- pop20002010 %>% filter(id==chicago_id, COUNTY=="000") %>% select(-SUMLEV, -STATE, -COUNTY, -PLACE, -COUSUB, -NAME, -STNAME, -ESTIMATESBASE2000, -id, -CENSUS2010POP, -POPESTIMATE2010)
+chi_pop20102018 <- pop20102018 %>% filter(id==chicago_id) %>% select(-Id, -Id2, -Geography, -`Target Geo Id`, -`Target Geo Id2`, -Rank, -Geography_1, -Geography_2, -`April 1, 2010 - Census`, -`April 1, 2010 - Estimates Base`, -id)
+chi_pop_y <- seq(2000, 2018)
+
+chi_pop <- data.frame(chi_pop_y, c(t(chi_pop20002009), t(chi_pop20102018)))
+colnames(chi_pop) <- c("year", "population")
+write_csv(chi_pop, chi_pop_path)
 
 ### TAG CRIMES TO TRACTS (ALL) ###
 
@@ -29,21 +45,29 @@ chi_clean <- tag_crimes(chi_clean, chi_tracts)
 chi_clean <- chi_clean %>% filter(!is.na(GEOID))  # drop these from data
 
 # all events
-chi_all_s <- agg_crimes(chi_clean %>% filter(hnfs==1), "all")
-chi_all_n <- agg_crimes(chi_clean %>% filter(narcotics==1), "all")
+chi_clean_s <- chi_clean %>% filter(hnfs==1)
+chi_clean_n <- chi_clean %>% filter(narcotics==1, arrest==1) # narcotics arrests
+
+chi_all_s <- agg_crimes(chi_clean_s, "all")
+chi_all_n <- agg_crimes(chi_clean_n, "all")  
 write_csv(chi_all_s, chi_tsa_path)
 write_csv(chi_all_n, chi_tna_path)
 
 # by aggregation
 # TODO group by hnfs versus narcotics as above under "all events"
-chi_agg <- agg_crimes(chi_clean, aggregation)
+chi_agg_s <- agg_crimes(chi_clean_s, aggregation)
+chi_agg_n <- agg_crimes(chi_clean_n, aggregation)
 
 # convert to matrix and vector storing geoid
-chi_mat <- chi_agg %>% spread_(aggregation, "count") %>% select(-GEOID)
-chi_geoid <- chi_agg %>% spread_(aggregation, "count") %>% select(GEOID)
+chi_mat_s <- chi_agg_s %>% spread_(aggregation, "count") %>% select(-GEOID)
+chi_geoid_s <- chi_agg_s %>% spread_(aggregation, "count") %>% select(GEOID)
+chi_mat_n <- chi_agg_n %>% spread_(aggregation, "count") %>% select(-GEOID)
+chi_geoid_n <- chi_agg_n %>% spread_(aggregation, "count") %>% select(GEOID)
 
-write_csv(chi_mat, chi_tmatrix_path, col_names=FALSE)
-write_csv(chi_geoid, chi_tgeoid_path, col_names=FALSE)
+write_csv(chi_mat_s, chi_ts_matrix_path, col_names=FALSE)
+write_csv(chi_geoid_s, chi_ts_geoid_path, col_names=FALSE)
+write_csv(chi_mat_n, chi_tn_matrix_path, col_names=FALSE)
+write_csv(chi_geoid_n, chi_tn_geoid_path, col_names=FALSE)
 
 ### CONSTRUCT ADJACENCY MATRIX ###
 

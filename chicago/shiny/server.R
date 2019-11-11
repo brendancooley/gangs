@@ -22,8 +22,8 @@ crimes <- read_csv("chi_clean.csv")
 
 cook.blocks <-  block_groups("Illinois", county = "031", year = "2016")   #Cook County Block Groups
 
-income2009 <- read_csv("income2016_clean.csv") %>% filter(capita > 1000)  # drop super low incomes
-income2016 <- read_csv("income2016_clean.csv") %>% filter(capita > 1000)
+income2009 <- read_csv(paste0(chi_cov_path_pre_shiny, "2009", ".csv")) %>% filter(capita > 1000)  # drop super low incomes
+income2016 <- read_csv(paste0(chi_cov_path_pre_shiny, "2016", ".csv")) %>% filter(capita > 1000)
 summary(income2009)
 
 # Next merge the geographic boundaries dataset with the ACS data

@@ -27,9 +27,12 @@ cook.tracts <-  tracts("Illinois", county = "031", year = 2016, refresh=TRUE)  #
 
 chi_shp <- readOGR(chi_shape_path, "Chicago")
 chi_shp <- spTransform(chi_shp, proj4string(cook.tracts))  # match CRS 
-proj4string(chicago_shp) <- proj4string(cook.tracts)
+proj4string(chi_shp) <- proj4string(cook.tracts)
 library(raster)
 chi_tracts <- intersect(cook.tracts, chi_shp)
+chi_tracts <- subset(chi_tracts, !(GEOID %in% airport_ids)) # drop airports
+chi_tracts <- subset(chi_tracts, !(GEOID %in% drop_ids)) # drop other Cook weirdos
+chi_tracts_ids <- chi_tracts@data$GEOID
 detach("package:raster", unload=TRUE)  # masks select from dplyr
 
 if (!dir.exists(chi_tracts_path)) {
@@ -63,8 +66,10 @@ narcotics_fbi <- c("18") # http://gis.chicagopolice.org/clearmap_crime_sums/crim
 
 crimes$hnfs <- ifelse(crimes$IUCR %in% hnfs_iucr, 1, 0)
 crimes$narcotics <- ifelse(crimes$`FBI Code` %in% narcotics_fbi, 1, 0)
+crimes$arrest <- ifelse(crimes$Arrest=="true", 1, 0)
 
-crimesClean <- crimes %>% filter(hnfs==1 | narcotics==1) %>% filter(!is.na(lat) & !is.na(lng) & lat > 40) %>% select(date, year, month, week, lat, lng, hnfs, narcotics)
+crimesClean <- crimes %>% filter(hnfs==1 | narcotics==1) %>% filter(!is.na(lat) & !is.na(lng) & lat > 40) %>% select(date, year, month, week, lat, lng, hnfs, narcotics, arrest)
+# crimesClean %>% filter(narcotics==1, arrest==0)  # almost all narcotics data are arrrest data
 
 write_csv(crimesClean, chi_clean_path)  # to data folder
 write_csv(crimesClean, 'shiny/chi_clean.csv') # to shiny folder
@@ -87,8 +92,9 @@ for (i in years) {
   # Obtaining the ACS Data begins with inputting the multi-use key
   api.key.install(key="9e14fb5cda17c74f8b723def3de2ada902631d4c")
   # Creating a Geographic Set for which to Grab Tabular Data from the ACS
-  geo <- geo.make(state=c(17), county=c(31),tract = "*" ,block.group = "*")
-
+  # geo <- geo.make(state=c(17), county=c(31), tract = "*" ,block.group = "*")
+  geo <- geo.make(state=c(17), county=c(31), tract = "*")
+  
   # Then Pulling Out the Median Household Income and Per Capita Income
   income <- acs.fetch(endyear = i, span = 5, geography = geo,
                       table.number = c("B19001"), col.names = "pretty")
@@ -127,13 +133,19 @@ for (i in years) {
 
   income_df$ln_capita <- log(income_df$capita)
 
+  # population
+  pop <- acs.fetch(endyear=i, span=5, geography=geo, table.number=c("B01003"), col.names="pretty")
+  income_df$population <- as.numeric(pop@estimate)
+  
   # income_df$rounded <- as.numeric(round(income_df$capita, digits = -3))/1000
 
   income_df <- income_df %>% as_tibble()
-
+  income_df <- income_df %>% filter(GEOID %in% chi_tracts_ids)  # filter out cook county non-city
+  
   # export to data folder
-  write_csv(income_df, paste0("data/income", i, "_clean.csv"))
+  write_csv(income_df, paste0(chi_cov_path_pre, i, ".csv"))
   # export to shiny
-  write_csv(income_df, paste0("shiny/income", i, "_clean.csv"))
+  write_csv(income_df, paste0(chi_cov_path_pre_shiny, i, ".csv"))
+  
 }
 
