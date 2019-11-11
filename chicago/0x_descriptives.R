@@ -19,15 +19,19 @@ chi_clean <- read_csv(chi_clean_path)
 minY <- min(chi_clean$year) %>% year()
 maxY <- max(chi_clean$year) %>% year()
 
-chi_tsa <- read_csv(chi_tsa_path) %>% filter()
+chi_tha <- read_csv(chi_tha_path)
+chi_tsa <- read_csv(chi_tsa_path)
 chi_tna <- read_csv(chi_tna_path)
+chi_tha <- chi_tha %>% left_join(chi_cov)
 chi_tsa <- chi_tsa %>% left_join(chi_cov)
 chi_tna <- chi_tna %>% left_join(chi_cov)
 
 # construct hnfs/arrest rates per tract
+chi_tha$rate <- chi_tha$count / chi_tha$population
 chi_tsa$rate <- chi_tsa$count / chi_tsa$population
 chi_tna$rate <- chi_tna$count / chi_tna$population
 
+chi_mat_h <- read_csv(chi_th_matrix_path, col_names=FALSE)
 chi_mat_s <- read_csv(chi_ts_matrix_path, col_names=FALSE)
 chi_mat_n <- read_csv(chi_tn_matrix_path, col_names=FALSE)
 
@@ -45,29 +49,36 @@ save_tmap(chi_pop_map, "figs/chi_pop_map.png")
 
 ### SHOOTINGS AND NARCOTICS ARRESTS OVER TIME ###
 
+homicides_t <- colSums(chi_mat_h)
 hnfs_t <- colSums(chi_mat_s)
 narcotics_t <- colSums(chi_mat_n)
 period_t <- seq(min(chi_clean[[aggregation]]), max(chi_clean[[aggregation]]), by = aggregation)
 
-counts_t <- data.frame(hnfs_t, narcotics_t, period_t) %>% as_tibble()
+counts_t <- data.frame(homicides_t, hnfs_t, narcotics_t, period_t) %>% as_tibble()
 counts_t$year <- year(counts_t$period_t)
 counts_t <- left_join(counts_t, chi_pop)
-counts_t$hnfs_100000 <- counts_t$hnfs_t / counts_t$population * 100000
+counts_t$`homicide rate` <- counts_t$homicides_t / counts_t$population * 100000
+counts_t$`shooting rate` <- counts_t$hnfs_t / counts_t$population * 100000
 counts_t$narcotics_100000 <- counts_t$narcotics_t / counts_t$population * 100000
 
-hnfs_t_plot <- ggplot(counts_t, aes(x=period_t, y=hnfs_100000)) +
+counts_t_cat <- counts_t %>% gather(key="type", value="rate", `homicide rate`, `shooting rate`, narcotics_100000) %>% filter(type!="narcotics_100000")
+
+hnfs_t_plot <- ggplot(counts_t_cat, aes(x=period_t, y=rate, color=type)) +
   geom_line(alpha=.5) +
-  geom_smooth(method="loess", color="red", se=FALSE) +
+  # geom_smooth(method="loess", color="red", se=FALSE) +
   theme_classic() +
-  labs(x="Month", y="Homicides and Non-Fatal Shootings per 100,000", title="Chicago Homicides and Non-Fatal Shootings")
-ggsave(filename="figs/hnfs_t_plot.png", plot=hnfs_t_plot)
+  labs(x="Month", y="Homicides and Non-Fatal Shootings per 100,000", title="Chicago Homicides and Non-Fatal Shootings") +
+  scale_color_grey() +
+  theme(aspect.ratio=1)
+ggsave(filename="figs/hnfs_t_plot.png", plot=hnfs_t_plot, width=6, height=6)
 
 narcotics_t_plot <- ggplot(counts_t, aes(x=period_t, y=narcotics_100000)) +
   geom_line(alpha=.5) +
   geom_smooth(method="loess", color="red", se=FALSE) +
   theme_classic() +
-  labs(x="Month", y="Narcotics Arrests per 100,000", title="Chicago Narcotics Arrests")
-ggsave(filename="figs/narcotics_t_plot.png", plot=narcotics_t_plot)
+  labs(x="Month", y="Narcotics Arrests per 100,000", title="Chicago Narcotics Arrests") +
+  theme(aspect.ratio=1)
+ggsave(filename="figs/narcotics_t_plot.png", plot=narcotics_t_plot, width=6, height=6)
 
 ### SHOOTINGS BY TRACT (ALL) ###
 

@@ -1,0 +1,124 @@
+---
+title: Illegal Drug Markets
+subtitle:
+date: 13 November 2019
+titlegraphic:
+fontsize: 10pt
+
+bibliography: /Users/bcooley/Dropbox (Princeton)/References/library.bib
+biblio-style: apsr
+
+output:
+ beamer_presentation:
+    template: "../templates/cooley-latex-beamer.tex"
+    fig_caption: true
+# toc: true
+ slide_level: 2
+---
+
+```{r libs, echo=FALSE, warning=FALSE, message=FALSE, results='hide'}
+
+knitr::opts_chunk$set(echo = TRUE, fig.align="center")
+
+```
+
+## Supply Chain
+
+- Global size of markets, 2009 [@UNODC2011]
+	+ Opium: $68 billion
+	+ Cocaine: $85 billion
+	+ [iPhone Sales](https://www.statista.com/statistics/263402/apples-iphone-revenue-since-3rd-quarter-2007/): $165 billion (2018)
+
+![Source: @Reuter2010](../chicago/figs/Reuter_hourglass.png){ width=30% }
+
+## Cocaine
+
+![](../chicago/figs/cocaine_supply_map.jpg)
+
+## Heroin
+
+![](../chicago/figs/opium_supply_map.jpg)
+
+## Cost-Price Margins [@Reuter2010]
+
+![](../chicago/figs/Reuter_costprice.png)
+
+## Retailers - Street Gangs
+
+> "Mexican DTOs and criminal groups are the principal transporters of illicit drugs into and through the Chicago HIDTA region" - DEA
+
+> "Street gangs control most retail drug distribution in the [Chicago] and are increasingly exploiting relationships with other gangs or DTOs and use of technology to advance their criminal activities" - DEA
+
+- Some involvement in production (e.g. converting powder to crack cocaine, repackaging)
+- Non-economic operating expenses dominate...
+
+## Operating Expenses
+
+![Source: @Levitt2000, QJE](../chicago/figs/lv_table4.png)
+
+## Territoriality
+
+> "If you want to expand your sales, you have to expand your street corners. You know, you have to physically take street corners, which is a violent act." - John Lippert, *Bloomberg Markets*
+
+> "Because crack distribution generates significant profits for street gangs, low-level rival gang members routinely engage in violence to acquire turf or steal drugs or drug proceeds" - DEA
+
+## Territoriality
+
+![Sources: Chicago Crime Commission Gang Book 2012, *Chicago Magazine*](../chicago/figs/gangmap2012cmag.jpg)
+
+## Price and Violent Competition
+
+**Gang Wars**
+
+- @Levitt2000
+	+ Gang wars occur about 25 percent of the time
+	+ Gang wars result in 20-30 percent drop in prices and quantities sold
+	+ Death rate (annual) for members: 7 percent
+- @Papachristos2009
+	+ 35 percent of homicides in 1994, 1998, 2002 documented as gang-related by homicide detectives
+	+ 88 percent inter-gang
+
+> "In 2006 nearly 50 percent of the homicides and a large percentage of other violent crimes and property crimes committed in Chicago were attributed to street gangs that are involved in drug trafficking" - DEA
+
+**Law Enforcement and Imprisonment**
+
+> "3,500 of the 13,000 inmates currently housed in the Cook County Jail have some gang affiliation" - DEA
+
+- At any given time, 1/3 of gang leadership is imprisoned [@Levitt2000]
+
+## Homicides and Non-Fatal Shootings
+
+![Source: Chicago PD](../chicago/figs/hnfs_t_plot.png)
+
+## Homicides and Non-Fatal Shootings
+
+![Source: Chicago PD](../chicago/figs/chi_tsa_map.png)
+
+## Narcotics Arrests
+
+![Source: Chicago PD](../chicago/figs/narcotics_t_plot.png)
+
+## Narcotics Arrests
+
+![Source: Chicago PD](../chicago/figs/chi_tna_map.png)
+
+## Questions
+
+**Labor Market for Retailers**
+
+- If retail prices are so high, why are earnings for dealers so low?
+- Why is compensation so low, given risk?
+
+**Territoriality and Competition**
+
+- Why is violence so uniquely associated with black markets?
+- Violence versus prices as competitive means...complements or substitutes?
+- Consumers presumably can travel quickly to different territories...what benefits does 'turf' bring if not market power?
+
+**Policy**
+
+- How would increased police enforcement (seizures or arrests) affect competition (price and violent) between groups?
+- Radical counterfactual: drug legalization
+	+ Tradeoff(?): violence versus consumption
+
+## References

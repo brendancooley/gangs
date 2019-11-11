@@ -56,6 +56,7 @@ crimes$year <- as.Date(paste0(crimes$Year, "-01-01"))
 crimes$lat <- crimes$Latitude
 crimes$lng <- crimes$Longitude
 
+homicide_iucr <- c("0110", "0130")
 hnfs_iucr <- c("0110", "0130", "041A", "041B")  # First and Second degree homicide and Aggravated Battery with a handgun or other firearm
 # NOTE: see codes: https://data.cityofchicago.org/Public-Safety/Chicago-Police-Department-Illinois-Uniform-Crime-R/c7ck-438e/data
 # NOTE: does not include aggravated assault: threat/display of firearm (0450, 0451)
@@ -64,11 +65,12 @@ hnfs_iucr <- c("0110", "0130", "041A", "041B")  # First and Second degree homici
 # NOTE: does not include weapons violation, unlawful use of firearm (0141A, 0141B)
 narcotics_fbi <- c("18") # http://gis.chicagopolice.org/clearmap_crime_sums/crime_types.html
 
+crimes$homicide <- ifelse(crimes$IUCR %in% homicide_iucr, 1, 0)
 crimes$hnfs <- ifelse(crimes$IUCR %in% hnfs_iucr, 1, 0)
 crimes$narcotics <- ifelse(crimes$`FBI Code` %in% narcotics_fbi, 1, 0)
 crimes$arrest <- ifelse(crimes$Arrest=="true", 1, 0)
 
-crimesClean <- crimes %>% filter(hnfs==1 | narcotics==1) %>% filter(!is.na(lat) & !is.na(lng) & lat > 40) %>% select(date, year, month, week, lat, lng, hnfs, narcotics, arrest)
+crimesClean <- crimes %>% filter(hnfs==1 | narcotics==1) %>% filter(!is.na(lat) & !is.na(lng) & lat > 40) %>% select(date, year, month, week, lat, lng, homicide, hnfs, narcotics, arrest)
 # crimesClean %>% filter(narcotics==1, arrest==0)  # almost all narcotics data are arrrest data
 
 write_csv(crimesClean, chi_clean_path)  # to data folder

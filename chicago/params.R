@@ -18,15 +18,21 @@ chi_cov_path_pre_shiny <- "shiny/covariates"
 chi_pop_path <- "data/population.csv"  # population by year
 
 chi_clean_path <- "data/chi_clean.csv" # cleaned chicago crime data
+
+chi_tha_path <- "output/chi_tha.csv"  # tracts, homicides, all
 chi_tsa_path <- "output/chi_tsa.csv" # tracts, shootings, all
 chi_tna_path <- "output/chi_tna.csv" # tracts, narcotics, all
+
 chi_dsa_path <- "output/chi_dsa.csv"  # districts (combined), shootings, all
 
+chi_th_geoid_path <- "output/chi_th_geoid.csv"
 chi_ts_geoid_path <- "output/chi_ts_geoid.csv"
 chi_tn_geoid_path <- "output/chi_tn_geoid.csv"
+
 chi_dgeoid_path <- "output/chi_dgeoid.csv"
 chi_geoid_cor_path <- "output/chi_geoid_cor.csv"
 
+chi_th_matrix_path <- "output/chi_th_matrix.csv"  # tracts, aggregation given in 02_clean
 chi_ts_matrix_path <- "output/chi_ts_matrix.csv"  # tracts, aggregation given in 02_clean
 chi_tn_matrix_path <- "output/chi_tn_matrix.csv"
 chi_dmatrix_path <- "output/chi_dmatrix.csv"  # tracts, aggregation given in 02_clean

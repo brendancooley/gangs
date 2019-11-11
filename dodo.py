@@ -21,6 +21,7 @@ def task_source():
 	yield {
 		'name': "initializing environment...",
 		'actions':["cp " + templatesPath + "cooley-plain.latex" + " templates/",
+				   "cp " + templatesPath + "cooley-latex-beamer.tex" + " templates/",
 				   "cp -a " + softwarePath + " source/"]
 	}
 
@@ -47,3 +48,9 @@ def task_figs():
 				'actions':["pandoc --template=" + figsTemplate + " -o " +
 							fName + ".pdf " + figsFiles[i]]
 			}
+
+def task_slides():
+	yield {
+		'name': "building slides...",
+		'actions':["R --slave -e \"rmarkdown::render(\'" + "ECO541talk/drugs.rmd" + "\', output_file=\'" + "drugs.pdf" +"\')\""]
+	}

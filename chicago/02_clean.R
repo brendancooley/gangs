@@ -45,25 +45,33 @@ chi_clean <- tag_crimes(chi_clean, chi_tracts)
 chi_clean <- chi_clean %>% filter(!is.na(GEOID))  # drop these from data
 
 # all events
+chi_clean_h <- chi_clean %>% filter(homicide==1)
 chi_clean_s <- chi_clean %>% filter(hnfs==1)
 chi_clean_n <- chi_clean %>% filter(narcotics==1, arrest==1) # narcotics arrests
 
+chi_all_h <- agg_crimes(chi_clean_h, "all")
 chi_all_s <- agg_crimes(chi_clean_s, "all")
-chi_all_n <- agg_crimes(chi_clean_n, "all")  
+chi_all_n <- agg_crimes(chi_clean_n, "all") 
+write_csv(chi_all_h, chi_tha_path)
 write_csv(chi_all_s, chi_tsa_path)
 write_csv(chi_all_n, chi_tna_path)
 
 # by aggregation
 # TODO group by hnfs versus narcotics as above under "all events"
+chi_agg_h <- agg_crimes(chi_clean_h, aggregation)
 chi_agg_s <- agg_crimes(chi_clean_s, aggregation)
 chi_agg_n <- agg_crimes(chi_clean_n, aggregation)
 
 # convert to matrix and vector storing geoid
+chi_mat_h <- chi_agg_h %>% spread_(aggregation, "count") %>% select(-GEOID)
+chi_geoid_h <- chi_agg_h %>% spread_(aggregation, "count") %>% select(GEOID)
 chi_mat_s <- chi_agg_s %>% spread_(aggregation, "count") %>% select(-GEOID)
 chi_geoid_s <- chi_agg_s %>% spread_(aggregation, "count") %>% select(GEOID)
 chi_mat_n <- chi_agg_n %>% spread_(aggregation, "count") %>% select(-GEOID)
 chi_geoid_n <- chi_agg_n %>% spread_(aggregation, "count") %>% select(GEOID)
 
+write_csv(chi_mat_h, chi_th_matrix_path, col_names=FALSE)
+write_csv(chi_geoid_h, chi_th_geoid_path, col_names=FALSE)
 write_csv(chi_mat_s, chi_ts_matrix_path, col_names=FALSE)
 write_csv(chi_geoid_s, chi_ts_geoid_path, col_names=FALSE)
 write_csv(chi_mat_n, chi_tn_matrix_path, col_names=FALSE)
