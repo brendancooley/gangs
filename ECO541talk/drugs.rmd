@@ -54,7 +54,7 @@ A Burdett-Mortensen (1998) search model
 
 ## Effects of Enforcement
 
-![](Figure3.png){width=250%}
+![](Figure3.png){width=300%}
 
 ## Incarceration
 
