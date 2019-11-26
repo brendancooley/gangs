@@ -100,8 +100,10 @@ def C_bin_kernel(delta, C):
     bin = np.where(out > 0, 1, 0)
     return(bin)
 
-def spect_clust(covM, M, delta=None, C=None, eig_plot=False):
+def spect_clust(covM, M, normalize=True, delta=None, C=None, eig_plot=False):
     """Conduct spectral clustering on trace-minimized covariance matrix
+
+    TODO: k-medians implementation
 
     Parameters
     ----------
@@ -125,17 +127,22 @@ def spect_clust(covM, M, delta=None, C=None, eig_plot=False):
 
     # extract eigenvectors
     # w, v = np.linalg.eig(G)
-    w, v = np.linalg.eigh(G) # NOTE: was getting complex eigenvalues using linalg.eig
-    kw = np.flip(np.argsort(w))[0:M+1]
-    kv = v.T[kw]  # NOTE: need to transpose eigenvectors
+    lbda, U = np.linalg.eigh(G) # NOTE: was getting complex eigenvalues using linalg.eig
+    lbda_K = np.flip(np.argsort(lbda))[0:M+1]
+    U_k = U.T[lbda_K]  # NOTE: need to transpose eigenvectors
+    if normalize is True:
+        U_norm = np.linalg.norm(U_k, axis=0)
+        U_k = U_k / U_norm
+
     if eig_plot is True:
-        plt.plot(w[np.flip(np.argsort(w))], "r+")
+        plt.plot(lbda[np.flip(np.argsort(lbda))], "r+")
 
     # cluster first M+1 eigenvectors
-    km = cluster.k_means(kv.transpose(), n_clusters=M+1)
+    km = cluster.k_means(U_k.transpose(), n_clusters=M+1)
     km_lab = km[1]
+    km_centroids = km[0]
 
-    return(km_lab)
+    return(km_lab, km_centroids)
 
 def permute_covM(covM, clusters, visualize=False, print_nc=False):
     """reorder covariance matrix to correspond to clustering output

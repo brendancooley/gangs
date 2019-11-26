@@ -64,18 +64,14 @@ chi_agg_n <- agg_crimes(chi_clean_n, aggregation)
 
 # convert to matrix and vector storing geoid
 chi_mat_h <- chi_agg_h %>% spread_(aggregation, "count") %>% select(-GEOID)
-chi_geoid_h <- chi_agg_h %>% spread_(aggregation, "count") %>% select(GEOID)
 chi_mat_s <- chi_agg_s %>% spread_(aggregation, "count") %>% select(-GEOID)
-chi_geoid_s <- chi_agg_s %>% spread_(aggregation, "count") %>% select(GEOID)
 chi_mat_n <- chi_agg_n %>% spread_(aggregation, "count") %>% select(-GEOID)
-chi_geoid_n <- chi_agg_n %>% spread_(aggregation, "count") %>% select(GEOID)
+chi_geoid <- chi_agg_h %>% spread_(aggregation, "count") %>% select(GEOID)
 
 write_csv(chi_mat_h, chi_th_matrix_path, col_names=FALSE)
-write_csv(chi_geoid_h, chi_th_geoid_path, col_names=FALSE)
 write_csv(chi_mat_s, chi_ts_matrix_path, col_names=FALSE)
-write_csv(chi_geoid_s, chi_ts_geoid_path, col_names=FALSE)
 write_csv(chi_mat_n, chi_tn_matrix_path, col_names=FALSE)
-write_csv(chi_geoid_n, chi_tn_geoid_path, col_names=FALSE)
+write_csv(chi_geoid, chi_t_geoid_path, col_names=FALSE)
 
 ### CONSTRUCT ADJACENCY MATRIX ###
 

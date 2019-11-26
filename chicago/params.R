@@ -1,3 +1,4 @@
+
 helperPath <- "../source/R/"
 helperFiles <- list.files(helperPath)
 for (i in helperFiles) {
@@ -20,15 +21,12 @@ chi_pop_path <- "data/population.csv"  # population by year
 chi_clean_path <- "data/chi_clean.csv" # cleaned chicago crime data
 
 chi_tha_path <- "output/chi_tha.csv"  # tracts, homicides, all
-chi_tsa_path <- "output/chi_tsa.csv" # tracts, shootings, all
+chi_tsa_path <- "output/chi_tsa.csv" # tracts, shootings (including homicides), all
 chi_tna_path <- "output/chi_tna.csv" # tracts, narcotics, all
 
 chi_dsa_path <- "output/chi_dsa.csv"  # districts (combined), shootings, all
 
-chi_th_geoid_path <- "output/chi_th_geoid.csv"
-chi_ts_geoid_path <- "output/chi_ts_geoid.csv"
-chi_tn_geoid_path <- "output/chi_tn_geoid.csv"
-
+chi_t_geoid_path <- "output/chi_t_geoid.csv"
 chi_dgeoid_path <- "output/chi_dgeoid.csv"
 chi_geoid_cor_path <- "output/chi_geoid_cor.csv"
 
@@ -43,8 +41,11 @@ chi_dadjacency_path <- "output/chi_dadjacency.csv"
 crimes_raw_url <- "https://www.dropbox.com/s/h7da81i9qt876tf/chi_crimes.csv?dl=1"
 ss_raw_url <- "https://www.dropbox.com/s/3qfruwbsg1t7g23/shotspotter.csv?dl=1"
 
-gammaL_path = "output/gammaL.csv"
+cov_mat_path = "output/cov_mat.csv"
+geoid_keep_path = "output/geoid_keep.csv"
+geoid_zero_path = "output/geoid_zero.csv"
 clusters_path = "output/clusters.csv"
+nc_path = "output/noise_cluster.csv"
 
 save.image('params.Rdata')
 
