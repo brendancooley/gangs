@@ -144,32 +144,12 @@ def spect_clust(covM, M, normalize=True, delta=None, C=None, eig_plot=False):
 
     return(km_lab, km_centroids)
 
-def permute_covM(covM, clusters, visualize=False, print_nc=False):
+def permute_covM(covM, clusters, visualize=False, nc=0):
     """reorder covariance matrix to correspond to clustering output
 
     """
 
     counts = np.bincount(clusters)
-    print(counts)
-
-    # identify noise cluster (is this consistent with spectral clustering?)
-    # NOTE: doesn't work when this assigns district to unique cluster (singletons)
-    V = []
-    for i in range(len(counts)):
-        indices = np.where(clusters==i)[0]
-        N = len(indices)
-        blockM = np.copy(covM)[indices,:][:,indices]
-        for j in range(blockM.shape[0]):
-            blockM[j, j] = 0  # zero out diagonal
-        if N != 1:
-            v = np.sum(blockM) / (N ** 2 - N)
-        else:
-            v = np.sum(blockM) / N
-        # TODO: normalizing by sqrt might be more principled...see Lei and Rinaldo
-        V.append(v)
-    nc = np.argmin(V)
-    if print_nc is True:
-        print("Cluster id " + str(nc) + " is the noise cluster.")
 
     # reassign noise cluster to last index
     clustersP = np.copy(clusters)
@@ -195,3 +175,26 @@ def permute_covM(covM, clusters, visualize=False, print_nc=False):
         plt.imshow(covMC, cmap="hot", interpolation="nearest")
 
     return(covMC)
+
+def Bhat(P, X, M):
+    """estimate connectivity matrix B
+
+    Parameters
+    ----------
+    P : type
+        Description of parameter `P`.
+    X : matrix K by K
+        centroids from clustering output
+
+    Returns
+    -------
+    matrix
+        K times K connectivity matrix
+
+    """
+
+    lbda, U = np.linalg.eigh(P)
+    lbda_K = np.flip(np.argsort(lbda))[0:M+1]
+    Lbda = np.diag(lbda[lbda_K])
+
+    return(np.matmul(np.matmul(X, Lbda), X.T))

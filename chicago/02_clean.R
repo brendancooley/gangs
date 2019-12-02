@@ -15,6 +15,11 @@ ipak(libs)
 chi_clean <- read_csv(chi_clean_path) # %>% filter(hnfs==1)
 chi_tracts <- readOGR(chi_tracts_path)
 
+minY <- min(chi_clean$year) %>% year()
+maxY <- max(chi_clean$year) %>% year()
+
+n_y_chunk <- (maxY - minY + 1) %/% y_chunk
+
 # week, month, year, all
 chi_clean$all <- "all"
 
@@ -72,6 +77,19 @@ write_csv(chi_mat_h, chi_th_matrix_path, col_names=FALSE)
 write_csv(chi_mat_s, chi_ts_matrix_path, col_names=FALSE)
 write_csv(chi_mat_n, chi_tn_matrix_path, col_names=FALSE)
 write_csv(chi_geoid, chi_t_geoid_path, col_names=FALSE)
+
+# year chunks
+for (i in 1:n_y_chunk) {
+  miny <- minY + (i-1) * y_chunk
+  maxy <- miny + y_chunk 
+  minyd <- ymd(miny, truncated=2L)
+  maxyd <- ymd(maxy, truncated=2L)
+  chi_mat_s_y <- chi_agg_s %>% filter(.[[aggregation]] >= minyd & .[[aggregation]] < maxyd) %>% spread_(aggregation, "count") %>% select(-GEOID)
+  fname <- paste0(chi_clust_fpath, miny)
+  mkdir(fname)
+  write_csv(chi_mat_s_y, paste0(fname, "/", chi_ts_matrix_y_file), col_names=FALSE)
+}
+
 
 ### CONSTRUCT ADJACENCY MATRIX ###
 

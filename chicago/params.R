@@ -6,6 +6,7 @@ for (i in helperFiles) {
 }
 
 aggregation <- "month"
+y_chunk <- 6
 
 airport_ids <- c("17031980000", "17031980100", "17031990000")
 drop_ids <- c("17031770700", "17031770602", "17031811701", "17031770800", "17031770500", "17031811600")  # Cook area surrounding airport
@@ -31,21 +32,33 @@ chi_dgeoid_path <- "output/chi_dgeoid.csv"
 chi_geoid_cor_path <- "output/chi_geoid_cor.csv"
 
 chi_th_matrix_path <- "output/chi_th_matrix.csv"  # tracts, aggregation given in 02_clean
-chi_ts_matrix_path <- "output/chi_ts_matrix.csv"  # tracts, aggregation given in 02_clean
 chi_tn_matrix_path <- "output/chi_tn_matrix.csv"
 chi_dmatrix_path <- "output/chi_dmatrix.csv"  # tracts, aggregation given in 02_clean
 
 chi_tadjacency_path <- "output/chi_tadjacency.csv"
 chi_dadjacency_path <- "output/chi_dadjacency.csv"
 
+# clustering (all)
+chi_clust_fpath <- "output/chi_ts_clust"
+chi_clust_fpath_all <- paste0(chi_clust_fpath, "/", "all")
+
+chi_ts_matrix_y_file <- "chi_ts_matrix.csv"
+chi_ts_matrix_path <- paste0(chi_clust_fpath_all, "/", chi_ts_matrix_y_file)
+
 crimes_raw_url <- "https://www.dropbox.com/s/h7da81i9qt876tf/chi_crimes.csv?dl=1"
 ss_raw_url <- "https://www.dropbox.com/s/3qfruwbsg1t7g23/shotspotter.csv?dl=1"
 
-cov_mat_path = "output/cov_mat.csv"
-geoid_keep_path = "output/geoid_keep.csv"
-geoid_zero_path = "output/geoid_zero.csv"
-clusters_path = "output/clusters.csv"
-nc_path = "output/noise_cluster.csv"
+# end file names for clustering output...place in relevant chi_clust_fpath folder
+cov_mat_path = "cov_mat.csv"
+P_path = "P.csv"
+P_sorted_path = "P_sorted.csv"
+geoid_keep_path = "geoid_keep.csv"
+geoid_zero_path = "geoid_zero.csv"
+clusters_path = "clusters.csv"
+nc_path = "noise_cluster.csv"
 
 save.image('params.Rdata')
+
+mkdir(chi_clust_fpath)
+mkdir(chi_clust_fpath_all)
 
