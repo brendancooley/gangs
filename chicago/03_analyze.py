@@ -33,6 +33,8 @@ geoids = np.genfromtxt(chi_t_geoid_path, delimiter=",")
 
 for i in groups:
 
+    # i = groups[0]
+
     folder_active = chi_clust_fpath + "/" + i
 
     counts = np.genfromtxt(folder_active + "/" + chi_ts_matrix_y_file, delimiter=",")
@@ -55,9 +57,10 @@ for i in groups:
 
     # CLUSTERING #
     # imp.reload(helpers)
-    M = 2
+    M = 3
     # clusters = helpers.spect_clust(P, M, normalize=True, eig_plot=True)
     clusters, centroids = helpers.spect_clust(P, M, normalize=False, eig_plot=True)
+    np.bincount(clusters)
     theta = np.eye(M+1)[clusters]
     X = centroids
     Bhat = helpers.Bhat(P, X, M)  # estimate of connectivity matrix

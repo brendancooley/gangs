@@ -3,6 +3,7 @@ import mosek
 from mosek.fusion import *
 from sklearn import cluster
 import matplotlib.pyplot as plt
+from itertools import permutations
 
 def covMat(A, zero=False, cor=False):
     """Short summary.
@@ -100,7 +101,7 @@ def C_bin_kernel(delta, C):
     bin = np.where(out > 0, 1, 0)
     return(bin)
 
-def spect_clust(covM, M, normalize=True, delta=None, C=None, eig_plot=False):
+def spect_clust(covM, K, normalize=False, delta=None, C=None, eig_plot=False):
     """Conduct spectral clustering on trace-minimized covariance matrix
 
     TODO: k-medians implementation
@@ -120,6 +121,7 @@ def spect_clust(covM, M, normalize=True, delta=None, C=None, eig_plot=False):
         Cluster ids for each district.
 
     """
+
     G = covM
     if delta is not None:
         S = C_bin_kernel(delta, C)  # TODO: provide option for exp kernel
@@ -128,7 +130,7 @@ def spect_clust(covM, M, normalize=True, delta=None, C=None, eig_plot=False):
     # extract eigenvectors
     # w, v = np.linalg.eig(G)
     lbda, U = np.linalg.eigh(G) # NOTE: was getting complex eigenvalues using linalg.eig
-    lbda_K = np.flip(np.argsort(lbda))[0:M+1]
+    lbda_K = np.flip(np.argsort(lbda))[0:K]
     U_k = U.T[lbda_K]  # NOTE: need to transpose eigenvectors
     if normalize is True:
         U_norm = np.linalg.norm(U_k, axis=0)
@@ -138,11 +140,112 @@ def spect_clust(covM, M, normalize=True, delta=None, C=None, eig_plot=False):
         plt.plot(lbda[np.flip(np.argsort(lbda))], "r+")
 
     # cluster first M+1 eigenvectors
-    km = cluster.k_means(U_k.transpose(), n_clusters=M+1)
+    km = cluster.k_means(U_k.transpose(), n_clusters=K)
     km_lab = km[1]
     km_centroids = km[0]
 
     return(km_lab, km_centroids)
+
+def est_J(P, V):
+    """Short summary.
+
+    Parameters
+    ----------
+    P : matrix
+        diagonal-less adjacency matrix
+    V : int
+        number of folds for cross-validation
+
+    Returns
+    -------
+    type
+        Description of returned object.
+
+    """
+
+    # TESTING
+    V = 4
+    P = np.genfromtxt('output/chi_ts_clust/all/P.csv', delimiter=",")
+    S = 50
+
+    N = P.shape[0]
+    fold_ids = fold_permutation(N, V)
+    Kbar = 20
+
+    mL = []
+
+    for s in range(S):
+
+        Loss = []
+
+        for k in np.arange(1, Kbar):
+
+            loss_v = []
+
+            for v in range(V):
+
+                fold_bin = np.copy(fold_ids) # zero if upper block, one otherwise
+                fold_bin = np.where(fold_bin == v, 1, 0)
+                Pp = rearrange_mat(P, fold_bin)
+                rowN = N - np.sum(fold_bin)
+                Ptilde = Pp[0:rowN,]
+                Pv = Pp[rowN:,]
+                # Pv.shape
+                # Ptilde.shape
+
+                clusters, centroids = spect_clust(np.matmul(Ptilde.transpose(), Ptilde), k)
+
+                theta = np.eye(k)[clusters]
+                # np.sum(theta, axis=0)
+                delta = np.diag(np.sum(theta, axis=0))
+                theta_tilde = theta[0:rowN,]
+                delta_tilde = np.diag(np.sum(theta_tilde, axis=0))
+                if np.any(np.diag(delta_tilde) == 0):
+                    print("singular delta_tilde matrix...proceeding to next fold...")
+                    break
+                # NOTE: possible that we get zeros in test set and can't invert
+                # print(delta_tilde)
+                Bhat = np.linalg.inv(delta_tilde) @ theta_tilde.transpose() @ Ptilde @ theta @ np.linalg.inv(delta)
+
+                P_hat = theta @ Bhat @ theta.transpose()
+                P_hat = P_hat - np.diag(np.diag(P_hat))
+                Pv_hat = P_hat[rowN:,]
+
+                loss = np.linalg.norm(Pv - Pv_hat, ord="fro")  # Frobenius Norm
+                loss_v.append(loss)
+
+            Loss.append(np.mean(loss_v))
+
+        minLoss = np.argmin(Loss)
+        mL.append(minLoss)
+
+
+def fold_permutation(N, V):
+    """Short summary.
+
+    Parameters
+    ----------
+    N : int
+        number of rows of covariance matrix
+    V : int
+        number of folds for cross validation
+
+    Returns
+    -------
+    array
+        1d permuted vector of fold ids
+
+    """
+
+    folds = np.arange(V)
+    rep = N // V
+    rem = N % V
+    fold_ids = np.repeat(folds, rep)
+    for i in range(rem):
+        fold_ids = np.append(fold_ids, np.random.choice(folds))
+    fold_ids = np.random.permutation(fold_ids)
+
+    return(fold_ids)
 
 def permute_covM(covM, clusters, visualize=False, nc=0):
     """reorder covariance matrix to correspond to clustering output
@@ -162,19 +265,46 @@ def permute_covM(covM, clusters, visualize=False, nc=0):
             if clustersP[i] == M:
                 clustersP[i] = nc
 
-    covMC = np.copy(covM)
-    p = []
-    for i in range(len(counts)):
-        for j in range(len(clustersP)):
-            if clustersP[j] == i:
-                p.append(j)
-    covMC[:,:] = covMC[p,:]
-    covMC[:,:] = covMC[:,p]
+    covMC = rearrange_mat(covM, clustersP)
 
     if visualize is True:
         plt.imshow(covMC, cmap="hot", interpolation="nearest")
 
     return(covMC)
+
+def rearrange_mat(M, ids):
+    """Short summary.
+
+    Parameters
+    ----------
+    M : mat
+        input matrix
+    ids : array (1d)
+        vector associating each row to a group
+
+    Returns
+    -------
+    Mp
+        permuted matrix
+
+    """
+
+    Mp = np.copy(M)
+    counts = np.bincount(ids)
+
+    p = []
+    for i in range(len(counts)):
+        for j in range(len(ids)):
+            if ids[j] == i:
+                p.append(j)
+    Mp[:,:] = Mp[p,:]
+    Mp[:,:] = Mp[:,p]
+
+    return(Mp)
+
+def Bhat_tilde(P, theta):
+
+
 
 def Bhat(P, X, M):
     """estimate connectivity matrix B

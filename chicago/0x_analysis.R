@@ -8,7 +8,7 @@ if (!'chicago' %in% strsplit(getwd(), "/")[[1]]) {
 
 source("params.R")
 
-libs <- c("tidyverse", "tigris", "leaflet", "leaflet.extras", "tmap", "rgdal", "RColorBrewer", "reshape2")
+libs <- c("tidyverse", "tigris", "leaflet", "leaflet.extras", "tmap", "rgdal", "RColorBrewer", "reshape2", "lubridate")
 ipak(libs)
 
 ### DATA ###
