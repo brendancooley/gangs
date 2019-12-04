@@ -33,7 +33,7 @@ geoids = np.genfromtxt(chi_t_geoid_path, delimiter=",")
 
 for i in groups:
 
-    # i = groups[0]
+    i = groups[0]
 
     folder_active = chi_clust_fpath + "/" + i
 
@@ -57,7 +57,7 @@ for i in groups:
 
     # CLUSTERING #
     # imp.reload(helpers)
-    M = 3
+    M = 2
     # clusters = helpers.spect_clust(P, M, normalize=True, eig_plot=True)
     clusters, centroids = helpers.spect_clust(P, M, normalize=False, eig_plot=True)
     np.bincount(clusters)
