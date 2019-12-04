@@ -57,7 +57,7 @@ for i in groups:
 
     # CLUSTERING #
     # imp.reload(helpers)
-    M = 2
+    M = 3
     # clusters = helpers.spect_clust(P, M, normalize=True, eig_plot=True)
     clusters, centroids = helpers.spect_clust(P, M, normalize=False, eig_plot=True)
     np.bincount(clusters)
