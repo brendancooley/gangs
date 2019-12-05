@@ -166,17 +166,18 @@ def est_J(P, V):
     # TESTING
     V = 4
     P = np.genfromtxt('output/chi_ts_clust/all/P.csv', delimiter=",")
+    P.shape
     S = 50
 
     N = P.shape[0]
-    fold_ids = fold_permutation(N, V)
-    Kbar = 20
+    Kbar = 10
 
     mL = []
 
     for s in range(S):
 
         Loss = []
+        fold_ids = fold_permutation(N, V)
 
         for k in np.arange(1, Kbar):
 
@@ -184,14 +185,20 @@ def est_J(P, V):
 
             for v in range(V):
 
+                # k = 3
+                v = 2
+
                 fold_bin = np.copy(fold_ids) # zero if upper block, one otherwise
                 fold_bin = np.where(fold_bin == v, 1, 0)
                 Pp = rearrange_mat(P, fold_bin)
                 rowN = N - np.sum(fold_bin)
                 Ptilde = Pp[0:rowN,]
-                Pv = Pp[rowN:,]
-                # Pv.shape
-                # Ptilde.shape
+                Ptilde
+                Pv = Pp[rowN:,rowN:]
+                print(Pv.shape)
+                Ptilde.shape
+                # Ptilde_sq = Pp[0:rowN,0:rowN]
+                # Ptilde_sq - Ptilde_sq.transpose()
 
                 clusters, centroids = spect_clust(np.matmul(Ptilde.transpose(), Ptilde), k)
 
@@ -206,10 +213,17 @@ def est_J(P, V):
                 # NOTE: possible that we get zeros in test set and can't invert
                 # print(delta_tilde)
                 Bhat = np.linalg.inv(delta_tilde) @ theta_tilde.transpose() @ Ptilde @ theta @ np.linalg.inv(delta)
+                Bhat - Bhat.transpose()
+                # TODO: not symmetric...why?
+
+                # delta_tilde
+                # delta
 
                 P_hat = theta @ Bhat @ theta.transpose()
                 P_hat = P_hat - np.diag(np.diag(P_hat))
-                Pv_hat = P_hat[rowN:,]
+                Pv_hat = P_hat[rowN:,rowN:]
+                # print(Pv_hat)
+                # Pv_hat.shape
 
                 loss = np.linalg.norm(Pv - Pv_hat, ord="fro")  # Frobenius Norm
                 loss_v.append(loss)
