@@ -132,6 +132,7 @@ def spect_clust(covM, K, normalize=False, delta=None, C=None, eig_plot=False):
     lbda, U = np.linalg.eigh(G) # NOTE: was getting complex eigenvalues using linalg.eig
     lbda_K = np.flip(np.argsort(lbda))[0:K]
     U_k = U.T[lbda_K]  # NOTE: need to transpose eigenvectors
+    # print(U_k)
     if normalize is True:
         U_norm = np.linalg.norm(U_k, axis=0)
         U_k = U_k / U_norm
@@ -164,15 +165,17 @@ def est_J(P, V):
     """
 
     # TESTING
-    V = 4
+    V = 3
     P = np.genfromtxt('output/chi_ts_clust/all/P.csv', delimiter=",")
-    P.shape
-    S = 50
+    S = 10
 
     N = P.shape[0]
     Kbar = 10
 
     mL = []
+    # NOTE: another way to do this is to output the first time we don't get a decrease in loss...argument being that rest of vector is noise
+        # this is consistent with results in Chen and Lei, they only provide guarantees against under estimation
+    # np.median(mL)
 
     for s in range(S):
 
@@ -182,56 +185,71 @@ def est_J(P, V):
         for k in np.arange(1, Kbar):
 
             loss_v = []
+            # k = 3
 
             for v in range(V):
 
-                # k = 3
-                v = 2
-
                 fold_bin = np.copy(fold_ids) # zero if upper block, one otherwise
+                # print(fold_bin)
                 fold_bin = np.where(fold_bin == v, 1, 0)
                 Pp = rearrange_mat(P, fold_bin)
                 rowN = N - np.sum(fold_bin)
                 Ptilde = Pp[0:rowN,]
-                Ptilde
+                # Ptilde.shape
                 Pv = Pp[rowN:,rowN:]
-                print(Pv.shape)
-                Ptilde.shape
-                # Ptilde_sq = Pp[0:rowN,0:rowN]
-                # Ptilde_sq - Ptilde_sq.transpose()
+                # Pv.shape
+                Ptilde_sq = Pp[0:rowN,0:rowN]
 
                 clusters, centroids = spect_clust(np.matmul(Ptilde.transpose(), Ptilde), k)
-
+                # u, s, vh = np.linalg.svd(Ptilde)
+                # vh[0:k,]
+                # NOTE: right singular vectors match up
                 theta = np.eye(k)[clusters]
+
+                # np.sum(theta, axis=1)
                 # np.sum(theta, axis=0)
                 delta = np.diag(np.sum(theta, axis=0))
                 theta_tilde = theta[0:rowN,]
                 delta_tilde = np.diag(np.sum(theta_tilde, axis=0))
-                if np.any(np.diag(delta_tilde) == 0):
-                    print("singular delta_tilde matrix...proceeding to next fold...")
-                    break
+                # if np.any(np.diag(delta_tilde) == 0):
+                #     print("singular delta_tilde matrix...proceeding to next fold...")
+                #     break
                 # NOTE: possible that we get zeros in test set and can't invert
                 # print(delta_tilde)
-                Bhat = np.linalg.inv(delta_tilde) @ theta_tilde.transpose() @ Ptilde @ theta @ np.linalg.inv(delta)
-                Bhat - Bhat.transpose()
+                # Bhat = np.linalg.inv(delta_tilde) @ theta_tilde.transpose() @ Ptilde @ theta @ np.linalg.inv(delta)
+                Bhat = Bhat2(Ptilde, theta, rowN)
+                # print(Bhat)
                 # TODO: not symmetric...why?
-
-                # delta_tilde
-                # delta
+                    # I think this is because we have zeros on the diagonal in Atilde
+                    # same problem with my estimates and what comes out of Chen and Lei estimator. Problem with thetas?
+                    # Solution: this estimator implies asymmetry but is consistent. Need to do as Lei code does and just do upper triangular loop
 
                 P_hat = theta @ Bhat @ theta.transpose()
+                if np.any(np.isnan(Bhat)):
+                    print("warning: nan in Bhat")
                 P_hat = P_hat - np.diag(np.diag(P_hat))
                 Pv_hat = P_hat[rowN:,rowN:]
                 # print(Pv_hat)
                 # Pv_hat.shape
 
+                # loss = 0
+                # for i in range(Pv.shape[0]):
+                #     for j in range(Pv.shape[1]):
+                #         loss += (Pv[i, j] - Pv_hat[i, j]) ** 2
+
                 loss = np.linalg.norm(Pv - Pv_hat, ord="fro")  # Frobenius Norm
                 loss_v.append(loss)
+                print(loss_v)
+
 
             Loss.append(np.mean(loss_v))
 
         minLoss = np.argmin(Loss)
         mL.append(minLoss)
+
+    out = np.median(mL)
+
+    return(out)
 
 
 def fold_permutation(N, V):
@@ -316,7 +334,68 @@ def rearrange_mat(M, ids):
 
     return(Mp)
 
-def Bhat_tilde(P, theta):
+def Bhat2(Ptilde, theta, rowN):
+    """Implement B estimator in Chen and Lei
+
+    Parameters
+    ----------
+    Ptilde : type
+        Description of parameter `Ptilde`.
+    theta : type
+        Description of parameter `theta`.
+    rowN : type
+        Description of parameter `rowN`.
+
+    Returns
+    -------
+    type
+        Description of returned object.
+
+    """
+
+    # TESTING
+    theta_1 = theta[0:rowN,]
+    theta_2 = theta[rowN:,]
+
+    P1 = Ptilde[:,0:rowN]
+    P2 = Ptilde[:,rowN:]
+
+    K = theta_1.shape[1]
+    B = np.zeros((K, K))
+
+    for i in range(K):
+        i_ids1 = theta_1[:,i]
+        n_i1 = np.sum(i_ids1)
+        for j in range(K):
+
+            if j <= i:
+
+                j_ids1 = theta_1[:,j]
+                j_ids2 = theta_2[:,j]
+                n_j1 = np.sum(j_ids1)
+                n_j2 = np.sum(j_ids2)
+
+                P_ij1 = P1[i_ids1==1,:]
+                P_ij1 = P_ij1[:,j_ids1==1]
+                P_ij1_tri = np.triu(P_ij1)
+                P_ij2 = P2[i_ids1==1,:]
+                P_ij2 = P_ij2[:,j_ids2==1]
+
+                if i == j:
+                    b_sum = np.sum(P_ij1_tri)
+                    b_sum += np.sum(P_ij2)
+                    B[i, j] = b_sum / ( (n_i1 - 1) * n_i1 / 2 + n_i1 * n_j2 )
+                else:
+                    b_sum = np.sum(P_ij1)
+                    b_sum += np.sum(P_ij2)
+                    B[i, j] = b_sum / ( n_i1 * (n_j1 + n_j2) )
+                    B[j, i] = B[i, j]
+
+    return(B)
+
+
+
+
 
 
 
