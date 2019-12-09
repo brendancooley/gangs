@@ -140,25 +140,5 @@ chi_dsa_map <- leaflet() %>%
               popup = popup)
 chi_dsa_map
 
-### CLUSTERS ###
 
-clusters <- read_csv(clusters_path, col_names=FALSE)
-ids <- read_csv(chi_dgeoid_path, col_names=FALSE) %>% pull(X1)
-clusters$id <- ids
-colnames(clusters) <- c("cluster", "id")
-
-chi_clusters_geo <- geo_join(chi_districts, clusters, "id", "id")
-
-popup <- paste0("GEOID: ", chi_clusters_geo$id, "<br>", "Cluster: ", chi_clusters_geo$cluster)
-factpal <- colorFactor(brewer.pal(6, "Set1"), chi_clusters_geo$cluster)
-
-chi_clusters_map <- leaflet() %>%
-  addProviderTiles(providers$CartoDB.Positron) %>%
-  addPolygons(data = chi_clusters_geo, 
-              color = ~factpal(cluster), # you need to use hex colors
-              fillOpacity = 0.7, 
-              weight = 1, 
-              smoothFactor = 0.2,
-              popup = popup)
-chi_clusters_map
 

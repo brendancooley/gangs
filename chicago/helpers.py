@@ -3,6 +3,7 @@ import mosek
 from mosek.fusion import *
 from sklearn import cluster
 import matplotlib.pyplot as plt
+from itertools import permutations
 
 def covMat(A, zero=False, cor=False):
     """Short summary.
@@ -100,8 +101,10 @@ def C_bin_kernel(delta, C):
     bin = np.where(out > 0, 1, 0)
     return(bin)
 
-def spect_clust(covM, M, delta=None, C=None, eig_plot=False):
+def spect_clust(covM, K, normalize=False, delta=None, C=None, eig_plot=False):
     """Conduct spectral clustering on trace-minimized covariance matrix
+
+    TODO: k-medians implementation
 
     Parameters
     ----------
@@ -118,6 +121,7 @@ def spect_clust(covM, M, delta=None, C=None, eig_plot=False):
         Cluster ids for each district.
 
     """
+
     G = covM
     if delta is not None:
         S = C_bin_kernel(delta, C)  # TODO: provide option for exp kernel
@@ -125,44 +129,162 @@ def spect_clust(covM, M, delta=None, C=None, eig_plot=False):
 
     # extract eigenvectors
     # w, v = np.linalg.eig(G)
-    w, v = np.linalg.eigh(G) # NOTE: was getting complex eigenvalues using linalg.eig
-    kw = np.flip(np.argsort(w))[0:M+1]
-    kv = v.T[kw]  # NOTE: need to transpose eigenvectors
+    lbda, U = np.linalg.eigh(G) # NOTE: was getting complex eigenvalues using linalg.eig
+    lbda_K = np.flip(np.argsort(lbda))[0:K]
+    U_k = U.T[lbda_K]  # NOTE: need to transpose eigenvectors
+    # print(U_k)
+    if normalize is True:
+        U_norm = np.linalg.norm(U_k, axis=0)
+        U_k = U_k / U_norm
+
     if eig_plot is True:
-        plt.plot(w[np.flip(np.argsort(w))], "r+")
+        plt.plot(lbda[np.flip(np.argsort(lbda))], "r+")
 
     # cluster first M+1 eigenvectors
-    km = cluster.k_means(kv.transpose(), n_clusters=M+1)
+    km = cluster.k_means(U_k.transpose(), n_clusters=K)
     km_lab = km[1]
+    km_centroids = km[0]
 
-    return(km_lab)
+    return(km_lab, km_centroids)
 
-def permute_covM(covM, clusters, visualize=False, print_nc=False):
+def est_J(P, V):
+    """Short summary.
+
+    Parameters
+    ----------
+    P : matrix
+        diagonal-less adjacency matrix
+    V : int
+        number of folds for cross-validation
+
+    Returns
+    -------
+    type
+        Description of returned object.
+
+    """
+
+    # TESTING
+    V = 3
+    P = np.genfromtxt('output/chi_ts_clust/all/P.csv', delimiter=",")
+    S = 10
+
+    N = P.shape[0]
+    Kbar = 10
+
+    mL = []
+    # NOTE: another way to do this is to output the first time we don't get a decrease in loss...argument being that rest of vector is noise
+        # this is consistent with results in Chen and Lei, they only provide guarantees against under estimation
+    # np.median(mL)
+
+    for s in range(S):
+
+        Loss = []
+        fold_ids = fold_permutation(N, V)
+
+        for k in np.arange(1, Kbar):
+
+            loss_v = []
+            # k = 3
+
+            for v in range(V):
+
+                fold_bin = np.copy(fold_ids) # zero if upper block, one otherwise
+                # print(fold_bin)
+                fold_bin = np.where(fold_bin == v, 1, 0)
+                Pp = rearrange_mat(P, fold_bin)
+                rowN = N - np.sum(fold_bin)
+                Ptilde = Pp[0:rowN,]
+                # Ptilde.shape
+                Pv = Pp[rowN:,rowN:]
+                # Pv.shape
+                Ptilde_sq = Pp[0:rowN,0:rowN]
+
+                clusters, centroids = spect_clust(np.matmul(Ptilde.transpose(), Ptilde), k)
+                # u, s, vh = np.linalg.svd(Ptilde)
+                # vh[0:k,]
+                # NOTE: right singular vectors match up
+                theta = np.eye(k)[clusters]
+
+                # np.sum(theta, axis=1)
+                # np.sum(theta, axis=0)
+                delta = np.diag(np.sum(theta, axis=0))
+                theta_tilde = theta[0:rowN,]
+                delta_tilde = np.diag(np.sum(theta_tilde, axis=0))
+                # if np.any(np.diag(delta_tilde) == 0):
+                #     print("singular delta_tilde matrix...proceeding to next fold...")
+                #     break
+                # NOTE: possible that we get zeros in test set and can't invert
+                # print(delta_tilde)
+                # Bhat = np.linalg.inv(delta_tilde) @ theta_tilde.transpose() @ Ptilde @ theta @ np.linalg.inv(delta)
+                Bhat = Bhat2(Ptilde, theta, rowN)
+                # print(Bhat)
+                # TODO: not symmetric...why?
+                    # I think this is because we have zeros on the diagonal in Atilde
+                    # same problem with my estimates and what comes out of Chen and Lei estimator. Problem with thetas?
+                    # Solution: this estimator implies asymmetry but is consistent. Need to do as Lei code does and just do upper triangular loop
+
+                P_hat = theta @ Bhat @ theta.transpose()
+                if np.any(np.isnan(Bhat)):
+                    print("warning: nan in Bhat")
+                P_hat = P_hat - np.diag(np.diag(P_hat))
+                Pv_hat = P_hat[rowN:,rowN:]
+                # print(Pv_hat)
+                # Pv_hat.shape
+
+                # loss = 0
+                # for i in range(Pv.shape[0]):
+                #     for j in range(Pv.shape[1]):
+                #         loss += (Pv[i, j] - Pv_hat[i, j]) ** 2
+
+                loss = np.linalg.norm(Pv - Pv_hat, ord="fro")  # Frobenius Norm
+                loss_v.append(loss)
+                print(loss_v)
+
+
+            Loss.append(np.mean(loss_v))
+
+        minLoss = np.argmin(Loss)
+        mL.append(minLoss)
+
+    out = np.median(mL)
+
+    return(out)
+
+
+def fold_permutation(N, V):
+    """Short summary.
+
+    Parameters
+    ----------
+    N : int
+        number of rows of covariance matrix
+    V : int
+        number of folds for cross validation
+
+    Returns
+    -------
+    array
+        1d permuted vector of fold ids
+
+    """
+
+    folds = np.arange(V)
+    rep = N // V
+    rem = N % V
+    fold_ids = np.repeat(folds, rep)
+    for i in range(rem):
+        fold_ids = np.append(fold_ids, np.random.choice(folds))
+    fold_ids = np.random.permutation(fold_ids)
+
+    return(fold_ids)
+
+def permute_covM(covM, clusters, visualize=False, nc=0):
     """reorder covariance matrix to correspond to clustering output
 
     """
 
     counts = np.bincount(clusters)
-    print(counts)
-
-    # identify noise cluster (is this consistent with spectral clustering?)
-    # NOTE: doesn't work when this assigns district to unique cluster (singletons)
-    V = []
-    for i in range(len(counts)):
-        indices = np.where(clusters==i)[0]
-        N = len(indices)
-        blockM = np.copy(covM)[indices,:][:,indices]
-        for j in range(blockM.shape[0]):
-            blockM[j, j] = 0  # zero out diagonal
-        if N != 1:
-            v = np.sum(blockM) / (N ** 2 - N)
-        else:
-            v = np.sum(blockM) / N
-        # TODO: normalizing by sqrt might be more principled...see Lei and Rinaldo
-        V.append(v)
-    nc = np.argmin(V)
-    if print_nc is True:
-        print("Cluster id " + str(nc) + " is the noise cluster.")
 
     # reassign noise cluster to last index
     clustersP = np.copy(clusters)
@@ -175,16 +297,127 @@ def permute_covM(covM, clusters, visualize=False, print_nc=False):
             if clustersP[i] == M:
                 clustersP[i] = nc
 
-    covMC = np.copy(covM)
-    p = []
-    for i in range(len(counts)):
-        for j in range(len(clustersP)):
-            if clustersP[j] == i:
-                p.append(j)
-    covMC[:,:] = covMC[p,:]
-    covMC[:,:] = covMC[:,p]
+    covMC = rearrange_mat(covM, clustersP)
 
     if visualize is True:
         plt.imshow(covMC, cmap="hot", interpolation="nearest")
 
     return(covMC)
+
+def rearrange_mat(M, ids):
+    """Short summary.
+
+    Parameters
+    ----------
+    M : mat
+        input matrix
+    ids : array (1d)
+        vector associating each row to a group
+
+    Returns
+    -------
+    Mp
+        permuted matrix
+
+    """
+
+    Mp = np.copy(M)
+    counts = np.bincount(ids)
+
+    p = []
+    for i in range(len(counts)):
+        for j in range(len(ids)):
+            if ids[j] == i:
+                p.append(j)
+    Mp[:,:] = Mp[p,:]
+    Mp[:,:] = Mp[:,p]
+
+    return(Mp)
+
+def Bhat2(Ptilde, theta, rowN):
+    """Implement B estimator in Chen and Lei
+
+    Parameters
+    ----------
+    Ptilde : type
+        Description of parameter `Ptilde`.
+    theta : type
+        Description of parameter `theta`.
+    rowN : type
+        Description of parameter `rowN`.
+
+    Returns
+    -------
+    type
+        Description of returned object.
+
+    """
+
+    # TESTING
+    theta_1 = theta[0:rowN,]
+    theta_2 = theta[rowN:,]
+
+    P1 = Ptilde[:,0:rowN]
+    P2 = Ptilde[:,rowN:]
+
+    K = theta_1.shape[1]
+    B = np.zeros((K, K))
+
+    for i in range(K):
+        i_ids1 = theta_1[:,i]
+        n_i1 = np.sum(i_ids1)
+        for j in range(K):
+
+            if j <= i:
+
+                j_ids1 = theta_1[:,j]
+                j_ids2 = theta_2[:,j]
+                n_j1 = np.sum(j_ids1)
+                n_j2 = np.sum(j_ids2)
+
+                P_ij1 = P1[i_ids1==1,:]
+                P_ij1 = P_ij1[:,j_ids1==1]
+                P_ij1_tri = np.triu(P_ij1)
+                P_ij2 = P2[i_ids1==1,:]
+                P_ij2 = P_ij2[:,j_ids2==1]
+
+                if i == j:
+                    b_sum = np.sum(P_ij1_tri)
+                    b_sum += np.sum(P_ij2)
+                    B[i, j] = b_sum / ( (n_i1 - 1) * n_i1 / 2 + n_i1 * n_j2 )
+                else:
+                    b_sum = np.sum(P_ij1)
+                    b_sum += np.sum(P_ij2)
+                    B[i, j] = b_sum / ( n_i1 * (n_j1 + n_j2) )
+                    B[j, i] = B[i, j]
+
+    return(B)
+
+
+
+
+
+
+
+def Bhat(P, X, M):
+    """estimate connectivity matrix B
+
+    Parameters
+    ----------
+    P : type
+        Description of parameter `P`.
+    X : matrix K by K
+        centroids from clustering output
+
+    Returns
+    -------
+    matrix
+        K times K connectivity matrix
+
+    """
+
+    lbda, U = np.linalg.eigh(P)
+    lbda_K = np.flip(np.argsort(lbda))[0:M+1]
+    Lbda = np.diag(lbda[lbda_K])
+
+    return(np.matmul(np.matmul(X, Lbda), X.T))

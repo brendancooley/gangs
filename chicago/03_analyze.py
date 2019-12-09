@@ -5,47 +5,126 @@ import imp
 import time
 import os
 import pyreadr
+import matplotlib.pyplot as plt
 
 import helpers
 imp.reload(helpers)
 
 paths = pyreadr.read_r('params.RData') # also works for Rds
 
-chi_dmatrix_path = paths['chi_dmatrix_path'].iloc[0, 0]
-gammaL_path = paths['gammaL_path'].iloc[0, 0]
+chi_ts_matrix_y_file = paths['chi_ts_matrix_y_file'].iloc[0, 0]
+chi_t_geoid_path = paths['chi_t_geoid_path'].iloc[0, 0]
+geoid_keep_path = paths['geoid_keep_path'].iloc[0, 0]
+geoid_zero_path = paths['geoid_zero_path'].iloc[0, 0]
+cov_mat_path = paths['cov_mat_path'].iloc[0, 0]
 clusters_path = paths['clusters_path'].iloc[0, 0]
-chi_dadjacency_path = paths['chi_dadjacency_path'].iloc[0, 0]
+chi_tadjacency_path = paths['chi_tadjacency_path'].iloc[0, 0]
+nc_path = paths['nc_path'].iloc[0, 0]
+P_path = paths['P_path'].iloc[0, 0]
+P_sorted_path = paths['P_sorted_path'].iloc[0, 0]
 
-C = np.genfromtxt(chi_dadjacency_path, delimiter=",")  # adjacency matrix
+chi_clust_fpath = paths['chi_clust_fpath'].iloc[0, 0]
+groups = [f for f in os.listdir(chi_clust_fpath) if not f.startswith('.')]
 
-counts = np.genfromtxt(chi_dmatrix_path, delimiter=",")
-covM = helpers.covMat(counts, zero=False, cor=False)  # construct covariance matrix
-
-### working... ###
-
-
-### TRACE MINIMIZATION ###
-if not os.path.exists(gammaL_path):
-    start_time = time.time()
-    gammaL = helpers.traceMin(covM)
-    print("trace minimization completed in %s seconds" % (time.time() - start_time))
-    # (N=200): trace minimization completed in 2218.314126968384 seconds
-    np.savetxt(gammaL_path, gammaL, delimiter=",")
-
-# diagnostics
-gammaL = np.genfromtxt(gammaL_path, delimiter=",")
-gammaL_cor = np.corrcoef(gammaL)
-np.trace(covM)
-np.trace(gammaL)
+C = np.genfromtxt(chi_tadjacency_path, delimiter=",")  # adjacency matrix
+geoids = np.genfromtxt(chi_t_geoid_path, delimiter=",")
 
 ### CLUSTERING ###
-M = 4
-clusters = helpers.spect_clust(gammaL_cor, M, delta=3, C=C, eig_plot=True)  # regionalization version
-# clusters = helpers.spect_clust(gammaL_cor, M, eig_plot=True)
 
-np.savetxt(clusters_path, clusters, delimiter=",")
+for i in groups:
+
+    i = groups[0]
+
+    folder_active = chi_clust_fpath + "/" + i
+
+    counts = np.genfromtxt(folder_active + "/" + chi_ts_matrix_y_file, delimiter=",")
+
+    covM = helpers.covMat(counts, zero=False, cor=False)  # construct covariance matrix
+    # plt.imshow(covM, cmap="hot", interpolation="nearest")
+
+    P0 = covM - np.diag(np.diag(covM))
+    # plt.imshow(P0, cmap="hot", interpolation="nearest")
+
+    geoids_zero = geoids[np.argwhere(np.sum(P0, axis=0)==0)]  # district ids to drop from analysis (no covariance)
+    geoids_keep = geoids[np.argwhere(np.sum(P0, axis=0)!=0)]
+    np.savetxt(folder_active + "/" + geoid_zero_path, geoids_zero)
+    np.savetxt(folder_active + "/" + geoid_keep_path, geoids_keep)
+
+    P = P0[np.sum(P0, axis=0)!=0,:]
+    P = P[:,np.sum(P0, axis=0)!=0]
+    # plt.imshow(P, cmap="hot", interpolation="nearest")
+    np.savetxt(folder_active + "/" + P_path, P, delimiter=',', fmt='%f')
+
+    # CLUSTERING #
+    # imp.reload(helpers)
+    M = 3
+    # clusters = helpers.spect_clust(P, M, normalize=True, eig_plot=True)
+    clusters, centroids = helpers.spect_clust(P, M, normalize=False, eig_plot=True)
+    np.bincount(clusters)
+    theta = np.eye(M+1)[clusters]
+    X = centroids
+    Bhat = helpers.Bhat(P, X, M)  # estimate of connectivity matrix
+    # np.linalg.norm(Bhat, axis=1)
+
+    noise_cluster = np.array([np.argmin(np.linalg.norm(Bhat, axis=1))])
+
+    np.savetxt(folder_active + "/" + clusters_path, clusters, delimiter=",")
+    np.savetxt(folder_active + "/" + nc_path, noise_cluster, delimiter=",")
+
+    P_sorted = helpers.permute_covM(P, clusters, nc=noise_cluster)
+    # plt.imshow(P_sorted, cmap="hot", interpolation="nearest")
+    np.savetxt(folder_active + "/" + P_sorted_path, P_sorted, delimiter=',', fmt='%f')
 
 
-### ANALYSIS ###
 
-helpers.permute_covM(gammaL_cor, clusters, visualize=True, print_nc=True)
+
+
+
+
+### WORKING ###
+
+folder_active = chi_clust_fpath + "/" + "all"
+
+counts = np.genfromtxt(folder_active + "/" + chi_ts_matrix_y_file, delimiter=",")
+
+covM = helpers.covMat(counts, zero=False, cor=False)  # construct covariance matrix
+# plt.imshow(covM, cmap="hot", interpolation="nearest")
+
+P0 = covM - np.diag(np.diag(covM))
+lbda, U = np.linalg.eigh(covM)
+lbda, U = np.linalg.eigh(P0)
+# NOTE: P doesn't remain PSD when we drop the diagonal
+
+# plt.imshow(P0, cmap="hot", interpolation="nearest")
+
+geoids_zero = geoids[np.argwhere(np.sum(P0, axis=0)==0)]  # district ids to drop from analysis (no covariance)
+geoids_keep = geoids[np.argwhere(np.sum(P0, axis=0)!=0)]
+np.savetxt(folder_active + "/" + geoid_zero_path, geoids_zero)
+# np.savetxt(geoid_keep_path, geoids_keep)
+
+P = P0[np.sum(P0, axis=0)!=0,:]
+P = P[:,np.sum(P0, axis=0)!=0]
+plt.imshow(P, cmap="hot", interpolation="nearest")
+np.savetxt(folder_active + "/" + P_path, P)
+
+# CLUSTERING #
+# imp.reload(helpers)
+M = 2
+# clusters = helpers.spect_clust(P, M, normalize=True, eig_plot=True)
+clusters, centroids = helpers.spect_clust(P, M, normalize=False, eig_plot=True)
+
+lbda, U = np.linalg.eigh(P)
+
+theta = np.eye(M+1)[clusters]
+X = centroids
+Bhat = helpers.Bhat(P, X, M)  # estimate of connectivity matrix
+# np.linalg.norm(Bhat, axis=1)
+
+noise_cluster = np.array([np.argmin(np.linalg.norm(Bhat, axis=1))])
+
+np.savetxt(folder_active + "/" + clusters_path, clusters, delimiter=",")
+np.savetxt(folder_active + "/" + nc_path, noise_cluster, delimiter=",")
+
+P_sorted = helpers.permute_covM(P, clusters, nc=noise_cluster)
+plt.imshow(P_sorted, cmap="hot", interpolation="nearest")
+np.savetxt(folder_active + "/" + P_sorted_path, P_sorted)

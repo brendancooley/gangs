@@ -1,3 +1,4 @@
+
 helperPath <- "../source/R/"
 helperFiles <- list.files(helperPath)
 for (i in helperFiles) {
@@ -5,6 +6,7 @@ for (i in helperFiles) {
 }
 
 aggregation <- "month"
+y_chunk <- 6
 
 airport_ids <- c("17031980000", "17031980100", "17031990000")
 drop_ids <- c("17031770700", "17031770602", "17031811701", "17031770800", "17031770500", "17031811600")  # Cook area surrounding airport
@@ -20,31 +22,43 @@ chi_pop_path <- "data/population.csv"  # population by year
 chi_clean_path <- "data/chi_clean.csv" # cleaned chicago crime data
 
 chi_tha_path <- "output/chi_tha.csv"  # tracts, homicides, all
-chi_tsa_path <- "output/chi_tsa.csv" # tracts, shootings, all
+chi_tsa_path <- "output/chi_tsa.csv" # tracts, shootings (including homicides), all
 chi_tna_path <- "output/chi_tna.csv" # tracts, narcotics, all
 
 chi_dsa_path <- "output/chi_dsa.csv"  # districts (combined), shootings, all
 
-chi_th_geoid_path <- "output/chi_th_geoid.csv"
-chi_ts_geoid_path <- "output/chi_ts_geoid.csv"
-chi_tn_geoid_path <- "output/chi_tn_geoid.csv"
-
+chi_t_geoid_path <- "output/chi_t_geoid.csv"
 chi_dgeoid_path <- "output/chi_dgeoid.csv"
 chi_geoid_cor_path <- "output/chi_geoid_cor.csv"
 
 chi_th_matrix_path <- "output/chi_th_matrix.csv"  # tracts, aggregation given in 02_clean
-chi_ts_matrix_path <- "output/chi_ts_matrix.csv"  # tracts, aggregation given in 02_clean
 chi_tn_matrix_path <- "output/chi_tn_matrix.csv"
 chi_dmatrix_path <- "output/chi_dmatrix.csv"  # tracts, aggregation given in 02_clean
 
 chi_tadjacency_path <- "output/chi_tadjacency.csv"
 chi_dadjacency_path <- "output/chi_dadjacency.csv"
 
+# clustering (all)
+chi_clust_fpath <- "output/chi_ts_clust"
+chi_clust_fpath_all <- paste0(chi_clust_fpath, "/", "all")
+
+chi_ts_matrix_y_file <- "chi_ts_matrix.csv"
+chi_ts_matrix_path <- paste0(chi_clust_fpath_all, "/", chi_ts_matrix_y_file)
+
 crimes_raw_url <- "https://www.dropbox.com/s/h7da81i9qt876tf/chi_crimes.csv?dl=1"
 ss_raw_url <- "https://www.dropbox.com/s/3qfruwbsg1t7g23/shotspotter.csv?dl=1"
 
-gammaL_path = "output/gammaL.csv"
-clusters_path = "output/clusters.csv"
+# end file names for clustering output...place in relevant chi_clust_fpath folder
+cov_mat_path = "cov_mat.csv"
+P_path = "P.csv"
+P_sorted_path = "P_sorted.csv"
+geoid_keep_path = "geoid_keep.csv"
+geoid_zero_path = "geoid_zero.csv"
+clusters_path = "clusters.csv"
+nc_path = "noise_cluster.csv"
 
 save.image('params.Rdata')
+
+mkdir(chi_clust_fpath)
+mkdir(chi_clust_fpath_all)
 
