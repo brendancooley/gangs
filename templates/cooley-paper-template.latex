@@ -84,6 +84,11 @@ $endif$
 \usepackage{accents}
 \newcommand{\ubar}[1]{\underaccent{\bar}{#1}}
 
+% Expectation, Variance, Covariance
+\newcommand{\E}{\mathrm{E}}
+\newcommand{\Var}{\mathrm{Var}}
+\newcommand{\Cov}{\mathrm{Cov}}
+
 % hyperlinked citations
 \usepackage{color}
 \definecolor{darkblue}{rgb}{0.0,0.0,0.55}

@@ -1,74 +1,44 @@
----
-title: | 
-	| Gunshots and Turf Wars
-	| \tiny \hfill
-    | \Large Inferring Gang Territories from Administrative Data
-author: 
-	- name: Brendan Cooley
-      affiliation: Ph.D. Candidate, Department of Politics, Princeton University
-    - name: Noam Reich
-      affiliation: Ph.D. Candidate, Department of Politics, Princeton University
-date: \today
-abstract: Street gangs are conjectured to engage in violent territorial competition. This competition can be difficult to study empirically as the number of gangs and the division of territory between them are usually unobserved to the analyst. However, traces of gang conflict manifest themselves in police and administrative data on violent crime. In this paper, we show that the frequency and location of shootings are sufficient statistics for the territorial partition under mild assumptions about the data generating processes for gang-related and non-gang related shootings. We then show how to estimate this territorial partition from a panel of geolocated shooting data. We apply our method to analyze the structure of gang territorial competition in Chicago using victim-based crime reports from the Chicago Police Department. The method reveals both the number of gangs in operation in Chicago and their territorial boundaries.
-thanks: Thanks go here.
-# jelcodes: JEL codes go here
-
-bibliography: /Users/bcooley/Dropbox (Princeton)/References/library.bib
-biblio-style: apsr
-
-papersize: letter
-documentclass: article
-geometry: margin=1.25in
-link-citations: true
-
-output:
-	fig_caption: yes
-    citation_package: natbib
-
----
-
-
-
-\newpage
-
-# Introduction
-
-# Literature
-
-# Data
-
-# Model
-
-
 There are $N$ districts in the city ($i, j \in \mathcal{N} = \left\{1, ..., N \right\}$). $r_i$ residents live in each district. The city is also inhabited by $K$ gangs ($k, \ell \in \mathcal{K} = \left\{1, ..., K \right\}$). Each gang is endowed with a $m_k$ soldiers. A partition function $\pi : \mathcal{N} \rightarrow \left\{ 0, \mathcal{K} \right\}$ assigns territories to the gangs that control them, where $\pi(i) = 0$ indicates the absence of any gang activity. $\mathcal{K}_k$ is the set of territories controlled by gang $k$ and $| \mathcal{K}_k |$ the number of territories controlled by gang $k$. The set of unoccupied territories is $\mathcal{K}_0$. We are interested in estimating the number of groups, $K$, and the territorial partition, $\pi$.
 
 We observe data on geo-located shootings for $T$ periods, indexed $\left\{ 1, ..., T \right\}$. We hold the above quantities constant over time. There are three types of shootings that occur in the city -- inter-gang, intra-gang, and non-gang. Let $y_i^t$ denote non-gang related shootings in district $i$ during period $t$ and $x_i^t$ denote gang-related shootings in the same district-period. Non-gang shootings are committed by residents with probability $\eta_i$ and are independent across districts. Then, the expected number of shootings in district $i$ is $\eta_i r_i$ with variance $\psi_i = \eta_i (1 - \eta_i) r_i$.^[In other words, non-gang shootings are distributed i.i.d. binomial.]
   
-Gang-related shootings are determined by the geographic distribution of gang activity and the state of relations between and within gangs. We assume the probability a given soldier from gang $k$ is operating in territory $i$ is constant and given by $q_k = | \mathcal{K}_k |^{-1}$. Members of the same gang sometimes commit violence against one another. The probability violence occurs between members of gang $k$ during period $t$ is given by $\xi_k^t$. Assumption 1 states that the expected likelihood of such violence is non-zero.
+Gang-related shootings are determined by the geographic distribution of gang activity and the state of relations between and within gangs. We assume the probability a given soldier from gang $k$ is operating in territory $i$ is constant and given by $q_k = | \mathcal{K}_k |^{-1}$. Members of the same gang sometimes commit violence against one another. The probability violence occurs between members of gang $k$ during period $t$ is given by $\xi_k^t$. Assumption `r Aintragang_nz` states that the expected likelihood of such violence is non-zero.
 
+```{r, echo=FALSE, warning=FALSE, message=FALSE, results='hide'}
+Aintragang_nz <- Atick
+Atick <- Atick + 1
+```
 
-
-**Assumption 1:** $\E [ \xi_k^t ] > 0$ for all $k \neq 0$.
+**Assumption `r Aintragang_nz`:** $\E [ \xi_k^t ] > 0$ for all $k \neq 0$.
 
 We also assume that conflict within gangs is unrelated to within-gang conflict between other gangs.
 
+```{r, echo=FALSE, warning=FALSE, message=FALSE, results='hide'}
+Aintragang_iid <- Atick
+Atick <- Atick + 1
+```
 
-
-**Assumption 2:** $\E [ \xi_k^t \xi_{\ell}^t ] - \E [ \xi_k^t ] \E [ \xi_{\ell}^t ] = 0$ for all $k \neq \ell$.
+**Assumption `r Aintragang_iid`:** $\E [ \xi_k^t \xi_{\ell}^t ] - \E [ \xi_k^t ] \E [ \xi_{\ell}^t ] = 0$ for all $k \neq \ell$.
 
 We impose no other restrictions on the distribution of intra-gang shocks. The possibility of intra-gang violence allows us to distinguish between territories owned by the same gang and territories whose owners exclusively war with one another.^[Alternatively, we could assume that gangs fight at least two other groups with positive probability. We view this assumption as less restrictive.]
 
 Gangs also war with one another with varying intensity. The probability a member of gang $k$ shoots a given member of gang $\ell$ during period $t$ is $\epsilon_{k \ell}^t$. We make two assumptions on the distribution of these inter-gang shocks. First, we assume they are quasi-symmetric. This requires that any increase in the likelihood that members of gang $k$ shoot members of gang $\ell$ is accompanied by a proportionate increase in reciprocal violence. Notably, we allow this retaliation propensity to vary at the level of the gang but not the gang-dyad.
 
+```{r, echo=FALSE, warning=FALSE, message=FALSE, results='hide'}
+Aintergang_symmetry <- Atick
+Atick <- Atick + 1
+```
 
-
-**Assumption 3:** $\epsilon_{k \ell}^t = c_{\ell} \epsilon_{\ell, k}^{t}$ with the normalization $c_1 = 1$.
+**Assumption `r Aintergang_symmetry`:** $\epsilon_{k \ell}^t = c_{\ell} \epsilon_{\ell, k}^{t}$ with the normalization $c_1 = 1$.
 
 Second, we assume inter-gang shocks are independent across gang dyads.^[Of course, the intensity of conflict between any two gangs is almost certainly affected by the broader conflict environment. This assumption is made for purposes of model tractability. In future work, we plan to model the genesis of conflict shocks and perhaps relax this assumption.]
 
+```{r, echo=FALSE, warning=FALSE, message=FALSE, results='hide'}
+Aintergang_iid <- Atick
+Atick <- Atick + 1
+```
 
-
-**Assumption 4:** $\E \left[ \epsilon_{k, \ell}^t \epsilon_{m, n}^t \right] - \E \left[ \epsilon_{k, \ell}^t  \right] \E \left[ \epsilon_{m, n}^t \right] = 0$ for $m, n \notin \left\{ k, \ell \right\}$.
+**Assumption `r Aintergang_iid`:** $\E \left[ \epsilon_{k, \ell}^t \epsilon_{m, n}^t \right] - \E \left[ \epsilon_{k, \ell}^t  \right] \E \left[ \epsilon_{m, n}^t \right] = 0$ for $m, n \notin \left\{ k, \ell \right\}$.
 
 The expected number of gang-related shootings in district $i$ during period $t$ can then be calculated as 
 $$
@@ -79,11 +49,14 @@ $$
 v_i^t = x_i^t + y_i^t
 $$
 
-In the proceeding section we will show that the covariance in shootings across districts is informative about the number of groups and the territorial partition. Proposition  1 describes the covariance structure of our model. A derivation of this quantity can be found in Appendix A.
+In the proceeding section we will show that the covariance in shootings across districts is informative about the number of groups and the territorial partition. Proposition  `r Pcov` describes the covariance structure of our model. A derivation of this quantity can be found in Appendix `r Apdx_cov`.
 
+```{r, echo=FALSE, warning=FALSE, message=FALSE, results='hide'}
+Pcov <- Ptick
+Ptick <- Ptick + 1
+```
 
-
-**Proposition 2:** The covariance in shootings between districts $i$ and $j$ is
+**Proposition `r Ptick`:** The covariance in shootings between districts $i$ and $j$ is
 $$
 \Cov [ v_i^t, v_j^t ] = \begin{cases} \sum_k \left( 
 \Var [ \epsilon_{\pi(i), k}^t ] c_{\pi(i)} c_k \left( m_{\pi(i)} m_k \right)^2 \right) +  \Var[ \xi_{\pi(i)}^t ]  \left( m_{\pi(i)}^2 q_{\pi(i)} \right)^2 + \psi_i & \quad \text{if } i = j \\
@@ -93,26 +66,4 @@ $$
 $$
 
 Corollary - blocks
-
-
-# Estimation
-
-# Results
-
-# Conclusion
-
-
-\clearpage
-
-
-# Appendices
-
-
-
-## Appendix A: Covariance Derivation
-
-\clearpage
-
-# References
-
 

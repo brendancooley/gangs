@@ -54,13 +54,16 @@ def task_paper():
 	"""
 
 	"""
+	if os.path.isfile("references.RData") is False:
+		yield {
+			'name': "collecting references...",
+			'actions':["R --slave -e \"set.seed(100);knitr::knit('gangs.rmd')\""]
+        }
 	yield {
-		'name': "draft paper",
-		'actions': ["R --slave -e \"set.seed(100); knitr::knit('gangs.rmd')\"",
-					"pandoc --template=templates/cooley-paper-template.latex \
-					--filter pandoc-citeproc \
-					-o gangs.pdf gangs.md"],
-		'verbosity': 2,
+    	'name': "writing paper...",
+    	'actions':["R --slave -e \"set.seed(100);knitr::knit('gangs.rmd')\"",
+                   "pandoc --template=templates/cooley-paper-template.latex --filter pandoc-citeproc -o gangs.pdf gangs.md"],
+                   'verbosity': 2,
 	}
 
 def task_slides():

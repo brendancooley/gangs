@@ -27,6 +27,35 @@ output:
 
 ---
 
+```{r libs, echo=FALSE, warning=FALSE, message=FALSE, results='hide'}
+
+helperPath <- "source/R/"
+helperFiles <- list.files(helperPath)
+for (i in helperFiles) {
+  source(paste0(helperPath, i))
+}
+
+libs <- c()
+ipak(libs)
+
+# not available
+Aintragang_nz <- "NA"
+Aintragang_iid <- "NA"
+Aintergang_symmetry <- "NA"
+Aintergang_iid <- "NA"
+
+Pcov <- "NA"
+
+Apdx_cov <- "NA"
+
+if (file.exists('references.RData')) load('references.RData')
+
+# setup definition, assumption, proposition, lemma tickers
+Atick <- 1
+Ptick <- 1
+
+```
+
 \newpage
 
 # Introduction
@@ -37,7 +66,7 @@ output:
 
 # Model
 
-```{r, child = "sections/model.md"}
+```{r, child = "sections/model.rmd"}
 ```
 
 # Estimation
@@ -50,15 +79,23 @@ output:
 \clearpage
 
 
-# Appendix
+# Appendices
 
 ```{r Appendix Numbering, echo=FALSE, warning=FALSE, message=FALSE, results='hide'}
 
 a <- 1
-Aeconomy <- LETTERS[a]
+Apdx_cov <- LETTERS[a]
 
 ```
+
+## Appendix `r Apdx_cov`: Covariance Derivation
 
 \clearpage
 
 # References
+
+```{r, echo=FALSE, warning=FALSE, message=FALSE, results='hide'}
+
+save.image('references.RData')
+
+```
