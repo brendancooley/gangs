@@ -22,6 +22,7 @@ def task_source():
 		'name': "initializing environment...",
 		'actions':["cp " + templatesPath + "cooley-plain.latex" + " templates/",
 				   "cp " + templatesPath + "cooley-latex-beamer.tex" + " templates/",
+				   "cp " + templatesPath + "cooley-paper-template.latex" + " templates/",
 				   "cp -a " + softwarePath + " source/"]
 	}
 
@@ -48,6 +49,19 @@ def task_figs():
 				'actions':["pandoc --template=" + figsTemplate + " -o " +
 							fName + ".pdf " + figsFiles[i]]
 			}
+
+def task_paper():
+	"""
+
+	"""
+	yield {
+		'name': "draft paper",
+		'actions': ["R --slave -e \"set.seed(100); knitr::knit('gangs.rmd')\"",
+					"pandoc --template=templates/cooley-paper-template.latex \
+					--filter pandoc-citeproc \
+					-o gangs.pdf gangs.md"],
+		'verbosity': 2,
+	}
 
 def task_slides():
 	yield {
