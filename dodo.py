@@ -41,13 +41,12 @@ def task_sections():
 def task_figs():
 	figsFiles = helpers.getFiles(figsPath)
 	for i in range(len(figsFiles)):
-		fName = figsFiles[i].split(".")[0]
-		suffix = figsFiles[i].split(".")[1]
-		if suffix == "md":
+		fName = figsFiles[i].split("/")[1].split(".")[0]
+		suffix = figsFiles[i].split("/")[1].split(".")[1]
+		if suffix == "tex":
 			yield {
 				'name': figsFiles[i],
-				'actions':["pandoc --template=" + figsTemplate + " -o " +
-							fName + ".pdf " + figsFiles[i]]
+				'actions':["cd figs/;  latexmk -pdf " + fName + ".tex" + "; latexmk -c; magick -density 300 " + fName + ".pdf " + fName + ".png"]
 			}
 
 def task_paper():

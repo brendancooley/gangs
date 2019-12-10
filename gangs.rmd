@@ -46,6 +46,8 @@ Aintergang_iid <- "NA"
 
 Pcov <- "NA"
 
+Ccov <- "NA"
+
 Apdx_cov <- "NA"
 
 if (file.exists('references.RData')) load('references.RData')
@@ -53,6 +55,7 @@ if (file.exists('references.RData')) load('references.RData')
 # setup definition, assumption, proposition, lemma tickers
 Atick <- 1
 Ptick <- 1
+Ctick <- 1
 
 ```
 
@@ -89,6 +92,9 @@ Apdx_cov <- LETTERS[a]
 ```
 
 ## Appendix `r Apdx_cov`: Covariance Derivation
+
+```{r, child="sections/Apdx_cov.rmd"}
+```
 
 \clearpage
 
