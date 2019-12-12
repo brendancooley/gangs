@@ -49,6 +49,7 @@ crimes_raw_url <- "https://www.dropbox.com/s/h7da81i9qt876tf/chi_crimes.csv?dl=1
 ss_raw_url <- "https://www.dropbox.com/s/3qfruwbsg1t7g23/shotspotter.csv?dl=1"
 
 # end file names for clustering output...place in relevant chi_clust_fpath folder
+K_path = "K.csv"
 cov_mat_path = "cov_mat.csv"
 P_path = "P.csv"
 P_sorted_path = "P_sorted.csv"

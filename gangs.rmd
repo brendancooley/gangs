@@ -74,6 +74,9 @@ Ctick <- 1
 
 # Estimation
 
+```{r, child = "sections/estimation.rmd"}
+```
+
 # Results
 
 # Conclusion

@@ -22,6 +22,7 @@ chi_tadjacency_path = paths['chi_tadjacency_path'].iloc[0, 0]
 nc_path = paths['nc_path'].iloc[0, 0]
 P_path = paths['P_path'].iloc[0, 0]
 P_sorted_path = paths['P_sorted_path'].iloc[0, 0]
+K_path = paths['K_path'].iloc[0, 0]
 
 chi_clust_fpath = paths['chi_clust_fpath'].iloc[0, 0]
 groups = [f for f in os.listdir(chi_clust_fpath) if not f.startswith('.')]
@@ -29,7 +30,11 @@ groups = [f for f in os.listdir(chi_clust_fpath) if not f.startswith('.')]
 C = np.genfromtxt(chi_tadjacency_path, delimiter=",")  # adjacency matrix
 geoids = np.genfromtxt(chi_t_geoid_path, delimiter=",")
 
+V = 3 # number of folds for cross validation
+
 ### CLUSTERING ###
+
+groups = ["all"]  # stick to everything for now, commenting this out gives estimates for 5-year subsets
 
 for i in groups:
 
@@ -57,11 +62,12 @@ for i in groups:
 
     # CLUSTERING #
     # imp.reload(helpers)
-    M = 3
+    M = helpers.est_J(P, V, S=50)
+    np.savetxt(folder_active + "/" + K_path, np.array(M), delimiter=",")
     # clusters = helpers.spect_clust(P, M, normalize=True, eig_plot=True)
     clusters, centroids = helpers.spect_clust(P, M, normalize=False, eig_plot=True)
     np.bincount(clusters)
-    theta = np.eye(M+1)[clusters]
+    theta = np.eye(M)[clusters]
     X = centroids
     Bhat = helpers.Bhat(P, X, M)  # estimate of connectivity matrix
     # np.linalg.norm(Bhat, axis=1)
@@ -74,7 +80,6 @@ for i in groups:
     P_sorted = helpers.permute_covM(P, clusters, nc=noise_cluster)
     # plt.imshow(P_sorted, cmap="hot", interpolation="nearest")
     np.savetxt(folder_active + "/" + P_sorted_path, P_sorted, delimiter=',', fmt='%f')
-
 
 
 
