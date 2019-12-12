@@ -63,7 +63,7 @@ for i in groups:
     # CLUSTERING #
     # imp.reload(helpers)
     M = helpers.est_J(P, V, S=50)
-    np.savetxt(folder_active + "/" + K_path, np.array(M), delimiter=",")
+    np.savetxt(folder_active + "/" + K_path, np.array([M]), delimiter=",")
     # clusters = helpers.spect_clust(P, M, normalize=True, eig_plot=True)
     clusters, centroids = helpers.spect_clust(P, M, normalize=False, eig_plot=True)
     np.bincount(clusters)
