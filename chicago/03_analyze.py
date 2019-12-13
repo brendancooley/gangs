@@ -22,7 +22,9 @@ chi_tadjacency_path = paths['chi_tadjacency_path'].iloc[0, 0]
 nc_path = paths['nc_path'].iloc[0, 0]
 P_path = paths['P_path'].iloc[0, 0]
 P_sorted_path = paths['P_sorted_path'].iloc[0, 0]
-K_path = paths['K_path'].iloc[0, 0]
+J_path = paths['J_path'].iloc[0, 0]
+eig_path = paths['eig_path'].iloc[0, 0]
+Bhat_path = paths["Bhat_path"].iloc[0, 0]
 
 chi_clust_fpath = paths['chi_clust_fpath'].iloc[0, 0]
 groups = [f for f in os.listdir(chi_clust_fpath) if not f.startswith('.')]
@@ -63,14 +65,20 @@ for i in groups:
     # CLUSTERING #
     # imp.reload(helpers)
     M = helpers.est_J(P, V, S=50)
-    np.savetxt(folder_active + "/" + K_path, np.array([M]), delimiter=",")
+    np.savetxt(folder_active + "/" + J_path, np.array([M]), delimiter=",")
     # clusters = helpers.spect_clust(P, M, normalize=True, eig_plot=True)
-    clusters, centroids = helpers.spect_clust(P, M, normalize=False, eig_plot=True)
+
+    # return eigvals
+    lbda, U = np.linalg.eigh(P)
+    np.savetxt(folder_active + "/" + eig_path, lbda, delimiter=",")
+
+    clusters, centroids = helpers.spect_clust(P, M, normalize=False, eig_plot=False)
     np.bincount(clusters)
     theta = np.eye(M)[clusters]
     X = centroids
     Bhat = helpers.Bhat(P, X, M)  # estimate of connectivity matrix
     # np.linalg.norm(Bhat, axis=1)
+    np.savetxt(folder_active + "/" + Bhat_path, Bhat, delimiter=",")
 
     noise_cluster = np.array([np.argmin(np.linalg.norm(Bhat, axis=1))])
 

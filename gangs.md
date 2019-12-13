@@ -288,6 +288,29 @@ An alternative set of approaches to estimating $J$ exploit the intuition discuss
 
 # Results
 
+
+
+
+We detect the presence of 4 gangs in Chicago. Figure \ref{fig:scree} displays the 50 eigenvalues of the covariance matrix of shootings across census tracts. The first several eigenvalues stand out from the remainder, indicative of the presence of unique clusters of gang activity in the data.
+
+![Leading eigenvalues of the matrix of covariances in shootings across districs. Dashed line is drawn through the $J$th eigenvalue. Eigenvectors associated with values above this line are used in the clustering analysis. \label{fig:scree}](figure/unnamed-chunk-13-1.png)
+
+These clusters are easily visualized by examining the permuted covariance matrix, the empirical equivalent to Figure \ref{fig:blocks}. This can be seen in Figure \ref{fig:block_hm}. Each square on the right panel highlights the districts controlled with a single gang, with the bottom right block corresponding to districts estimated to have no gang activity. Gang wars generate positive covariance in the off-block diagonal entries. Darker off-block-diagonal entries indicate more intense conflict between the gangs controlling the pairs of districts in question. 
+
+![The left panel shows the values of the unclustered covariance matrix. Darker values indicate higher tract-to-tract covariance in shootings. The permutes these entries in accordance with the estimated partition function. The black squares highlight covariances within a given gang's territory. The bottom right block corresponds to the districts estimated to have no gang activity. \label{fig:block_hm}](figure/unnamed-chunk-14-1.png)
+
+Figure \ref{fig:map} shows the distribution of gang territory in the Chicago. Like the distribution of shootings, gang activity is concentrated in the south and west of the city. Large tracts of the central and northern parts of the city are estimated to be devoid of gang activity. Gangs territories are somewhat locally compact, consistent with data published by the Chicago Police. However, some neighborhoods of the city are quite contested. All of the gangs we detect operate in both the southern and western of the city.
+
+![Estimated territorial partition of Chicago, 2001-2018. Light gray tracts are estimated to have no gang activity. \label{fig:map}](figure/unnamed-chunk-15-1.png)
+
+So far, we have focused on our results for the esimated partition function, $\hat{\pi}$. Our estimates for $\hat{B}$ describe the intensity of conflict between gangs in our sample. Figure \ref{fig:Bhat_hm} displays the magnitudes of these conflict intensities. 
+
+![Estimated inter-gang conflict intensities, $\hat{B}$, exempting non-gang occupied areas. Colors along the diagonal correspond to the gangs occupying the territories shown in Figure \ref{fig:map}. Darker grays indicate the corresponding gangs on the diagonal tend to experience more intense conflict with one another. \label{fig:Bhat_hm}](figure/unnamed-chunk-16-1.png)
+
+## Validation on Chicago Police Department Gang Maps
+
+*In progress...*
+
 # Conclusion
 
 
