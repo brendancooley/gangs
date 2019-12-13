@@ -1,0 +1,62 @@
+```{r, echo=FALSE, warning=FALSE, message=FALSE, results='hide'}
+
+source("../chicago/params.R")
+
+chi_clean <- read_csv(paste0("../chicago/", chi_clean_path))
+  
+chi_tracts <- readOGR(paste0("../chicago/", chi_tracts_path))
+
+eigs <- read_csv(paste0("../chicago/", analysisSub, "/", eig_path), col_names=FALSE)
+J <- read_csv(paste0("../chicago/", analysisSub, "/", J_path), col_names=FALSE) %>% pull(.)
+K <- J - 1
+
+clusters <- read_csv(paste0("../chicago/", analysisSub, "/", clusters_path), col_names=FALSE) %>% pull(.)
+geoid_keep <- read_csv(paste0("../chicago/", analysisSub, "/", geoid_keep_path), col_names=FALSE) %>% pull(.)
+geoid_zero <- read_csv(paste0("../chicago/", analysisSub, "/", geoid_zero_path), col_names=FALSE) %>% pull(.)
+nc <- read_csv(paste0("../chicago/", analysisSub, "/", nc_path), col_names=FALSE) %>% pull(.) # noise cluster
+
+P <- read_csv(paste0("../chicago/", analysisSub, "/", P_path), col_names=FALSE) %>% as.matrix()
+P_sorted <- read_csv(paste0("../chicago/", analysisSub, "/", P_sorted_path), col_names=FALSE) %>% as.matrix()
+
+Bhat <- read_csv(paste0("../chicago/", analysisSub, "/", Bhat_path), col_names=FALSE) %>% as.matrix()
+
+# build plots after data as been loaded
+source("../chicago/0x_analysis.R")
+
+```
+
+We detect the presence of `r K` gangs in Chicago. Figure \ref{fig:scree} displays the `r screeN` eigenvalues of the covariance matrix of shootings across census tracts. The first several eigenvalues stand out from the remainder, indicative of the presence of unique clusters of gang activity in the data.
+
+```{r, echo=FALSE, warning=FALSE, message=FALSE, fig.cap = "Leading eigenvalues of the matrix of covariances in shootings across districs. Dashed line is drawn through the $J$th eigenvalue. Eigenvectors associated with values above this line are used in the clustering analysis. \\label{fig:scree}", fig.height=4, dpi=300, fig.pos="t"}
+
+screePlot
+
+```
+
+These clusters are easily visualized by examining the permuted covariance matrix, the empirical equivalent to Figure \ref{fig:blocks}. This can be seen in Figure \ref{fig:block_hm}. Each square on the right panel highlights the districts controlled with a single gang, with the bottom right block corresponding to districts estimated to have no gang activity. Gang wars generate positive covariance in the off-block diagonal entries. Darker off-block-diagonal entries indicate more intense conflict between the gangs controlling the pairs of districts in question. 
+
+```{r, echo=FALSE, warning=FALSE, message=FALSE, fig.cap = "The left panel shows the values of the unclustered covariance matrix. Darker values indicate higher tract-to-tract covariance in shootings. The permutes these entries in accordance with the estimated partition function. The black squares highlight covariances within a given gang's territory. The bottom right block corresponds to the districts estimated to have no gang activity. \\label{fig:block_hm}", fig.height=4, dpi=300, fig.pos="t"}
+
+block_hm
+
+```
+
+Figure \ref{fig:map} shows the distribution of gang territory in the Chicago. Like the distribution of shootings, gang activity is concentrated in the south and west of the city. Large tracts of the central and northern parts of the city are estimated to be devoid of gang activity. Gangs territories are somewhat locally compact, consistent with data published by the Chicago Police. However, some neighborhoods of the city are quite contested. All of the gangs we detect operate in both the southern and western of the city.
+
+```{r, echo=FALSE, warning=FALSE, message=FALSE, fig.cap = paste0("Estimated territorial partition of Chicago, ", minY, "-", maxY, ". Light gray tracts are estimated to have no gang activity. \\label{fig:map}"), fig.height=9, dpi=300, fig.pos="t"}
+
+chi_clusters_map
+
+```
+
+So far, we have focused on our results for the esimated partition function, $\hat{\pi}$. Our estimates for $\hat{B}$ describe the intensity of conflict between gangs in our sample. Figure \ref{fig:Bhat_hm} displays the magnitudes of these conflict intensities. 
+
+```{r, echo=FALSE, warning=FALSE, message=FALSE, fig.cap = "Estimated inter-gang conflict intensities, $\\hat{B}$, exempting non-gang occupied areas. Colors along the diagonal correspond to the gangs occupying the territories shown in Figure \\ref{fig:map}. Darker grays indicate the corresponding gangs on the diagonal tend to experience more intense conflict with one another. \\label{fig:Bhat_hm}", fig.height=4, dpi=300, fig.pos="t"}
+
+Bhat_hm
+
+```
+
+## Validation on Chicago Police Department Gang Maps
+
+*In progress...*

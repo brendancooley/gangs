@@ -110,8 +110,8 @@ def spect_clust(covM, K, normalize=False, delta=None, C=None, eig_plot=False):
     ----------
     gammaL : matrix self.N ** 2 ** 2
         Trace minimized covariance matrix.
-    M : int
-        Suspected number of groups
+    K : int
+        Suspected number of clusters
     delta : int
         Size of neighborhood for regionalization, if None then use fully connected gammaL
 
@@ -147,7 +147,7 @@ def spect_clust(covM, K, normalize=False, delta=None, C=None, eig_plot=False):
 
     return(km_lab, km_centroids)
 
-def est_J(P, V):
+def est_J(P, V, S=50):
     """Short summary.
 
     Parameters
@@ -165,14 +165,14 @@ def est_J(P, V):
     """
 
     # TESTING
-    V = 3
-    P = np.genfromtxt('output/chi_ts_clust/all/P.csv', delimiter=",")
-    S = 10
+    # V = 3
+    # P = np.genfromtxt('output/chi_ts_clust/all/P.csv', delimiter=",")
+    # S = 50
 
     N = P.shape[0]
     Kbar = 10
 
-    mL = []
+    Jvec = []
     # NOTE: another way to do this is to output the first time we don't get a decrease in loss...argument being that rest of vector is noise
         # this is consistent with results in Chen and Lei, they only provide guarantees against under estimation
     # np.median(mL)
@@ -239,15 +239,21 @@ def est_J(P, V):
 
                 loss = np.linalg.norm(Pv - Pv_hat, ord="fro")  # Frobenius Norm
                 loss_v.append(loss)
-                print(loss_v)
 
 
             Loss.append(np.mean(loss_v))
 
-        minLoss = np.argmin(Loss)
-        mL.append(minLoss)
+        Ldelta = Loss - np.append(Loss[1:], 0)
+        # len(np.where(np.array([1, 0, 0]) == 2)[0])
+        if len(np.where(Ldelta < 0)[0]) > 0:
+            # np.where(np.array([1, 0, 0]) == 1)
+            Jhat = np.min(np.where(Ldelta < 0)[0]) + 1
+            Jvec.append(Jhat)
+        else:
+            Jvec.append(Kbar)
 
-    out = np.median(mL)
+    Jhat_counts = np.bincount(Jvec)
+    out = np.argmax(Jhat_counts)
 
     return(out)
 
@@ -417,7 +423,7 @@ def Bhat(P, X, M):
     """
 
     lbda, U = np.linalg.eigh(P)
-    lbda_K = np.flip(np.argsort(lbda))[0:M+1]
+    lbda_K = np.flip(np.argsort(lbda))[0:M]
     Lbda = np.diag(lbda[lbda_K])
 
     return(np.matmul(np.matmul(X, Lbda), X.T))
