@@ -47,9 +47,9 @@ which can be solved via K-means clustering on the leading eigenvectors of $\tild
 \hat{B} = \hat{X} \hat{\Lambda} \hat{X}^T
 \end{equation}
 
-Shootings in districts without gangs will exhibit no covariance in expectation with shootings in districts in which gangs operate, $\E[ b_{0k} ] = 0$ for all $k \neq 0$. Once we have estimated $B$, we can therefore isolate the cluster corresponding to no gang activity by finding the row of $B$ with the smallest values, formally
+Shootings in districts without gangs will exhibit no covariance in expectation with shootings in districts in which gangs operate, $\E[ b_{0k} ] = 0$ for all $k \neq 0$. Once we have estimated $B$, we can therefore isolate the cluster corresponding to no gang activity by finding the row of $\hat{B}$ with the smallest values, formally
 \begin{equation} \label{eq:nc}
-\min_{ k \in \left\{ 1, ..., J \right\} } \lVert ( B - \text{diag}(B) )^{(k)} \rVert_2
+\min_{ k \in \left\{ 1, ..., J \right\} } \lVert ( \hat{B} - \text{diag}(\hat{B}) )^{(k)} \rVert_2
 \end{equation}
 where $M^{(k)}$ is the $k$th row of $M$ and $\lVert M^{(k)} \rVert_2$ is the Euclidean vector norm. 
 

@@ -73,10 +73,9 @@ clusters_path <- "clusters.csv"
 nc_path <- "noise_cluster.csv"
 Bhat_path <- "Bhat.csv"
 
-save.image('params.Rdata')
-
 wd <- getwd()
-if (!("sections" %in% strsplit(wd, "/")[[1]])) {
+if ("chicago" %in% strsplit(wd, "/")[[1]]) {
+  save.image('params.Rdata')
   mkdir(chi_clust_fpath)
   mkdir(chi_clust_fpath_all)
 }

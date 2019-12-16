@@ -493,8 +493,76 @@ document.getElementsByTagName('head')[0].appendChild(style);
 			</div>
 </section>
 
-<section><section id="motivation" class="title-slide slide level1"><h1>Motivation</h1></section><section id="approach" class="slide level2">
+<section><section id="motivation" class="title-slide slide level1"><h1>Motivation</h1><div class="fragment">
+<p><strong>Gang Violence</strong></p>
+<blockquote>
+<p>“In 2006 nearly 50 percent of the homicides and a large percentage of other violent crimes and property crimes committed in Chicago were attributed to street gangs that are involved in drug trafficking” - HIDTA 2007</p>
+</blockquote>
+<ul>
+<li><span class="citation" data-cites="Sanchez1991">Sanchez-Jankowski (1991)</span>, <span class="citation" data-cites="Levitt2000">Levitt and Venkatesh (2000)</span>, <span class="citation" data-cites="Papachristos2009">Papachristos (2009)</span>, <span class="citation" data-cites="Papachristos2013">Papachristos, Hureau, and Braga (2013)</span></li>
+</ul>
+</div>
+<div class="fragment">
+<p><strong>Turf Wars:</strong></p>
+<blockquote>
+<p>“Gang violence is often sparked by competitive relations over <strong>turf.</strong> A gang’s turf has economic and symbolic value: the gang regulates who sells what on its street corners, and gang members take pride in controlling the blocks where they grew up. Encroaching on another gang’s turf can trigger violence and a series of retaliations as gang members avenge fallen comrades.” <span class="citation" data-cites="Vargas2016">Vargas (2016)</span>, <em>Wounded City</em></p>
+</blockquote>
+<ul>
+<li><span class="citation" data-cites="Vargas2016">Vargas (2016)</span>, <span class="citation" data-cites="Ebdm2018">Bueno De Mesquita (2018)</span>, <span class="citation" data-cites="Bruhn2019">Bruhn (2019)</span></li>
+</ul>
+</div></section><section id="measurement-problem" class="slide level2">
+<h2>Measurement Problem</h2>
+<ul>
+<li>Studying gang conflict and police-gang relations empirically often requires information on
+<ul>
+<li>Number and identities of groups</li>
+<li>Territorial footprints</li>
+</ul></li>
+<li><em>Usually unobserved to the analyst</em></li>
+</ul>
+<p><strong>Question:</strong> How many gangs operate within a given city and how is territory divided amongst them?</p>
+<div class="fragment">
+<p><strong>Existing Approaches:</strong></p>
+<ul>
+<li>Police records: <span class="citation" data-cites="Bruhn2019">Bruhn (2019)</span>, <span class="citation" data-cites="Melnikov2019">Melnikov, Schmidt-Padilla, and Sviatschi (2019)</span></li>
+<li>Natural Language Processing: <span class="citation" data-cites="Sobrino2019">Sobrino (2019)</span></li>
+<li>Mixed methods: Alcocer et al, Mapping Criminal Organizations</li>
+</ul>
+</div>
+</section><section id="approach" class="slide level2">
 <h2>Approach</h2>
+<p><strong>Observables:</strong> Time-stamped, geolocated shootings</p>
+<p><strong>Unobservables:</strong></p>
+<ol type="1">
+<li>Number of gangs</li>
+<li>Territorial partition</li>
+</ol>
+<div class="fragment">
+<p><strong>Inferential Strategy</strong></p>
+<ol type="1">
+<li>Model data-generating process for shootings</li>
+</ol>
+<ul>
+<li>Non-gang</li>
+<li>Intra-gang</li>
+<li>Inter-gang</li>
+</ul>
+</div>
+<div class="fragment">
+<ol start="2" type="1">
+<li>Derive relationship between spatial covariance in shootings and latent variables</li>
+</ol>
+</div>
+<div class="fragment">
+<ol start="3" type="1">
+<li>Estimate model using observed spatial covariances</li>
+</ol>
+</div>
+<div class="fragment">
+<ol start="4" type="1">
+<li>Validate results using police records (Chicago), <em>In Progress</em></li>
+</ol>
+</div>
 </section><section id="bottom-line" class="slide level2">
 <h2>Bottom Line</h2>
 <p><img data-src="chicago/figs/gangmap2012cmag.jpg#left" style="width:40.0%" /></p>
@@ -502,7 +570,33 @@ document.getElementsByTagName('head')[0].appendChild(style);
 <h2>Bottom Line</h2>
 <p><img data-src="chicago/figs/gangmap2012cmag.jpg#left" style="width:40.0%" /> <img data-src="chicago/figs/maps/all.png#right" style="width:40.0%" /></p>
 </section></section>
-<section><section id="data" class="title-slide slide level1"><h1>Data</h1></section><section id="gunshots" class="slide level2">
+<section><section id="data" class="title-slide slide level1"><h1>Data</h1><div class="fragment">
+<p><strong>Gunshots</strong></p>
+<ul>
+<li>Victim-based crime reports, 2001-2018
+<ul>
+<li>Illinois Uniform Crime Reporting code, latitude, longitude, date-time</li>
+<li>Extract homicides and nonfatal shootings (aggravated battery with firearm)</li>
+<li>Project into census tract-months: 861 tracts, 4,000 residents each</li>
+</ul></li>
+</ul>
+</div>
+<div class="fragment">
+<p><strong>Turf</strong></p>
+<ul>
+<li>Chicago Police Department internal reports, annual <span class="citation" data-cites="Bruhn2019">(Bruhn 2019)</span>
+<ul>
+<li>Number of gangs</li>
+<li>Territorial partition</li>
+</ul></li>
+<li>Findings
+<ul>
+<li>57 gangs</li>
+<li>Collective territory covers 1/3 of city</li>
+<li>67 percent of Chicago residents live in gang-controlled territory</li>
+</ul></li>
+</ul>
+</div></section><section id="gunshots" class="slide level2">
 <h2>Gunshots</h2>
 <center>
 <img data-src="chicago/figs/shootings_animated.gif#center" style="width:70.0%" />
@@ -510,16 +604,289 @@ document.getElementsByTagName('head')[0].appendChild(style);
 </section><section id="gunshots-1" class="slide level2">
 <h2>Gunshots</h2>
 <p><img data-src="index_files/figure-revealjs/gunshots_tracts-1.png" /><!-- --></p>
-</section><section id="spatial-covariance" class="slide level2">
-<h2>Spatial Covariance</h2>
-<!-- ![](block_mat_raw.png)
- -->
-<p><img data-src="index_files/figure-revealjs/covmat1-1.png" /><!-- --></p>
-</section><section id="turf-wars" class="slide level2">
-<h2>Turf Wars</h2>
-<p><img data-src="figs/Bruhn_maps.png" style="width:90.0%" /></p>
 </section></section>
-<section id="thank-you" class="title-slide slide level1 aligncenter"><h1>Thank You</h1></section>
+<section><section id="model" class="title-slide slide level1"><h1>Model</h1><p><strong>Observables</strong></p>
+<ul>
+<li><span class="math inline">\(\mathcal{N} = \left\{1, ..., N \right\}\)</span> - districts</li>
+<li><span class="math inline">\(1, ..., T\)</span> - periods (months)</li>
+<li><span class="math inline">\(r_i\)</span> - the number of residents in territory <span class="math inline">\(i\)</span></li>
+<li><span class="math inline">\(v_i^t = x_i^t + y_i^t\)</span>
+<ul>
+<li><span class="math inline">\(y_i^t\)</span> - non-gang related shootings</li>
+<li><span class="math inline">\(x_i^t\)</span> - gang-related shootings</li>
+</ul></li>
+</ul>
+<p><strong>Unobservables</strong></p>
+<ul>
+<li><span class="math inline">\(\mathcal{K} = \left\{1, ..., K \right\}\)</span> - gangs</li>
+<li><span class="math inline">\(\pi : \mathcal{N} \rightarrow \left\{ 0, \mathcal{K} \right\}\)</span> - partition function
+<ul>
+<li><span class="math inline">\(\pi(i) = 0\)</span> indicates the absence of any gang activity.</li>
+<li><span class="math inline">\(\mathcal{N}_k\)</span> - the set of territories controlled by gang <span class="math inline">\(k\)</span></li>
+<li><span class="math inline">\(n_k = | \mathcal{K}_k |\)</span> - the number of territories controlled by gang <span class="math inline">\(k\)</span></li>
+<li><span class="math inline">\(\mathcal{K}_0\)</span> - the set of unoccupied territories.</li>
+<li><span class="math inline">\(m_k\)</span> - the number of members of gang <span class="math inline">\(k\)</span></li>
+</ul></li>
+</ul></section><section id="varieties-of-violence" class="slide level2">
+<h2>Varieties of Violence</h2>
+<p><strong>Non-Gang</strong></p>
+<ul>
+<li><span class="math inline">\(\eta_i\)</span> - the probability a resident commits a shooting
+<ul>
+<li>independent across districts</li>
+</ul></li>
+</ul>
+<div class="fragment">
+<p><strong>Intra-Gang</strong></p>
+<ul>
+<li><span class="math inline">\(\xi_k^t\)</span> - probability a member of gang <span class="math inline">\(k\)</span> shoots a member of his own gang</li>
+<li><strong>Assumption 1:</strong> <span class="math inline">\(\mathbb{E} [ \xi_k^t ] &gt; 0\)</span> for all <span class="math inline">\(k \neq 0\)</span> and <span class="math inline">\(\xi_0^t = 0\)</span> for all <span class="math inline">\(t\)</span>.</li>
+<li><strong>Assumption 2:</strong> <span class="math inline">\(\mathbb{E} [ \xi_k^t \xi_{\ell}^t ]] - \mathbb{E} [ \xi_k^t ] \mathbb{E}[ \xi_{\ell}^t ] = 0\)</span> for all <span class="math inline">\(k \neq \ell\)</span></li>
+</ul>
+</div>
+<div class="fragment">
+<p><strong>Inter-Gang</strong></p>
+<ul>
+<li><span class="math inline">\(\epsilon_{k \ell}^t\)</span> - the probability a member of gang <span class="math inline">\(k\)</span> shoots a member of gang <span class="math inline">\(\ell\)</span>.</li>
+<li><strong>Assumption 3:</strong> <span class="math inline">\(c_{k} \epsilon_{k, \ell}^t = c_{\ell} \epsilon_{\ell, k}^{t}\)</span> with the normalization <span class="math inline">\(c_1 = 1\)</span>. If <span class="math inline">\(k = 0\)</span> or <span class="math inline">\(\ell = 0\)</span> then <span class="math inline">\(\epsilon_{k, \ell}^t = 0\)</span> for all <span class="math inline">\(t\)</span>.</li>
+<li><strong>Assumption 4:</strong> <span class="math inline">\(\mathbb{E} \left[ \epsilon_{k, \ell}^t \epsilon_{m, n}^t \right] - \mathbb{E} \left[ \epsilon_{k, \ell}^t \right] \mathbb{E} \left[ \epsilon_{m, n}^t \right] = 0\)</span> for <span class="math inline">\(m, n \notin \left\{ k, \ell \right\}\)</span>.</li>
+</ul>
+</div>
+</section><section id="varieties-of-violence-1" class="slide level2">
+<h2>Varieties of Violence</h2>
+<p><strong>Gang-Related Shootings</strong></p>
+<p><span class="math display">\[
+\E [ x_i^t ] = \underbrace{ \frac{m_{\pi(i)}}{n_{\pi(i)}} \mathbb{E} [ \xi_{\pi(i)}^t ]}_{ \text{intra-gang} } + \underbrace{\sum_{k \neq \pi(i)} \frac{m_k}{n_{\pi(i)}}  \mathbb{E} [ \epsilon_{k, \pi(i)}^t ]}_{ \text{inter-gang} }
+\]</span></p>
+<p><strong>Non-Gang Related Shootings</strong></p>
+<p><span class="math display">\[
+\mathbb{E} [y_i^t] = \eta_i r_i
+\]</span> <span class="math display">\[
+\text{Var} [ y_i^t ] = \psi_i = \eta_i (1 - \eta_i) r_i
+\]</span></p>
+</section><section id="covariance-structure" class="slide level2">
+<h2>Covariance Structure</h2>
+<p><strong>Proposition 1:</strong> The covariance in shootings between districts <span class="math inline">\(i\)</span> and <span class="math inline">\(j\)</span> is <span class="math display">\[
+a_{ij} = \begin{cases} \sum_{k \neq \pi(i)} \left( 
+\left( \frac{m_k}{n_{\pi(i)}} \right)^2 \text{Var} [  \epsilon_{\pi(i), k}^t ] \right) +  \left( \frac{m_{\pi(i)}}{n_{\pi(i)}} \right)^2 \Var[ \xi_{\pi(i)}^t ] + \psi_i &amp; \text{if } i = j \\
+\sum_{k \neq \pi(i)} \left( 
+\left( \frac{m_k}{n_{\pi(i)}} \right)^2 \text{Var} [ \epsilon_{\pi(i), k}^t ] \right) +  \left( \frac{m_{\pi(i)}}{n_{\pi(i)}} \right)^2 \text{Var} [ \xi_{\pi(i)}^t ] &amp; \text{if } \pi(i) = \pi(j) \\
+\frac{m_{\pi(i)}}{n_{\pi(j)}} \frac{m_{\pi(j)}}{n_{\pi(i)}} \frac{c_{\pi(j)}}{c_{\pi(i)}} \Var [\epsilon_{\pi(i), \pi(j)}^t] &amp; \text{if } \pi(i) \neq \pi(j) \\
+0 &amp; \text{otherwise}
+\end{cases}
+\]</span></p>
+<p><strong>Corollary 1 (Block Structure):</strong></p>
+<ol type="1">
+<li>If <span class="math inline">\(\pi(i) = \pi(j) = k\)</span> and <span class="math inline">\(i \neq j\)</span> then <span class="math inline">\(a_{ij} = b_{kk}\)</span> constant for all <span class="math inline">\(i, j\)</span>.</li>
+<li>If <span class="math inline">\(\pi(i) = k\)</span> and <span class="math inline">\(\pi(j) = \ell\)</span> with <span class="math inline">\(\ell \neq k\)</span> then <span class="math inline">\(a_{ij} = b_{k \ell}\)</span> constant for all <span class="math inline">\(i, j\)</span>.</li>
+</ol>
+</section><section id="covariance-structure-1" class="slide level2">
+<h2>Covariance Structure</h2>
+<p><img data-src="figs/block_mat.png" /></p>
+</section><section id="covariance-structure-and-latent-variables" class="slide level2">
+<h2>Covariance Structure and Latent Variables</h2>
+<ul>
+<li><span class="math inline">\(\Psi = \text{diag}(\psi_1, \dots \psi_N)\)</span></li>
+<li><span class="math inline">\(Q = A - \Psi\)</span> (gang-related spatial covariance matrix)</li>
+<li><span class="math inline">\(B_{K + 1 \times K + 1} = (b_{k \ell})_{ \left\{ k, \ell \in \mathcal{K} \right\} }\)</span> (within-gang variance and cross-gang covariances)</li>
+<li><span class="math inline">\(\Theta_{N \times K + 1} = (\theta_{ik})_{\left\{ i \in \mathcal{N}, k \in \mathcal{N} \right\} }\)</span> (membership matrix, <span class="math inline">\(\theta_{ik} = 1\)</span> if <span class="math inline">\(\pi(i) = k\)</span> and <span class="math inline">\(0\)</span> otherwise)</li>
+</ul>
+<div class="fragment">
+<p><span class="math display">\[
+Q = \Theta B \Theta^T
+\]</span></p>
+<ul>
+<li>Stochastic blockmodel <span class="citation" data-cites="Holland1983 Jin2015 Lei2015">(Holland, Laskey, and Leinhardt 1983; Jin 2015; Lei and Rinaldo 2015)</span></li>
+</ul>
+</div>
+</section></section>
+<section><section id="estimation" class="title-slide slide level1"><h1>Estimation</h1><p><strong>Targets</strong></p>
+<ul>
+<li>Partition function, <span class="math inline">\(\pi\)</span> (Membership matrix: <span class="math inline">\(\Theta\)</span>)</li>
+<li>Number of groups <span class="math inline">\(K\)</span></li>
+<li>Non-gang territory, <span class="math inline">\(\mathcal{N}_0\)</span></li>
+</ul>
+<p><strong>Method</strong></p>
+<ol type="1">
+<li>Hold <span class="math inline">\(K\)</span> fixed, estimate partition (<span class="math inline">\(J = K + 1\)</span>)</li>
+<li>Cross validate over many trial <span class="math inline">\(K\)</span> to estimate number of groups</li>
+</ol></section><section id="estimation-problem" class="slide level2">
+<h2>Estimation Problem</h2>
+<p><strong>Finite Sample Noise</strong></p>
+<p><span class="math display">\[
+\tilde{A} = \mathbb{E} [A] + \Phi
+\]</span></p>
+<ul>
+<li><span class="math inline">\(\Phi = (\phi_{ij})_{ \left\{ i, j \in \mathcal{N} \right\} }\)</span></li>
+<li><span class="math inline">\(\mathbb{E} [ \phi_{ij} ] = 0\)</span> for all <span class="math inline">\(i, j\)</span></li>
+</ul>
+<div class="fragment">
+<p><span class="math display">\[\begin{align*}
+Q - \text{diag}(Q) &amp;= \mathbb{E}[A] - \text{diag}(mathbb{E}[A]) \\
+&amp;= \tilde{A} - \Phi - \text{diag}(\mathbb{E}[A]) \\
+\Phi - \text{diag}(\Phi) &amp;= \left( \tilde{A} - \text{diag}(\tilde{A}) \right) - \left( Q - \text{diag}(Q) \right)
+\end{align*}\]</span></p>
+</div>
+<div class="fragment">
+<p><strong>Moment Estimator</strong></p>
+<p><span class="math display">\[\begin{equation} \label{eq:estimator}
+(\hat{\Theta}, \hat{B}) = \argmin_{B \in \mathbb{R}^{J \times J}, \Theta \in \mathbb{M}^{N \times J}} \lVert \Phi - \text{diag}(\Phi) \rVert_F
+\end{equation}\]</span></p>
+</div>
+</section><section id="eigenstructure-of-q-lei2015" class="slide level2">
+<h2>Eigenstructure of <span class="math inline">\(Q\)</span> (<span class="citation" data-cites="Lei2015">Lei and Rinaldo (2015)</span>)</h2>
+<ul>
+<li><span class="math inline">\(\Delta = \text{diag}(\sqrt{n_1}, \dots, \sqrt{n_{J}})\)</span></li>
+</ul>
+<p><span class="math display">\[\begin{align*}
+Q &amp;= \Theta B \Theta^T \\
+&amp;= \Theta \Delta^{-1} \Delta B \Delta \Delta^{-1} \Theta^T \\
+&amp;= \Theta \Delta^{-1} Z \Lambda Z^T \Delta^{-1} \Theta^T \\
+&amp;= \Theta X \Lambda X^T \Theta^T
+\end{align*}\]</span></p>
+<ul>
+<li><span class="math inline">\(\Lambda = \text{diag}(\lambda_1, ..., \lambda_{J})\)</span> nonzero eigenvalues of <span class="math inline">\(\Delta B \Delta\)</span>
+<ul>
+<li><span class="math inline">\(Z_{N \times J}\)</span> associated eigenvectors</li>
+</ul></li>
+<li><span class="math inline">\(X = \Delta^{-1} Z\)</span></li>
+</ul>
+<div class="fragment">
+<p><strong>Spectral Clustering:</strong> Relate eigenvectors of empirical covariance matrix <span class="math inline">\(\tilde{A}\)</span> to those of <span class="math inline">\(Q\)</span></p>
+<p><span class="math display">\[
+\tilde{A} - \text{diag}(\tilde{A}) = \tilde{U} \tilde{\Lambda} \tilde{U}^T
+\]</span></p>
+</div>
+</section><section id="modified-estimation-problem" class="slide level2">
+<h2>Modified Estimation Problem</h2>
+<p><span class="math display">\[\begin{align*}
+\left( \hat{\Lambda}, \hat{X}, \hat{\Theta} \right) &amp;= \argmin_{ \Lambda \in \mathbb{D}^{J \times J}, X \in \mathbb{R}^{J \times J}, \Theta \in \mathbb{M}^{N \times J} } \lVert \Phi - \text{diag}(\Phi) \rVert_F \\
+&amp;= \argmin_{ \Lambda \in \mathbb{D}^{J \times J}, X \in \mathbb{R}^{J \times J}, \Theta \in \mathbb{M}^{N \times J} } \lVert \left( \tilde{A} - \text{diag}(\tilde{A}) \right) - \left( Q - \text{diag}(Q) \right) \rVert_F
+&amp;= \argmin_{ \Lambda \in \mathbb{D}^{J \times J}, X \in \mathbb{R}^{J \times J}, \Theta \in \mathbb{M}^{N \times J} } \lVert \tilde{U} \tilde{\Lambda} \tilde{U}^T - \left( \Theta X \Lambda X^T \Theta^T - \text{diag}(Q) \right) \rVert_F \\
+&amp;\approx \argmin_{ \Lambda \in \mathbb{D}^{J \times J}, X \in \mathbb{R}^{J \times J}, \Theta \in \mathbb{M}^{N \times J} } \lVert \tilde{U} \tilde{\Lambda} \tilde{U}^T - \Theta X \Lambda X^T \Theta^T \rVert_F
+\end{align*}\]</span></p>
+<ul>
+<li>Set <span class="math inline">\(\hat{\Lambda} = \tilde{\Lambda}\)</span></li>
+</ul>
+<div class="fragment">
+<p><span class="math display">\[\begin{equation} \label{eq:kmeans}
+\left( \hat{X}, \hat{\Theta} \right) = \argmin_{ X \in \mathbb{R}^{J \times J}, \Theta \in \mathbb{M}^{N \times J} } \lVert \Theta X - \tilde{U} \rVert_F
+\end{equation}\]</span></p>
+<ul>
+<li>K-means problem</li>
+</ul>
+</div>
+<div class="fragment">
+<p><strong>Inter-Gang Conflict Estimates</strong></p>
+<p><span class="math display">\[\begin{equation} \label{eq:B}
+\hat{B} = \hat{X} \hat{\Lambda} \hat{X}^T
+\end{equation}\]</span></p>
+</div>
+</section><section id="non-gang-territory" class="slide level2">
+<h2>Non-Gang Territory</h2>
+<ul>
+<li>No covariance with gang territory in expectation,
+<ul>
+<li><span class="math inline">\(\mathbb{E} [ b_{0k} ] = 0\)</span> for all <span class="math inline">\(k \neq 0\)</span></li>
+</ul></li>
+</ul>
+<p><strong>Estimator</strong></p>
+<p><span class="math display">\[\begin{equation} \label{eq:nc}
+\min_{ k \in \left\{ 1, ..., J \right\} } \lVert ( \hat{B} - \text{diag}(\hat{B}) )^{(k)} \rVert_2
+\end{equation}\]</span></p>
+</section><section id="number-of-groups-chen2018" class="slide level2">
+<h2>Number of Groups <span class="citation" data-cites="Chen2018">(Chen and Lei 2018)</span></h2>
+<ol type="1">
+<li>For each <span class="math inline">\(k \in \left\{ 1, ..., \bar{K} \right\}\)</span>,</li>
+</ol>
+<ul>
+<li>Randomly split districts into folds <span class="math inline">\(\mathcal{N}_1, \dots, \mathcal{N}_V\)</span>.</li>
+<li>For each fold, estimate <span class="math inline">\(\hat{\Theta}(v)\)</span> and <span class="math inline">\(\hat{B}(v)\)</span>.</li>
+<li>For each fold, calculate the predictive loss on <span class="math inline">\(\tilde{A}^{(v,v)}\)</span>, <span class="math inline">\(L_v(\tilde{A}, \hat{A}(v))\)</span></li>
+<li>Average the predictive loss across folds, <span class="math inline">\(\bar{L}_{k}(\tilde{A})\)</span>.</li>
+</ul>
+<ol start="2" type="1">
+<li>Construct the sequence of changes in predictive loss, <span class="math inline">\(\delta\)</span>.</li>
+<li>Select <span class="math inline">\(\hat{J}\)</span> at first point in sequence where predictive loss does not decrease</li>
+</ol>
+</section></section>
+<section><section id="results" class="title-slide slide level1"><h1>Results</h1><ul>
+<li>4 gangs detected</li>
+</ul>
+<p><img data-src="index_files/figure-revealjs/scree-1.png" /><!-- --></p></section><section id="empirical-covariances" class="slide level2">
+<h2>Empirical Covariances</h2>
+<p><img data-src="index_files/figure-revealjs/emp_cov-1.png" /><!-- --></p>
+</section><section id="territorial-partition" class="slide level2">
+<h2>Territorial Partition</h2>
+<p><img data-src="index_files/figure-revealjs/partition-1.png" /><!-- --></p>
+</section><section id="conflict-intensities" class="slide level2">
+<h2>Conflict Intensities</h2>
+<p><img data-src="index_files/figure-revealjs/b_hat-1.png" /><!-- --></p>
+</section></section>
+<section id="next-steps" class="title-slide slide level1"><h1>Next Steps</h1><ul>
+<li>Validation
+<ul>
+<li>Calculate empirical loss relative to Chicago gang map</li>
+</ul></li>
+<li>Uncertainty
+<ul>
+<li>Bootstrap tract-months, calculate confidence metrics for partition function, intervals for number of groups</li>
+</ul></li>
+<li>Robustness
+<ul>
+<li>Different levels of resolution, block groups?</li>
+</ul></li>
+<li>Extend to other cities</li>
+</ul></section>
+<section id="thank-you" class="title-slide slide level1 aligncenter"><h1>Thank You</h1><hr style="height:30em; visibility:hidden;" /></section>
+<section id="spatial-covariance" class="title-slide slide level1"><h1>Spatial Covariance</h1><p><img data-src="index_files/figure-revealjs/covmat1-1.png" /><!-- --></p></section>
+<section id="changes-in-territory-over-time" class="title-slide slide level1"><h1>Changes in Territory over Time</h1><center>
+<img data-src="figs/Bruhn_maps.png" style="width:65.0%" />
+</center>
+<ul>
+<li><span class="citation" data-cites="Bruhn2019">Bruhn (2019)</span></li>
+</ul>
+<div id="refs" class="references" role="doc-bibliography">
+<div id="ref-Bruhn2019">
+<p>Bruhn, Jesse. 2019. “The Geography of Gang Violence.”</p>
+</div>
+<div id="ref-Ebdm2018">
+<p>Bueno De Mesquita, Ethan. 2018. “Territorial Conflict over Endogenous Rents.” <em>Journal of Politics</em>.</p>
+</div>
+<div id="ref-Chen2018">
+<p>Chen, Kehui, and Jing Lei. 2018. “Network Cross-Validation for Determining the Number of Communities in Network Data.” <em>Journal of the American Statistical Association</em> 113 (521): 241–51.</p>
+</div>
+<div id="ref-Holland1983">
+<p>Holland, Paul W., Kathryn Blackmond Laskey, and Samuel Leinhardt. 1983. “Stochastic blockmodels: First steps.” <em>Social Networks</em> 5 (2): 109–37.</p>
+</div>
+<div id="ref-Jin2015">
+<p>Jin, Jiashun. 2015. “Fast Community Detection by SCORE.” <em>The Annals of Statistics</em> 43 (1): 57–89.</p>
+</div>
+<div id="ref-Lei2015">
+<p>Lei, Jing, and Alessandro Rinaldo. 2015. “Consistency of Spectral Clustering in Stochastic Block Models.” <em>The Annals of Statistics</em> 43 (1): 215–37.</p>
+</div>
+<div id="ref-Levitt2000">
+<p>Levitt, Steven D, and Sudhir Alladi Venkatesh. 2000. “An economic analysis of a drug-selling gang’s finances.” <em>Quarterly Journal of Economics</em>, 755–89.</p>
+</div>
+<div id="ref-Melnikov2019">
+<p>Melnikov, Nikita, Carlos Schmidt-Padilla, and Maria Micaela Sviatschi. 2019. “Gangs, Labor Mobility, and Development.”</p>
+</div>
+<div id="ref-Papachristos2009">
+<p>Papachristos, Andrew V. 2009. “Murder by Structure: Dominance Relations and the Social Structure of Gang Homicide.” <em>American Journal of Sociology</em> 115 (1): 74–128.</p>
+</div>
+<div id="ref-Papachristos2013">
+<p>Papachristos, Andrew V., David M. Hureau, and Anthony A. Braga. 2013. “The Corner and the Crew: The Influence of Geography and Social Networks on Gang Violence.” <em>American Sociological Review</em> 78 (3): 417–47.</p>
+</div>
+<div id="ref-Sanchez1991">
+<p>Sanchez-Jankowski, Martin. 1991. <em>Islands in the street: Gangs and American urban society</em>.</p>
+</div>
+<div id="ref-Sobrino2019">
+<p>Sobrino, Fernanda. 2019. “Mexican Cartel Wars: Fighting for the U.S. Opioid Market,” 1–61.</p>
+</div>
+<div id="ref-Vargas2016">
+<p>Vargas, Robert. 2016. <em>Wounded city: Violent turf wars in a Chicago barrio</em>. Oxford University Press.</p>
+</div>
+</div></section>
     </div>
   </div>
 

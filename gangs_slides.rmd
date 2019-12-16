@@ -42,6 +42,8 @@ ipak(libs)
 
 if (file.exists('references.RData')) load('references.RData')
 
+source("chicago/params.R")
+
 ### for descriptives ###
 
 chi_clean <- read_csv(paste0("chicago/", chi_clean_path))
@@ -63,6 +65,7 @@ chi_mat_n <- read_csv(paste0("chicago/", chi_tn_matrix_path), col_names=FALSE)
 
 chi_tracts <- readOGR(paste0("chicago/", chi_tracts_path))
 chi_shp <- readOGR(paste0("chicago/", chi_shape_path), "Chicago")
+tracts_n <- chi_tracts$GEOID %>% length()
 
 ### for analysis ###
 
@@ -88,7 +91,71 @@ source("chicago/0x_analysis.R")
 
 # Motivation
 
+<div class="fragment">
+
+**Gang Violence**
+
+> "In 2006 nearly 50 percent of the homicides and a large percentage of other violent crimes and property crimes committed in Chicago were attributed to street gangs that are involved in drug trafficking" - HIDTA 2007
+
+- @Sanchez1991, @Levitt2000, @Papachristos2009, @Papachristos2013
+
+</div>
+<div class="fragment">
+
+**Turf Wars:**
+
+> "Gang violence is often sparked by competitive relations over **turf.** A gang's turf has economic and symbolic value: the gang regulates who sells what on its street corners, and gang members take pride in controlling the blocks where they grew up. Encroaching on another gang's turf can trigger violence and a series of retaliations as gang members avenge fallen comrades." @Vargas2016, *Wounded City*
+
+- @Vargas2016, @Ebdm2018, @Bruhn2019
+
+</div>
+
+## Measurement Problem
+
+- Studying gang conflict and police-gang relations empirically often requires information on 
+  + Number and identities of groups
+  + Territorial footprints
+- *Usually unobserved to the analyst*
+
+**Question:** How many gangs operate within a given city and how is territory divided amongst them?
+
+. . .
+
+**Existing Approaches:**
+
+- Police records: @Bruhn2019, @Melnikov2019
+- Natural Language Processing: @Sobrino2019 
+- Mixed methods: Alcocer et al, Mapping Criminal Organizations
+
 ## Approach
+
+**Observables:** Time-stamped, geolocated shootings
+
+**Unobservables:**
+
+1. Number of gangs
+2. Territorial partition
+
+. . .
+
+**Inferential Strategy**
+
+1. Model data-generating process for shootings
+    + Non-gang
+    + Intra-gang
+    + Inter-gang
+
+. . .
+
+2. Derive relationship between spatial covariance in shootings and latent variables
+
+. . .
+
+3. Estimate model using observed spatial covariances
+
+. . .
+
+4. Validate results using police records (Chicago), *In Progress*
 
 ## Bottom Line
 
@@ -99,6 +166,30 @@ source("chicago/0x_analysis.R")
 ![](chicago/figs/gangmap2012cmag.jpg#left){width=40%} ![](chicago/figs/maps/all.png#right){width=40%}
 
 # Data
+
+<div class="fragment">
+
+**Gunshots**
+
+- Victim-based crime reports, 2001-2018
+  + Illinois Uniform Crime Reporting code, latitude, longitude, date-time
+  + Extract homicides and nonfatal shootings (aggravated battery with firearm)
+  + Project into census tract-months: `r tracts_n` tracts, 4,000 residents each
+
+</div>
+<div class="fragment">
+
+**Turf**
+
+- Chicago Police Department internal reports, annual [@Bruhn2019]
+  + Number of gangs
+  + Territorial partition
+- Findings
+  + 57 gangs
+  + Collective territory covers 1/3 of city 
+  + 67 percent of Chicago residents live in gang-controlled territory
+
+</div>
 
 ## Gunshots
 
@@ -114,10 +205,264 @@ chi_shootings_tracts_mfirst_map
 
 ```
 
-## Spatial Covariance
+# Model
 
-<!-- ![](block_mat_raw.png)
- -->
+**Observables**
+
+- $\mathcal{N} = \left\{1, ..., N \right\}$ - districts
+- $1, ..., T$ - periods (months)
+- $r_i$ - the number of residents in territory $i$
+- $v_i^t = x_i^t + y_i^t$
+  - $y_i^t$ - non-gang related shootings
+  - $x_i^t$ - gang-related shootings 
+
+**Unobservables**
+
+- $\mathcal{K} = \left\{1, ..., K \right\}$ - gangs
+- $\pi : \mathcal{N} \rightarrow \left\{ 0, \mathcal{K} \right\}$ - partition function
+  + $\pi(i) = 0$ indicates the absence of any gang activity. 
+  + $\mathcal{N}_k$ - the set of territories controlled by gang $k$ 
+  + $n_k = | \mathcal{K}_k |$ - the number of territories controlled by gang $k$
+  + $\mathcal{K}_0$ - the set of unoccupied territories. 
+  + $m_k$ - the number of members of gang $k$
+
+## Varieties of Violence
+
+**Non-Gang**
+
+- $\eta_i$ - the probability a resident commits a shooting 
+  + independent across districts
+
+. . .
+
+**Intra-Gang**
+
+- $\xi_k^t$ - probability a member of gang $k$ shoots a member of his own gang
+- **Assumption `r Aintragang_nz`:** $\mathbb{E} [ \xi_k^t ] > 0$ for all $k \neq 0$ and $\xi_0^t = 0$ for all $t$.
+- **Assumption `r Aintragang_iid`:** $\mathbb{E} [ \xi_k^t \xi_{\ell}^t ]] - \mathbb{E} [ \xi_k^t ] \mathbb{E}[ \xi_{\ell}^t ] = 0$ for all $k \neq \ell$
+
+. . .
+
+**Inter-Gang**
+
+- $\epsilon_{k \ell}^t$ - the probability a member of gang $k$ shoots a member of gang $\ell$. 
+- **Assumption `r Aintergang_symmetry`:** $c_{k} \epsilon_{k, \ell}^t = c_{\ell} \epsilon_{\ell, k}^{t}$ with the normalization $c_1 = 1$. If $k = 0$ or $\ell = 0$ then $\epsilon_{k, \ell}^t = 0$ for all $t$.
+- **Assumption `r Aintergang_iid`:** $\mathbb{E} \left[ \epsilon_{k, \ell}^t \epsilon_{m, n}^t \right] - \mathbb{E} \left[ \epsilon_{k, \ell}^t  \right] \mathbb{E} \left[ \epsilon_{m, n}^t \right] = 0$ for $m, n \notin \left\{ k, \ell \right\}$.
+
+## Varieties of Violence
+
+**Gang-Related Shootings**
+
+$$
+\mathbb{E} [ x_i^t ] = \underbrace{ \frac{m_{\pi(i)}}{n_{\pi(i)}} \mathbb{E} [ \xi_{\pi(i)}^t ]}_{ \text{intra-gang} } + \underbrace{\sum_{k \neq \pi(i)} \frac{m_k}{n_{\pi(i)}}  \mathbb{E} [ \epsilon_{k, \pi(i)}^t ]}_{ \text{inter-gang} }
+$$
+
+**Non-Gang Related Shootings**
+
+$$
+\mathbb{E} [y_i^t] = \eta_i r_i
+$$
+$$
+\text{Var} [ y_i^t ] = \psi_i = \eta_i (1 - \eta_i) r_i
+$$
+
+## Covariance Structure
+
+**Proposition `r Pcov`:** The covariance in shootings between districts $i$ and $j$ is
+$$
+a_{ij} = \begin{cases} \sum_{k \neq \pi(i)} \left( 
+\left( \frac{m_k}{n_{\pi(i)}} \right)^2 \text{Var} [  \epsilon_{\pi(i), k}^t ] \right) +  \left( \frac{m_{\pi(i)}}{n_{\pi(i)}} \right)^2 \text{Var}[ \xi_{\pi(i)}^t ] + \psi_i & \text{if } i = j \\
+\sum_{k \neq \pi(i)} \left( 
+\left( \frac{m_k}{n_{\pi(i)}} \right)^2 \text{Var} [ \epsilon_{\pi(i), k}^t ] \right) +  \left( \frac{m_{\pi(i)}}{n_{\pi(i)}} \right)^2 \text{Var} [ \xi_{\pi(i)}^t ] & \text{if } \pi(i) = \pi(j) \\
+\frac{m_{\pi(i)}}{n_{\pi(j)}} \frac{m_{\pi(j)}}{n_{\pi(i)}} \frac{c_{\pi(j)}}{c_{\pi(i)}} \text{Var} [\epsilon_{\pi(i), \pi(j)}^t] & \text{if } \pi(i) \neq \pi(j) \\
+0 & \text{otherwise}
+\end{cases}
+$$
+
+**Corollary `r Ccov` (Block Structure):** 
+
+1. If $\pi(i) = \pi(j) = k$ and $i \neq j$ then $a_{ij} = b_{kk}$ constant for all $i, j$.
+2. If $\pi(i) = k$ and $\pi(j) = \ell$ with $\ell \neq k$ then $a_{ij} = b_{k \ell}$ constant for all $i, j$.
+
+## Covariance Structure
+
+![](figs/block_mat.png)
+
+## Covariance Structure and Latent Variables
+
+- $\Psi = \text{diag}(\psi_1, \dots \psi_N)$
+- $Q = A - \Psi$ (gang-related spatial covariance matrix)
+- $B_{K + 1 \times K + 1} = (b_{k \ell})_{ \left\{ k, \ell \in \mathcal{K} \right\} }$ (within-gang variance and cross-gang covariances)
+- $\Theta_{N \times K + 1} = (\theta_{ik})_{\left\{ i \in \mathcal{N}, k \in \mathcal{N} \right\} }$ (membership matrix, $\theta_{ik} = 1$ if $\pi(i) = k$ and $0$ otherwise)
+
+. . .
+
+$$
+Q = \Theta B \Theta^T
+$$
+
+- Stochastic blockmodel [@Holland1983; @Jin2015; @Lei2015]
+
+# Estimation
+
+**Targets**
+
+- Partition function, $\pi$ (Membership matrix: $\Theta$)
+- Number of groups $K$
+- Non-gang territory, $\mathcal{N}_0$
+
+**Method**
+
+1. Hold $K$ fixed, estimate partition ($J = K + 1$)
+2. Cross validate over many trial $K$ to estimate number of groups
+
+## Estimation Problem
+
+**Finite Sample Noise**
+
+$$
+\tilde{A} = \mathbb{E} [A] + \Phi
+$$
+
+- $\Phi = (\phi_{ij})_{ \left\{ i, j \in \mathcal{N} \right\} }$
+- $\mathbb{E} [ \phi_{ij} ] = 0$ for all $i, j$
+
+. . .
+
+\begin{align*}
+Q - \text{diag}(Q) &= \mathbb{E}[A] - \text{diag}(\mathbb{E}[A]) \\
+&= \tilde{A} - \Phi - \text{diag}(\mathbb{E}[A]) \\
+\Phi - \text{diag}(\Phi) &= \left( \tilde{A} - \text{diag}(\tilde{A}) \right) - \left( Q - \text{diag}(Q) \right)
+\end{align*}
+
+. . . 
+
+**Moment Estimator**
+
+\begin{equation} \label{eq:estimator}
+(\hat{\Theta}, \hat{B}) = \argmin_{B \in \mathbb{R}^{J \times J}, \Theta \in \mathbb{M}^{N \times J}} \lVert \Phi - \text{diag}(\Phi) \rVert_F
+\end{equation}
+
+## Eigenstructure of $Q$ (@Lei2015)
+
+- $\Delta = \text{diag}(\sqrt{n_1}, \dots, \sqrt{n_{J}})$
+
+\begin{align*}
+Q &= \Theta B \Theta^T \\
+&= \Theta \Delta^{-1} \Delta B \Delta \Delta^{-1} \Theta^T \\
+&= \Theta \Delta^{-1} Z \Lambda Z^T \Delta^{-1} \Theta^T \\
+&= \Theta X \Lambda X^T \Theta^T
+\end{align*}
+
+- $\Lambda = \text{diag}(\lambda_1, ..., \lambda_{J})$ nonzero eigenvalues of $\Delta B \Delta$
+  - $Z_{N \times J}$ associated eigenvectors
+- $X = \Delta^{-1} Z$
+
+. . . 
+
+**Spectral Clustering:** Relate eigenvectors of empirical covariance matrix $\tilde{A}$ to those of $Q$
+
+$$
+\tilde{A} - \text{diag}(\tilde{A}) = \tilde{U} \tilde{\Lambda} \tilde{U}^T
+$$
+
+## Modified Estimation Problem
+
+\begin{align*}
+\left( \hat{\Lambda}, \hat{X}, \hat{\Theta} \right) &= \argmin_{ \Lambda \in \mathbb{D}^{J \times J}, X \in \mathbb{R}^{J \times J}, \Theta \in \mathbb{M}^{N \times J} } \lVert \Phi - \text{diag}(\Phi) \rVert_F \\
+&= \argmin_{ \Lambda \in \mathbb{D}^{J \times J}, X \in \mathbb{R}^{J \times J}, \Theta \in \mathbb{M}^{N \times J} } \lVert \left( \tilde{A} - \text{diag}(\tilde{A}) \right) - \left( Q - \text{diag}(Q) \right) \rVert_F \\
+&= \argmin_{ \Lambda \in \mathbb{D}^{J \times J}, X \in \mathbb{R}^{J \times J}, \Theta \in \mathbb{M}^{N \times J} } \lVert \tilde{U} \tilde{\Lambda} \tilde{U}^T - \left( \Theta X \Lambda X^T \Theta^T - \text{diag}(Q) \right) \rVert_F \\
+&\approx \argmin_{ \Lambda \in \mathbb{D}^{J \times J}, X \in \mathbb{R}^{J \times J}, \Theta \in \mathbb{M}^{N \times J} } \lVert \tilde{U} \tilde{\Lambda} \tilde{U}^T - \Theta X \Lambda X^T \Theta^T \rVert_F
+\end{align*}
+
+- Set $\hat{\Lambda} = \tilde{\Lambda}$
+
+. . .
+
+\begin{equation} \label{eq:kmeans}
+\left( \hat{X}, \hat{\Theta} \right) = \argmin_{ X \in \mathbb{R}^{J \times J}, \Theta \in \mathbb{M}^{N \times J} } \lVert \Theta X - \tilde{U} \rVert_F
+\end{equation}
+
+- K-means problem
+
+. . .
+
+**Inter-Gang Conflict Estimates**
+
+\begin{equation} \label{eq:B}
+\hat{B} = \hat{X} \hat{\Lambda} \hat{X}^T
+\end{equation}
+
+## Non-Gang Territory
+
+- No covariance with gang territory in expectation, 
+  + $\mathbb{E} [ b_{0k} ] = 0$ for all $k \neq 0$
+
+**Estimator**
+
+\begin{equation} \label{eq:nc}
+\min_{ k \in \left\{ 1, ..., J \right\} } \lVert ( \hat{B} - \text{diag}(\hat{B}) )^{(k)} \rVert_2
+\end{equation}
+
+## Number of Groups [@Chen2018]
+
+1. For each $k \in \left\{ 1, ..., \bar{K} \right\}$,
+    + Randomly split districts into folds $\mathcal{N}_1, \dots, \mathcal{N}_V$.
+    + For each fold, estimate $\hat{\Theta}(v)$ and $\hat{B}(v)$.
+    + For each fold, calculate the predictive loss on $\tilde{A}^{(v,v)}$, $L_v(\tilde{A}, \hat{A}(v))$
+    + Average the predictive loss across folds, $\bar{L}_{k}(\tilde{A})$.
+2. Construct the sequence of changes in predictive loss, $\delta$.
+3. Select $\hat{J}$ at first point in sequence where predictive loss does not decrease
+
+# Results
+
+- `r K` gangs detected
+
+```{r scree, echo=FALSE, warning=FALSE, message=FALSE, fig.height=4.5, dpi=300}
+
+screePlot
+
+```
+
+## Empirical Covariances
+
+```{r emp_cov, echo=FALSE, warning=FALSE, message=FALSE, fig.height=5.5, dpi=300}
+
+block_hm
+
+```
+
+## Territorial Partition
+
+```{r partition, echo=FALSE, warning=FALSE, message=FALSE, fig.height=5.5, dpi=300}
+
+chi_clusters_map
+
+```
+
+## Conflict Intensities
+
+```{r b_hat, echo=FALSE, warning=FALSE, message=FALSE, fig.height=5.5, dpi=300}
+
+Bhat_hm
+
+```
+
+# Next Steps
+
+- Validation
+  + Calculate empirical loss relative to Chicago gang map
+- Uncertainty
+  + Bootstrap tract-months, calculate confidence metrics for partition function, intervals for number of groups
+- Robustness
+  + Different levels of resolution, block groups? 
+- Extend to other cities
+
+# Thank You  {.aligncenter}
+
+<hr style="height:30em; visibility:hidden;" />
+
+# Spatial Covariance
 
 ```{r covmat1, echo=FALSE, warning=FALSE, message=FALSE, fig.height=5.5, dpi=300}
 
@@ -125,8 +470,10 @@ P_hm
 
 ```
 
-## Turf Wars
+# Changes in Territory over Time
 
-![](figs/Bruhn_maps.png){width=90%}
+<center>
+![](figs/Bruhn_maps.png){width=65%}
+</center>
 
-# Thank You  {.aligncenter}
+- @Bruhn2019

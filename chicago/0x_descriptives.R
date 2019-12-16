@@ -55,7 +55,7 @@ chi_tna$rate <- chi_tna$count / chi_tna$population
 chi_clean_geo <- chi_clean_hnfs %>% # filter(year < as.Date("2002-01-01")) %>% # for testing
   st_as_sf(coords = c('lng', 'lat'), crs = proj4string(chi_shp))
 
-tmap_style("white")
+# tmap_style("white")
 chi_shootings_map <- tm_shape(chi_shp) +
   tm_polygons(col="white") +
   tm_shape(chi_clean_geo) +
@@ -147,7 +147,7 @@ chi_tsa_map <- leaflet() %>%
               popup = popup)
 
 # tmap (static) version
-tmap_style("gray")
+# tmap_style("gray")
 chi_tsa_map <- tm_shape(chi_tsa_geo) +
   tm_polygons("rate", title=paste0("Homicides and Non-Fatal Shootings per Capita ", minY, "-", maxY)) +
   tm_layout(legend.position=c("left", "bottom"))
