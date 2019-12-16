@@ -540,13 +540,13 @@ document.getElementsByTagName('head')[0].appendChild(style);
 <div class="fragment">
 <p><strong>Inferential Strategy</strong></p>
 <ol type="1">
-<li>Model data-generating process for shootings</li>
-</ol>
+<li>Model data-generating process for shootings
 <ul>
 <li>Non-gang</li>
 <li>Intra-gang</li>
 <li>Inter-gang</li>
-</ul>
+</ul></li>
+</ol>
 </div>
 <div class="fragment">
 <ol start="2" type="1">
@@ -656,7 +656,7 @@ document.getElementsByTagName('head')[0].appendChild(style);
 <h2>Varieties of Violence</h2>
 <p><strong>Gang-Related Shootings</strong></p>
 <p><span class="math display">\[
-\E [ x_i^t ] = \underbrace{ \frac{m_{\pi(i)}}{n_{\pi(i)}} \mathbb{E} [ \xi_{\pi(i)}^t ]}_{ \text{intra-gang} } + \underbrace{\sum_{k \neq \pi(i)} \frac{m_k}{n_{\pi(i)}}  \mathbb{E} [ \epsilon_{k, \pi(i)}^t ]}_{ \text{inter-gang} }
+\mathbb{E} [ x_i^t ] = \underbrace{ \frac{m_{\pi(i)}}{n_{\pi(i)}} \mathbb{E} [ \xi_{\pi(i)}^t ]}_{ \text{intra-gang} } + \underbrace{\sum_{k \neq \pi(i)} \frac{m_k}{n_{\pi(i)}}  \mathbb{E} [ \epsilon_{k, \pi(i)}^t ]}_{ \text{inter-gang} }
 \]</span></p>
 <p><strong>Non-Gang Related Shootings</strong></p>
 <p><span class="math display">\[
@@ -668,10 +668,10 @@ document.getElementsByTagName('head')[0].appendChild(style);
 <h2>Covariance Structure</h2>
 <p><strong>Proposition 1:</strong> The covariance in shootings between districts <span class="math inline">\(i\)</span> and <span class="math inline">\(j\)</span> is <span class="math display">\[
 a_{ij} = \begin{cases} \sum_{k \neq \pi(i)} \left( 
-\left( \frac{m_k}{n_{\pi(i)}} \right)^2 \text{Var} [  \epsilon_{\pi(i), k}^t ] \right) +  \left( \frac{m_{\pi(i)}}{n_{\pi(i)}} \right)^2 \Var[ \xi_{\pi(i)}^t ] + \psi_i &amp; \text{if } i = j \\
+\left( \frac{m_k}{n_{\pi(i)}} \right)^2 \text{Var} [  \epsilon_{\pi(i), k}^t ] \right) +  \left( \frac{m_{\pi(i)}}{n_{\pi(i)}} \right)^2 \text{Var}[ \xi_{\pi(i)}^t ] + \psi_i &amp; \text{if } i = j \\
 \sum_{k \neq \pi(i)} \left( 
 \left( \frac{m_k}{n_{\pi(i)}} \right)^2 \text{Var} [ \epsilon_{\pi(i), k}^t ] \right) +  \left( \frac{m_{\pi(i)}}{n_{\pi(i)}} \right)^2 \text{Var} [ \xi_{\pi(i)}^t ] &amp; \text{if } \pi(i) = \pi(j) \\
-\frac{m_{\pi(i)}}{n_{\pi(j)}} \frac{m_{\pi(j)}}{n_{\pi(i)}} \frac{c_{\pi(j)}}{c_{\pi(i)}} \Var [\epsilon_{\pi(i), \pi(j)}^t] &amp; \text{if } \pi(i) \neq \pi(j) \\
+\frac{m_{\pi(i)}}{n_{\pi(j)}} \frac{m_{\pi(j)}}{n_{\pi(i)}} \frac{c_{\pi(j)}}{c_{\pi(i)}} \text{Var} [\epsilon_{\pi(i), \pi(j)}^t] &amp; \text{if } \pi(i) \neq \pi(j) \\
 0 &amp; \text{otherwise}
 \end{cases}
 \]</span></p>
@@ -722,7 +722,7 @@ Q = \Theta B \Theta^T
 </ul>
 <div class="fragment">
 <p><span class="math display">\[\begin{align*}
-Q - \text{diag}(Q) &amp;= \mathbb{E}[A] - \text{diag}(mathbb{E}[A]) \\
+Q - \text{diag}(Q) &amp;= \mathbb{E}[A] - \text{diag}(\mathbb{E}[A]) \\
 &amp;= \tilde{A} - \Phi - \text{diag}(\mathbb{E}[A]) \\
 \Phi - \text{diag}(\Phi) &amp;= \left( \tilde{A} - \text{diag}(\tilde{A}) \right) - \left( Q - \text{diag}(Q) \right)
 \end{align*}\]</span></p>
@@ -761,7 +761,7 @@ Q &amp;= \Theta B \Theta^T \\
 <h2>Modified Estimation Problem</h2>
 <p><span class="math display">\[\begin{align*}
 \left( \hat{\Lambda}, \hat{X}, \hat{\Theta} \right) &amp;= \argmin_{ \Lambda \in \mathbb{D}^{J \times J}, X \in \mathbb{R}^{J \times J}, \Theta \in \mathbb{M}^{N \times J} } \lVert \Phi - \text{diag}(\Phi) \rVert_F \\
-&amp;= \argmin_{ \Lambda \in \mathbb{D}^{J \times J}, X \in \mathbb{R}^{J \times J}, \Theta \in \mathbb{M}^{N \times J} } \lVert \left( \tilde{A} - \text{diag}(\tilde{A}) \right) - \left( Q - \text{diag}(Q) \right) \rVert_F
+&amp;= \argmin_{ \Lambda \in \mathbb{D}^{J \times J}, X \in \mathbb{R}^{J \times J}, \Theta \in \mathbb{M}^{N \times J} } \lVert \left( \tilde{A} - \text{diag}(\tilde{A}) \right) - \left( Q - \text{diag}(Q) \right) \rVert_F \\
 &amp;= \argmin_{ \Lambda \in \mathbb{D}^{J \times J}, X \in \mathbb{R}^{J \times J}, \Theta \in \mathbb{M}^{N \times J} } \lVert \tilde{U} \tilde{\Lambda} \tilde{U}^T - \left( \Theta X \Lambda X^T \Theta^T - \text{diag}(Q) \right) \rVert_F \\
 &amp;\approx \argmin_{ \Lambda \in \mathbb{D}^{J \times J}, X \in \mathbb{R}^{J \times J}, \Theta \in \mathbb{M}^{N \times J} } \lVert \tilde{U} \tilde{\Lambda} \tilde{U}^T - \Theta X \Lambda X^T \Theta^T \rVert_F
 \end{align*}\]</span></p>
@@ -797,15 +797,13 @@ Q &amp;= \Theta B \Theta^T \\
 </section><section id="number-of-groups-chen2018" class="slide level2">
 <h2>Number of Groups <span class="citation" data-cites="Chen2018">(Chen and Lei 2018)</span></h2>
 <ol type="1">
-<li>For each <span class="math inline">\(k \in \left\{ 1, ..., \bar{K} \right\}\)</span>,</li>
-</ol>
+<li>For each <span class="math inline">\(k \in \left\{ 1, ..., \bar{K} \right\}\)</span>,
 <ul>
 <li>Randomly split districts into folds <span class="math inline">\(\mathcal{N}_1, \dots, \mathcal{N}_V\)</span>.</li>
 <li>For each fold, estimate <span class="math inline">\(\hat{\Theta}(v)\)</span> and <span class="math inline">\(\hat{B}(v)\)</span>.</li>
 <li>For each fold, calculate the predictive loss on <span class="math inline">\(\tilde{A}^{(v,v)}\)</span>, <span class="math inline">\(L_v(\tilde{A}, \hat{A}(v))\)</span></li>
 <li>Average the predictive loss across folds, <span class="math inline">\(\bar{L}_{k}(\tilde{A})\)</span>.</li>
-</ul>
-<ol start="2" type="1">
+</ul></li>
 <li>Construct the sequence of changes in predictive loss, <span class="math inline">\(\delta\)</span>.</li>
 <li>Select <span class="math inline">\(\hat{J}\)</span> at first point in sequence where predictive loss does not decrease</li>
 </ol>
