@@ -65,7 +65,27 @@ def task_paper():
                    'verbosity': 2,
 	}
 
+def task_prep_slides():
+	"""
+
+	"""
+	yield {
+		'name': "moving slide files",
+		'actions': ["mkdir -p css",
+					"cp -a " + templatesPath + "slides/ " + "css/"]
+	}	
+
 def task_slides():
+	"""
+
+	"""
+	yield {
+		'name': 'draft slides',
+		'actions': ["R --slave -e \"rmarkdown::render('gangs_slides.Rmd', output_file='index.html')\""],
+		'verbosity': 2,
+	}
+
+def task_ECOslides():
 	yield {
 		'name': "building slides...",
 		'actions':["R --slave -e \"rmarkdown::render(\'" + "ECO541talk/drugs.rmd" + "\', output_file=\'" + "drugs.pdf" +"\')\""]
