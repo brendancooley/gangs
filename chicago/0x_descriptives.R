@@ -16,6 +16,7 @@ chi_cov <- read_csv(paste0(chi_cov_path_pre, "2016.csv")) %>% select(GEOID, popu
 # chi_cov$population %>% sum()  # note that sum of tract-level estimates don't agree with total population of city
 
 chi_clean <- read_csv(chi_clean_path)
+chi_clean_hnfs <- chi_clean %>% filter(hnfs==1)
 minY <- min(chi_clean$year) %>% year()
 maxY <- max(chi_clean$year) %>% year()
 
@@ -36,6 +37,27 @@ chi_mat_s <- read_csv(chi_ts_matrix_path, col_names=FALSE)
 chi_mat_n <- read_csv(chi_tn_matrix_path, col_names=FALSE)
 
 chi_tracts <- readOGR(chi_tracts_path)
+chi_shp <- readOGR(chi_shape_path, "Chicago")
+
+### SHOOTING ANIMATION ###
+
+chi_clean_geo <- chi_clean_hnfs %>% # filter(year < as.Date("2002-01-01")) %>% # for testing
+  st_as_sf(coords = c('lng', 'lat'), crs = proj4string(chi_shp))
+
+tmap_style("white")
+chi_shootings_map <- tm_shape(chi_shp) +
+  tm_polygons(col="white") +
+  tm_shape(chi_clean_geo) +
+  tm_dots(col="red") +
+  tm_view(bbox=st_bbox(chi_clean_geo)) +
+  tm_facets(along = "month", free.coords=FALSE)
+
+tmap_animation(chi_shootings_map, filename="figs/shootings_animated.gif", width=1600, delay=40)
+
+### add tract boundaries (for example) ###
+chi_months <- chi_clean_hnfs$month %>% unique() %>% sort()
+chi_mlast <- chi_months[length(chi_months)]
+
 
 ### POPULATION BY TRACT ###
 
