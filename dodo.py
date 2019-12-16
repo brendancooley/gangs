@@ -8,6 +8,9 @@ import helpers
 
 templatesPath = "~/Dropbox\ \(Princeton\)/8_Templates/"
 softwarePath = "~/Dropbox\ \(Princeton\)/14_Software/"
+verticatorPath = "~/Dropbox\ \(Princeton\)/8_Templates/plugin/verticator"
+pluginDest = "index_files/reveal.js-3.8.0/plugin"
+revealPath = "~/Dropbox\ \(Princeton\)/8_Templates/reveal.js-3.8.0"
 
 sectionsPath = "sections/"
 sectionsTemplate = "templates/cooley-plain.latex"
@@ -46,7 +49,7 @@ def task_figs():
 		if suffix == "tex":
 			yield {
 				'name': figsFiles[i],
-				'actions':["cd figs/;  latexmk -pdf " + fName + ".tex" + "; latexmk -c; magick -density 300 " + fName + ".pdf " + fName + ".png"]
+				'actions':["cd figs/;  latexmk -pdf " + fName + ".tex" + "; latexmk -c; magick -density 300 " + fName + ".pdf " + fName + ".png; cd ..;"]
 			}
 
 def task_paper():
@@ -81,7 +84,10 @@ def task_slides():
 	"""
 	yield {
 		'name': 'draft slides',
-		'actions': ["R --slave -e \"rmarkdown::render('gangs_slides.Rmd', output_file='index.html')\""],
+		'actions': ["R --slave -e \"rmarkdown::render('gangs_slides.Rmd', output_file='index.html')\"",
+            "perl -pi -w -e 's{reveal.js-3.3.0.1}{reveal.js-3.8.0}g' index.html",
+            "cp -r " + revealPath + " index_files/",
+            "cp -a " + verticatorPath + " " + pluginDest],
 		'verbosity': 2,
 	}
 

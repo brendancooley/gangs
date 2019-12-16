@@ -1,6 +1,6 @@
 ### DON'T RUN THIS SECTION WHEN BUILDING PAPER ### 
 wd <- getwd()
-if (!("sections" %in% strsplit(wd, "/")[[1]])) {
+if ("chicago" %in% strsplit(wd, "/")[[1]]) {
   
   ### SETUP ###
   
@@ -102,18 +102,20 @@ col_mapping$cluster <- as.factor(col_mapping$cluster)
 clusters_df_col <- left_join(clusters_df, col_mapping)
 chi_clusters_geo <- geo_join(chi_tracts, clusters_df_col, "GEOID", "GEOID")
 
-tmap_style("white")
+# tmap_options(bg.color = "#d0c7be")
 chi_clusters_map <- tm_shape(chi_clusters_geo) +
   tm_fill(col="color") +
   # tm_polygons("cluster", title=paste0("Cluster ID"), palette="Set3") +
-  tm_layout(legend.position=c("left", "bottom"))
+  tm_layout(bg.color="#d0c7be", outer.bg.color="white", legend.position=c("left", "bottom"))
 # chi_clusters_map
 
-# save_tmap(chi_clusters_map, paste0("figs/maps/", id, ".png"))
+# save_tmap(chi_clusters_map, "figs/maps/all.png")
 
 ### COV MATRICES ###
 P_melted <- melt(P)
+P_melted$value <- ifelse(P_melted$value < 0, 0, P_melted$value)
 P_sorted_melted <- melt(P_sorted)
+P_sorted_melted$value <- ifelse(P_sorted_melted$value < 0, 0, P_sorted_melted$value)
 
 # summary(P_melted)
 hmColors <- colorRampPalette(c("white", bcOrange))(10)
@@ -132,7 +134,8 @@ P_hm <- ggplot(data = P_melted, aes(x=Var1, y=Var2, fill=value)) +
         axis.title.y=element_blank(),
         axis.text.y=element_blank(),
         axis.ticks.y=element_blank()) +
-  labs(x=" ", y=" ", title="Covariance Matrix (Unsorted)", subtitle="(Diagonal Entries = 0)")
+  labs(x=" ", y=" ", title="Covariance Matrix (Unsorted)", subtitle="(Diagonal Entries, Negative Entries = 0)") +
+  annotate("rect", xmin=0, ymin=0, xmax=nrow(P), ymax=nrow(P), alpha=0, size=.5, color="black")
 
 cluster_counts <- table(clusters_df$cluster)
 end <- cluster_counts[length(cluster_counts)]
@@ -156,7 +159,8 @@ P_hm_sorted <- ggplot(data = P_sorted_melted, aes(x=Var1, y=Var2, fill=value)) +
         axis.title.y=element_blank(),
         axis.text.y=element_blank(),
         axis.ticks.y=element_blank()) +
-  labs(x=" ", y=" ", title="Covariance Matrix (Sorted)", subtitle="(Diagonal Entries = 0)")
+  labs(x=" ", y=" ", title="Covariance Matrix (Sorted)", subtitle="(Diagonal Entries, Negative Entries = 0)") +
+  annotate("rect", xmin=0, ymin=0, xmax=nrow(P), ymax=nrow(P), alpha=0, size=.5, color="black")
 
 coord <- 0
 for (j in cluster_counts) {

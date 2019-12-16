@@ -21,14 +21,112 @@ output:
     self_contained: false
     # reveal_plugins: ["notes"]
     lib_dir: index_files
+    fig_caption: true
     reveal_options:
-      slideNumber: true
+      slideNumber: false
       progress: false
-      controls: false
-    includes:
-      after_body: "css/plugins.html"
+      controls: true
 ---
 
-## Slide 1
 
-## Thank You  {.aligncenter}
+```{r libs, echo=FALSE, warning=FALSE, message=FALSE, results='hide'}
+
+helperPath <- "source/R/"
+helperFiles <- list.files(helperPath)
+for (i in helperFiles) {
+  source(paste0(helperPath, i))
+}
+
+libs <- c("tidyverse", "tigris", "leaflet", "leaflet.extras", "tmap", "rgdal", "RColorBrewer", "reshape2", "lubridate", "patchwork", "ggnewscale", "sf")
+ipak(libs)
+
+if (file.exists('references.RData')) load('references.RData')
+
+### for descriptives ###
+
+chi_clean <- read_csv(paste0("chicago/", chi_clean_path))
+
+chi_pop <- read_csv(paste0("chicago/", chi_pop_path))
+chi_cov <- read_csv(paste0("chicago/", chi_cov_path_pre, "2016.csv")) %>% select(GEOID, population)
+
+chi_tha <- read_csv(paste0("chicago/", chi_tha_path))
+chi_tsa <- read_csv(paste0("chicago/", chi_tsa_path))
+chi_tna <- read_csv(paste0("chicago/", chi_tna_path))
+  
+chi_dsa <- read_csv(paste0("chicago/", chi_dsa_path))
+chi_districts <- readOGR(paste0("chicago/", chi_districts_path))
+chi_mapping <- read_csv(paste0("chicago/", chi_geoid_cor_path))
+
+chi_mat_h <- read_csv(paste0("chicago/", chi_th_matrix_path), col_names=FALSE)
+chi_mat_s <- read_csv(paste0("chicago/",chi_ts_matrix_path), col_names=FALSE)
+chi_mat_n <- read_csv(paste0("chicago/", chi_tn_matrix_path), col_names=FALSE)
+
+chi_tracts <- readOGR(paste0("chicago/", chi_tracts_path))
+chi_shp <- readOGR(paste0("chicago/", chi_shape_path), "Chicago")
+
+### for analysis ###
+
+eigs <- read_csv(paste0("chicago/", analysisSub, "/", eig_path), col_names=FALSE)
+J <- read_csv(paste0("chicago/", analysisSub, "/", J_path), col_names=FALSE) %>% pull(.)
+K <- J - 1
+
+clusters <- read_csv(paste0("chicago/", analysisSub, "/", clusters_path), col_names=FALSE) %>% pull(.)
+geoid_keep <- read_csv(paste0("chicago/", analysisSub, "/", geoid_keep_path), col_names=FALSE) %>% pull(.)
+geoid_zero <- read_csv(paste0("chicago/", analysisSub, "/", geoid_zero_path), col_names=FALSE) %>% pull(.)
+nc <- read_csv(paste0("chicago/", analysisSub, "/", nc_path), col_names=FALSE) %>% pull(.) # noise cluster
+
+P <- read_csv(paste0("chicago/", analysisSub, "/", P_path), col_names=FALSE) %>% as.matrix()
+P_sorted <- read_csv(paste0("chicago/", analysisSub, "/", P_sorted_path), col_names=FALSE) %>% as.matrix()
+
+Bhat <- read_csv(paste0("chicago/", analysisSub, "/", Bhat_path), col_names=FALSE) %>% as.matrix()
+
+source("chicago/0x_descriptives.R")
+source("chicago/0x_analysis.R")
+
+```
+
+
+# Motivation
+
+## Approach
+
+## Bottom Line
+
+![](chicago/figs/gangmap2012cmag.jpg#left){width=40%}
+
+## Bottom Line
+
+![](chicago/figs/gangmap2012cmag.jpg#left){width=40%} ![](chicago/figs/maps/all.png#right){width=40%}
+
+# Data
+
+## Gunshots
+
+<center>
+![](chicago/figs/shootings_animated.gif#center){width=70%}
+</center>
+
+## Gunshots
+
+```{r gunshots_tracts, echo=FALSE, warning=FALSE, message=FALSE, fig.height=5.5, dpi=300}
+
+chi_shootings_tracts_mfirst_map
+
+```
+
+## Spatial Covariance
+
+<!-- ![](block_mat_raw.png)
+ -->
+
+```{r covmat1, echo=FALSE, warning=FALSE, message=FALSE, fig.height=5.5, dpi=300}
+
+P_hm
+
+```
+
+## Turf Wars
+
+![](figs/Bruhn_maps.png){width=90%}
+
+# Thank You  {.aligncenter}

@@ -154,6 +154,17 @@ body {
   width: 50%;
 }*/
 
+img[src*='#left'] {
+    float: left;
+}
+img[src*='#right'] {
+    float: right;
+}
+img[src*='#center'] {
+    display: block;
+    margin: auto;
+}
+
 #left {
   left:-8.33%;
   text-align: left;

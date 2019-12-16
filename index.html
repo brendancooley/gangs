@@ -9,11 +9,11 @@
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
-  <link rel="stylesheet" href="index_files/reveal.js-3.3.0.1/css/reveal.css"/>
+  <link rel="stylesheet" href="index_files/reveal.js-3.8.0/css/reveal.css"/>
 
 
 
-<!-- <link rel="stylesheet" href="index_files/reveal.js-3.3.0.1/css/theme/simple.css" id="theme">
+<!-- <link rel="stylesheet" href="index_files/reveal.js-3.8.0/css/theme/simple.css" id="theme">
  -->
 
 
@@ -493,15 +493,38 @@ document.getElementsByTagName('head')[0].appendChild(style);
 			</div>
 </section>
 
-<section id="slide-1" class="slide level2">
-<h2>Slide 1</h2>
-</section>
-<section id="thank-you" class="title-slide slide level1 aligncenter"><h1>Thank You</h1><p><small><strong>Title Slide Image Credit:</strong> Photo by Devendra Bajaj on Unsplash</small></p></section>
+<section><section id="motivation" class="title-slide slide level1"><h1>Motivation</h1></section><section id="approach" class="slide level2">
+<h2>Approach</h2>
+</section><section id="bottom-line" class="slide level2">
+<h2>Bottom Line</h2>
+<p><img data-src="chicago/figs/gangmap2012cmag.jpg#left" style="width:40.0%" /></p>
+</section><section id="bottom-line-1" class="slide level2">
+<h2>Bottom Line</h2>
+<p><img data-src="chicago/figs/gangmap2012cmag.jpg#left" style="width:40.0%" /> <img data-src="chicago/figs/maps/all.png#right" style="width:40.0%" /></p>
+</section></section>
+<section><section id="data" class="title-slide slide level1"><h1>Data</h1></section><section id="gunshots" class="slide level2">
+<h2>Gunshots</h2>
+<center>
+<img data-src="chicago/figs/shootings_animated.gif#center" style="width:70.0%" />
+</center>
+</section><section id="gunshots-1" class="slide level2">
+<h2>Gunshots</h2>
+<p><img data-src="index_files/figure-revealjs/gunshots_tracts-1.png" /><!-- --></p>
+</section><section id="spatial-covariance" class="slide level2">
+<h2>Spatial Covariance</h2>
+<!-- ![](block_mat_raw.png)
+ -->
+<p><img data-src="index_files/figure-revealjs/covmat1-1.png" /><!-- --></p>
+</section><section id="turf-wars" class="slide level2">
+<h2>Turf Wars</h2>
+<p><img data-src="figs/Bruhn_maps.png" style="width:90.0%" /></p>
+</section></section>
+<section id="thank-you" class="title-slide slide level1 aligncenter"><h1>Thank You</h1></section>
     </div>
   </div>
 
-  <script src="index_files/reveal.js-3.3.0.1/lib/js/head.min.js"></script>
-  <script src="index_files/reveal.js-3.3.0.1/js/reveal.js"></script>
+  <script src="index_files/reveal.js-3.8.0/lib/js/head.min.js"></script>
+  <script src="index_files/reveal.js-3.8.0/js/reveal.js"></script>
 
   <script>
 
@@ -509,11 +532,11 @@ document.getElementsByTagName('head')[0].appendChild(style);
       // https://github.com/hakimel/reveal.js#configuration
       Reveal.initialize({
         // Display controls in the bottom right corner
-        controls: false,
+        controls: true,
         // Display a presentation progress bar
         progress: false,
         // Display the page number of the current slide
-        slideNumber: true,
+        slideNumber: false,
         // Push each slide change to the browser history
         history: true,
         // Vertical centering of slides
@@ -532,7 +555,7 @@ document.getElementsByTagName('head')[0].appendChild(style);
 
         // Optional reveal.js plugins
         dependencies: [
-																        { src: 'index_files/reveal.js-3.3.0.1/plugin/verticator/verticator.js'}
+																        { src: 'index_files/reveal.js-3.8.0/plugin/verticator/verticator.js'}
         ]
       });
     </script>
@@ -587,17 +610,6 @@ document.getElementsByTagName('head')[0].appendChild(style);
 	});
 </script> -->
 
-<script>
- Reveal.initialize({
-    // Optional reveal.js plugins
-    dependencies: [
-        { src: 'index_files/reveal.js-3.3.0.1/plugin/zoom-js/zoom.js', async: true },
-        { src: 'index_files/reveal.js-3.3.0.1/plugin/markdown/marked.js', async: true },
-        { src: 'index_files/reveal.js-3.3.0.1/plugin/notes/notes.js', async: true },
-        { src: 'index_files/reveal.js-3.3.0.1/plugin/verticator/verticator.js'}
-    ]
-});
-</script>
 
   </body>
 </html>

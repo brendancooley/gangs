@@ -20,7 +20,7 @@ lk_geoid <- "17031630800"
 vl_col <- "#e3052a"
 gd_col <- "#3794d7"
 lk_col <- "#d3cb1c"
-nc_col <- "#BEBEBE"
+nc_col <- "#e3e3e5"
 other_col <- "#8e178b"
 
 chi_shape_path <- "data/chicago_shp/"
