@@ -499,7 +499,7 @@ document.getElementsByTagName('head')[0].appendChild(style);
 <p>“In 2006 nearly 50 percent of the homicides and a large percentage of other violent crimes and property crimes committed in Chicago were attributed to street gangs that are involved in drug trafficking” - HIDTA 2007</p>
 </blockquote>
 <ul>
-<li><span class="citation" data-cites="Sanchez1991">Sanchez-Jankowski (1991)</span>, <span class="citation" data-cites="Levitt2000">Levitt and Venkatesh (2000)</span>, <span class="citation" data-cites="Papachristos2009">Papachristos (2009)</span>, <span class="citation" data-cites="Papachristos2013">Papachristos, Hureau, and Braga (2013)</span></li>
+<li><span class="citation" data-cites="Sanchez1991">Sanchez-Jankowski (1991)</span>, <span class="citation" data-cites="Levitt2000">Levitt and Venkatesh (2000)</span>, <span class="citation" data-cites="Papachristos2009">Papachristos (2009)</span></li>
 </ul>
 </div>
 <div class="fragment">
@@ -508,7 +508,7 @@ document.getElementsByTagName('head')[0].appendChild(style);
 <p>“Gang violence is often sparked by competitive relations over <strong>turf.</strong> A gang’s turf has economic and symbolic value: the gang regulates who sells what on its street corners, and gang members take pride in controlling the blocks where they grew up. Encroaching on another gang’s turf can trigger violence and a series of retaliations as gang members avenge fallen comrades.” <span class="citation" data-cites="Vargas2016">Vargas (2016)</span>, <em>Wounded City</em></p>
 </blockquote>
 <ul>
-<li><span class="citation" data-cites="Vargas2016">Vargas (2016)</span>, <span class="citation" data-cites="Ebdm2018">Bueno De Mesquita (2018)</span>, <span class="citation" data-cites="Bruhn2019">Bruhn (2019)</span></li>
+<li><span class="citation" data-cites="Papachristos2013">Papachristos, Hureau, and Braga (2013)</span>; <span class="citation" data-cites="Vargas2016">Vargas (2016)</span>, <span class="citation" data-cites="Ebdm2018">Bueno De Mesquita (2018)</span>, <span class="citation" data-cites="Bruhn2019">Bruhn (2019)</span></li>
 </ul>
 </div></section><section id="measurement-problem" class="slide level2">
 <h2>Measurement Problem</h2>
@@ -525,13 +525,13 @@ document.getElementsByTagName('head')[0].appendChild(style);
 <p><strong>Existing Approaches:</strong></p>
 <ul>
 <li>Police records: <span class="citation" data-cites="Bruhn2019">Bruhn (2019)</span>, <span class="citation" data-cites="Melnikov2019">Melnikov, Schmidt-Padilla, and Sviatschi (2019)</span></li>
-<li>Natural Language Processing: <span class="citation" data-cites="Sobrino2019">Sobrino (2019)</span></li>
+<li>Newspapers, Natural Language Processing: <span class="citation" data-cites="Sobrino2019">Sobrino (2019)</span></li>
 <li>Mixed methods: Alcocer et al, Mapping Criminal Organizations</li>
 </ul>
 </div>
 </section><section id="approach" class="slide level2">
 <h2>Approach</h2>
-<p><strong>Observables:</strong> Time-stamped, geolocated shootings</p>
+<p><strong>Observables:</strong> Time-stamped, geolocated homicides and nonfatal shootings</p>
 <p><strong>Unobservables:</strong></p>
 <ol type="1">
 <li>Number of gangs</li>
@@ -560,7 +560,7 @@ document.getElementsByTagName('head')[0].appendChild(style);
 </div>
 <div class="fragment">
 <ol start="4" type="1">
-<li>Validate results using police records (Chicago), <em>In Progress</em></li>
+<li>Validate results using police records (Chicago), <em>in progress</em></li>
 </ol>
 </div>
 </section><section id="bottom-line" class="slide level2">
@@ -596,6 +596,7 @@ document.getElementsByTagName('head')[0].appendChild(style);
 <li>67 percent of Chicago residents live in gang-controlled territory</li>
 </ul></li>
 </ul>
+<p><a href="#/bruhn_maps">Bruhn Maps</a></p>
 </div></section><section id="gunshots" class="slide level2">
 <h2>Gunshots</h2>
 <center>
@@ -640,16 +641,16 @@ document.getElementsByTagName('head')[0].appendChild(style);
 <p><strong>Intra-Gang</strong></p>
 <ul>
 <li><span class="math inline">\(\xi_k^t\)</span> - probability a member of gang <span class="math inline">\(k\)</span> shoots a member of his own gang</li>
-<li><strong>Assumption 1:</strong> <span class="math inline">\(\mathbb{E} [ \xi_k^t ] &gt; 0\)</span> for all <span class="math inline">\(k \neq 0\)</span> and <span class="math inline">\(\xi_0^t = 0\)</span> for all <span class="math inline">\(t\)</span>.</li>
-<li><strong>Assumption 2:</strong> <span class="math inline">\(\mathbb{E} [ \xi_k^t \xi_{\ell}^t ]] - \mathbb{E} [ \xi_k^t ] \mathbb{E}[ \xi_{\ell}^t ] = 0\)</span> for all <span class="math inline">\(k \neq \ell\)</span></li>
+<li><strong>Assumption 1 (Non-negativity):</strong> <span class="math inline">\(\mathbb{E} [ \xi_k^t ] &gt; 0\)</span> for all <span class="math inline">\(k \neq 0\)</span> and <span class="math inline">\(\xi_0^t = 0\)</span> for all <span class="math inline">\(t\)</span></li>
+<li><strong>Assumption 2 (Independence):</strong> <span class="math inline">\(\mathbb{E} [ \xi_k^t \xi_{\ell}^t ] - \mathbb{E} [ \xi_k^t ] \mathbb{E}[ \xi_{\ell}^t ] = 0\)</span> for all <span class="math inline">\(k \neq \ell\)</span></li>
 </ul>
 </div>
 <div class="fragment">
 <p><strong>Inter-Gang</strong></p>
 <ul>
-<li><span class="math inline">\(\epsilon_{k \ell}^t\)</span> - the probability a member of gang <span class="math inline">\(k\)</span> shoots a member of gang <span class="math inline">\(\ell\)</span>.</li>
-<li><strong>Assumption 3:</strong> <span class="math inline">\(c_{k} \epsilon_{k, \ell}^t = c_{\ell} \epsilon_{\ell, k}^{t}\)</span> with the normalization <span class="math inline">\(c_1 = 1\)</span>. If <span class="math inline">\(k = 0\)</span> or <span class="math inline">\(\ell = 0\)</span> then <span class="math inline">\(\epsilon_{k, \ell}^t = 0\)</span> for all <span class="math inline">\(t\)</span>.</li>
-<li><strong>Assumption 4:</strong> <span class="math inline">\(\mathbb{E} \left[ \epsilon_{k, \ell}^t \epsilon_{m, n}^t \right] - \mathbb{E} \left[ \epsilon_{k, \ell}^t \right] \mathbb{E} \left[ \epsilon_{m, n}^t \right] = 0\)</span> for <span class="math inline">\(m, n \notin \left\{ k, \ell \right\}\)</span>.</li>
+<li><span class="math inline">\(\epsilon_{k, \ell}^t\)</span> - the probability a member of gang <span class="math inline">\(k\)</span> shoots a member of gang <span class="math inline">\(\ell\)</span></li>
+<li><strong>Assumption 3 (Symmetry):</strong> <span class="math inline">\(c_{k} \epsilon_{k, \ell}^t = c_{\ell} \epsilon_{\ell, k}^{t}\)</span> with the normalization <span class="math inline">\(c_1 = 1\)</span>. If <span class="math inline">\(k = 0\)</span> or <span class="math inline">\(\ell = 0\)</span> then <span class="math inline">\(\epsilon_{k, \ell}^t = 0\)</span> for all <span class="math inline">\(t\)</span></li>
+<li><strong>Assumption 4 (Independence):</strong> <span class="math inline">\(\mathbb{E} [ \epsilon_{k, \ell}^t \epsilon_{m, n}^t ] - \mathbb{E} [ \epsilon_{k, \ell}^t ] \mathbb{E} [ \epsilon_{m, n}^t ] = 0\)</span> for <span class="math inline">\(m, n \notin \left\{ k, \ell \right\}\)</span></li>
 </ul>
 </div>
 </section><section id="varieties-of-violence-1" class="slide level2">
@@ -669,9 +670,9 @@ document.getElementsByTagName('head')[0].appendChild(style);
 <p><strong>Proposition 1:</strong> The covariance in shootings between districts <span class="math inline">\(i\)</span> and <span class="math inline">\(j\)</span> is <span class="math display">\[
 a_{ij} = \begin{cases} \sum_{k \neq \pi(i)} \left( 
 \left( \frac{m_k}{n_{\pi(i)}} \right)^2 \text{Var} [  \epsilon_{\pi(i), k}^t ] \right) +  \left( \frac{m_{\pi(i)}}{n_{\pi(i)}} \right)^2 \text{Var}[ \xi_{\pi(i)}^t ] + \psi_i &amp; \text{if } i = j \\
-\sum_{k \neq \pi(i)} \left( 
+\color{bcOrange} \sum_{k \neq \pi(i)} \left( 
 \left( \frac{m_k}{n_{\pi(i)}} \right)^2 \text{Var} [ \epsilon_{\pi(i), k}^t ] \right) +  \left( \frac{m_{\pi(i)}}{n_{\pi(i)}} \right)^2 \text{Var} [ \xi_{\pi(i)}^t ] &amp; \text{if } \pi(i) = \pi(j) \\
-\frac{m_{\pi(i)}}{n_{\pi(j)}} \frac{m_{\pi(j)}}{n_{\pi(i)}} \frac{c_{\pi(j)}}{c_{\pi(i)}} \text{Var} [\epsilon_{\pi(i), \pi(j)}^t] &amp; \text{if } \pi(i) \neq \pi(j) \\
+\color{bcOrange} \frac{m_{\pi(i)}}{n_{\pi(j)}} \frac{m_{\pi(j)}}{n_{\pi(i)}} \frac{c_{\pi(j)}}{c_{\pi(i)}} \text{Var} [\epsilon_{\pi(i), \pi(j)}^t] &amp; \text{if } \pi(i) \neq \pi(j) \\
 0 &amp; \text{otherwise}
 \end{cases}
 \]</span></p>
@@ -683,14 +684,23 @@ a_{ij} = \begin{cases} \sum_{k \neq \pi(i)} \left(
 </section><section id="covariance-structure-1" class="slide level2">
 <h2>Covariance Structure</h2>
 <p><img data-src="figs/block_mat.png" /></p>
+<div class="fragment">
+<p><span class="math display">\[
+A_{N \times N} = (a_{ij})_{ \left\{ i,j \in \mathcal{N} \right\} }
+\]</span></p>
+</div>
 </section><section id="covariance-structure-and-latent-variables" class="slide level2">
 <h2>Covariance Structure and Latent Variables</h2>
 <ul>
-<li><span class="math inline">\(\Psi = \text{diag}(\psi_1, \dots \psi_N)\)</span></li>
+<li><span class="math inline">\(\Psi = \text{diag}(\psi_1, \dots \psi_N)\)</span> (variance of non-gang shootings)</li>
 <li><span class="math inline">\(Q = A - \Psi\)</span> (gang-related spatial covariance matrix)</li>
-<li><span class="math inline">\(B_{K + 1 \times K + 1} = (b_{k \ell})_{ \left\{ k, \ell \in \mathcal{K} \right\} }\)</span> (within-gang variance and cross-gang covariances)</li>
-<li><span class="math inline">\(\Theta_{N \times K + 1} = (\theta_{ik})_{\left\{ i \in \mathcal{N}, k \in \mathcal{N} \right\} }\)</span> (membership matrix, <span class="math inline">\(\theta_{ik} = 1\)</span> if <span class="math inline">\(\pi(i) = k\)</span> and <span class="math inline">\(0\)</span> otherwise)</li>
 </ul>
+<div class="fragment">
+<ul>
+<li><span class="math inline">\(B_{K + 1 \times K + 1} = (b_{k \ell})_{ \left\{ k, \ell \in \mathcal{K} \right\} }\)</span> (within-gang variance and cross-gang covariances)</li>
+<li><span class="math inline">\(\Theta_{N \times K + 1} = (\theta_{ik})_{\left\{ i \in \mathcal{N}, k \in \mathcal{K} \cup 0 \right\} }\)</span> (binary membership matrix, <span class="math inline">\(\theta_{ik} = 1\)</span> if <span class="math inline">\(\pi(i) = k\)</span> and <span class="math inline">\(0\)</span> otherwise)</li>
+</ul>
+</div>
 <div class="fragment">
 <p><span class="math display">\[
 Q = \Theta B \Theta^T
@@ -702,7 +712,7 @@ Q = \Theta B \Theta^T
 </section></section>
 <section><section id="estimation" class="title-slide slide level1"><h1>Estimation</h1><p><strong>Targets</strong></p>
 <ul>
-<li>Partition function, <span class="math inline">\(\pi\)</span> (Membership matrix: <span class="math inline">\(\Theta\)</span>)</li>
+<li>Partition function, <span class="math inline">\(\pi\)</span> (membership matrix: <span class="math inline">\(\Theta\)</span>)</li>
 <li>Number of groups <span class="math inline">\(K\)</span></li>
 <li>Non-gang territory, <span class="math inline">\(\mathcal{N}_0\)</span></li>
 </ul>
@@ -763,14 +773,14 @@ Q &amp;= \Theta B \Theta^T \\
 \left( \hat{\Lambda}, \hat{X}, \hat{\Theta} \right) &amp;= \argmin_{ \Lambda \in \mathbb{D}^{J \times J}, X \in \mathbb{R}^{J \times J}, \Theta \in \mathbb{M}^{N \times J} } \lVert \Phi - \text{diag}(\Phi) \rVert_F \\
 &amp;= \argmin_{ \Lambda \in \mathbb{D}^{J \times J}, X \in \mathbb{R}^{J \times J}, \Theta \in \mathbb{M}^{N \times J} } \lVert \left( \tilde{A} - \text{diag}(\tilde{A}) \right) - \left( Q - \text{diag}(Q) \right) \rVert_F \\
 &amp;= \argmin_{ \Lambda \in \mathbb{D}^{J \times J}, X \in \mathbb{R}^{J \times J}, \Theta \in \mathbb{M}^{N \times J} } \lVert \tilde{U} \tilde{\Lambda} \tilde{U}^T - \left( \Theta X \Lambda X^T \Theta^T - \text{diag}(Q) \right) \rVert_F \\
-&amp;\approx \argmin_{ \Lambda \in \mathbb{D}^{J \times J}, X \in \mathbb{R}^{J \times J}, \Theta \in \mathbb{M}^{N \times J} } \lVert \tilde{U} \tilde{\Lambda} \tilde{U}^T - \Theta X \Lambda X^T \Theta^T \rVert_F
+&amp;\approx \argmin_{ \Lambda \in \mathbb{D}^{J \times J}, X \in \mathbb{R}^{J \times J}, \Theta \in \mathbb{M}^{N \times J} } \lVert \color{bcOrange} \tilde{U} \color{black} \tilde{\Lambda} \color{bcOrange} \tilde{U}^T \color{black} - \color{bcOrange} \Theta X \color{black} \Lambda \color{bcOrange} \left( \Theta X \right)^T \color{black} \rVert_F
 \end{align*}\]</span></p>
 <ul>
 <li>Set <span class="math inline">\(\hat{\Lambda} = \tilde{\Lambda}\)</span></li>
 </ul>
 <div class="fragment">
 <p><span class="math display">\[\begin{equation} \label{eq:kmeans}
-\left( \hat{X}, \hat{\Theta} \right) = \argmin_{ X \in \mathbb{R}^{J \times J}, \Theta \in \mathbb{M}^{N \times J} } \lVert \Theta X - \tilde{U} \rVert_F
+\left( \hat{X}, \hat{\Theta} \right) = \argmin_{ X \in \mathbb{R}^{J \times J}, \Theta \in \mathbb{M}^{N \times J} } \lVert \color{bcOrange} \Theta X - \tilde{U} \color{black} \rVert_F
 \end{equation}\]</span></p>
 <ul>
 <li>K-means problem</li>
@@ -836,13 +846,13 @@ Q &amp;= \Theta B \Theta^T \\
 </ul></li>
 <li>Extend to other cities</li>
 </ul></section>
-<section id="thank-you" class="title-slide slide level1 aligncenter"><h1>Thank You</h1><hr style="height:30em; visibility:hidden;" /></section>
-<section id="spatial-covariance" class="title-slide slide level1"><h1>Spatial Covariance</h1><p><img data-src="index_files/figure-revealjs/covmat1-1.png" /><!-- --></p></section>
-<section id="changes-in-territory-over-time" class="title-slide slide level1"><h1>Changes in Territory over Time</h1><center>
+<section id="thank-you" class="title-slide slide level1 aligncenter"><h1>Thank You</h1></section>
+<section id="bruhn_maps" class="title-slide slide level1"><h1>Changes in Territory over Time</h1><center>
 <img data-src="figs/Bruhn_maps.png" style="width:65.0%" />
 </center>
+<hr style="height:30em; visibility:hidden;" />
 <ul>
-<li><span class="citation" data-cites="Bruhn2019">Bruhn (2019)</span></li>
+<li><span class="citation" data-cites="Bruhn2019">Bruhn (2019)</span>, <a href="#/data">Back</a></li>
 </ul>
 <div id="refs" class="references" role="doc-bibliography">
 <div id="ref-Bruhn2019">
