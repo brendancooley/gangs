@@ -7,7 +7,7 @@ position: Ph.D. Candidates
 institution: Princeton University
 email: "bcooley (at) princeton.edu | noamg (at) princeton.edu"
 
-bibliography: /Users/brendancooley/Dropbox (Princeton)/References/library.bib
+bibliography: /Users/bcooley/Dropbox (Princeton)/References/library.bib
 biblio-style: apsr
 
 backgroundTitle: "figs/chi_aerial.jpg"
@@ -127,6 +127,13 @@ source("chicago/0x_analysis.R")
 - Newspapers, Natural Language Processing: @Sobrino2019 
 - Mixed methods: Alcocer et al, Mapping Criminal Organizations
 
+. . .
+
+**Limitations**
+
+- Methods used to construct police data opaque
+- Inductive approaches require local subject matter expertise
+
 ## Approach
 
 **Observables:** Time-stamped, geolocated homicides and nonfatal shootings
@@ -148,6 +155,7 @@ source("chicago/0x_analysis.R")
 . . .
 
 2. Derive relationship between spatial covariance in shootings and latent variables
+    + Generalization of @Trebbi2019 to inter-group conflict
 
 . . .
 
