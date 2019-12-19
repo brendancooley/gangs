@@ -167,11 +167,11 @@ source("chicago/0x_analysis.R")
 
 ## Bottom Line
 
-![](chicago/figs/gangmap2012cmag.jpg#left){width=40%}
+![](figs/gangmap2012cmag.jpg#left){width=40%}
 
 ## Bottom Line
 
-![](chicago/figs/gangmap2012cmag.jpg#left){width=40%} ![](chicago/figs/maps/all.png#right){width=40%}
+![](figs/gangmap2012cmag.jpg#left){width=40%} ![](figs/all.png#right){width=40%}
 
 # Data {id="data"}
 
@@ -204,7 +204,7 @@ source("chicago/0x_analysis.R")
 ## Gunshots
 
 <center>
-![](chicago/figs/shootings_animated.gif#center){width=70%}
+![](figs/shootings_animated.gif#center){width=70%}
 </center>
 
 ## Gunshots
