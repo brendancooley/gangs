@@ -1,0 +1,46 @@
+\documentclass[preview, 14pt, border=10pt, varwidth]{standalone}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{amsthm}
+\usepackage{natbib}
+\usepackage{geometry}
+\usepackage[english]{babel}
+\usepackage{accents}
+\usepackage{hyperref}
+\usepackage[T1]{fontenc}
+\usepackage{accents}
+
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{caption}
+\usepackage{colortbl}
+
+\usepackage{mathtools}
+% xcolor
+\usepackage[table]{xcolor}% http://ctan.org/pkg/xcolor
+\def\cca#1{\cellcolor{black!#10}\textcolor{black!#10}{#1}} % shade block by number and match text to color so it doesn't appear
+
+\setlength{\unitlength}{1cm}
+
+\begin{document}
+\begin{table}
+\arrayrulecolor{white}
+{\setlength\tabcolsep{4pt}%
+\begin{tabular}{ccc ccc ccc ccc}
+\cca{6} & \cca{2} & \cca{2} & \cca{4} & \cca{2} & \cca{2} & \cca{0} & \cca{2} & \cca{0} & \cca{0} & \cca{4} & \cca{2} \\ 
+\cca{0} & \cca{6} & \cca{2} & \cca{2} & \cca{2} & \cca{2} & \cca{2} & \cca{4} & \cca{0} & \cca{2} & \cca{0} & \cca{4} \\
+\cca{0} & \cca{0} & \cca{2} & \cca{0} & \cca{0} & \cca{0} & \cca{0} & \cca{0} & \cca{0} & \cca{0} & \cca{0} & \cca{0} \\
+\cca{2} & \cca{2} & \cca{2} & \cca{6} & \cca{4} & \cca{4} & \cca{0} & \cca{2} & \cca{2} & \cca{0} & \cca{0} & \cca{2} \\
+\cca{2} & \cca{0} & \cca{2} & \cca{4} & \cca{6} & \cca{2} & \cca{2} & \cca{0} & \cca{2} & \cca{4} & \cca{2} & \cca{0} \\
+\cca{0} & \cca{0} & \cca{0} & \cca{0} & \cca{0} & \cca{2} & \cca{0} & \cca{0} & \cca{0} & \cca{0} & \cca{0} & \cca{0} \\
+\cca{4} & \cca{4} & \cca{0} & \cca{2} & \cca{0} & \cca{2} & \cca{6} & \cca{2} & \cca{2} & \cca{0} & \cca{2} & \cca{2} \\
+\cca{2} & \cca{0} & \cca{0} & \cca{4} & \cca{4} & \cca{2} & \cca{2} & \cca{6} & \cca{2} & \cca{2} & \cca{2} & \cca{0} \\
+\cca{2} & \cca{2} & \cca{0} & \cca{0} & \cca{2} & \cca{4} & \cca{4} & \cca{0} & \cca{6} & \cca{2} & \cca{2} & \cca{2} \\
+\cca{2} & \cca{0} & \cca{2} & \cca{4} & \cca{2} & \cca{2} & \cca{4} & \cca{2} & \cca{2} & \cca{6} & \cca{0} & \cca{0} \\
+\cca{0} & \cca{0} & \cca{0} & \cca{0} & \cca{0} & \cca{0} & \cca{0} & \cca{0} & \cca{0} & \cca{0} & \cca{2} & \cca{0} \\
+\cca{2} & \cca{4} & \cca{2} & \cca{0} & \cca{2} & \cca{2} & \cca{2} & \cca{2} & \cca{0} & \cca{0} & \cca{4} & \cca{6} \\
+\end{tabular}}
+\end{table}
+\end{document}

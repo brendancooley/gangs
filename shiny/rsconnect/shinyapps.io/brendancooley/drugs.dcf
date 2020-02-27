@@ -1,0 +1,13 @@
+name: drugs
+title: drugs
+username:
+account: brendancooley
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 563821
+bundleId: 1860392
+url: https://brendancooley.shinyapps.io/drugs/
+when: 1549485929.84539
+asMultiple: FALSE
+asStatic: FALSE
+ignoredFiles: chi_crimes.csv|chicago_prelim.R|clean.R|nola_prelim.R|scratch.R
