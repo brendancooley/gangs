@@ -1,0 +1,109 @@
+We will first show how to estimate the territorial partition, described by the matrix $\Theta$, holding the number of groups, $K$, fixed. We will then proceed to estimate $K$ using cross validation, following @Chen2018. Let $J = K + 1$ for convenience.
+
+## Territorial Partition
+
+We observe the sample analogue to $A$,
+$$
+\tilde{A} = \E [A] + \Phi
+$$
+where $\Phi = (\phi_{ij})_{ \left\{ i, j \in \mathcal{N} \right\} }$ is a noise matrix with $\E[\phi_{ij}] = 0$ for all $i, j$. Note that
+\begin{align*}
+Q - \text{diag}(Q) &= \E[A] - \text{diag}(\E[A]) \\
+&= \tilde{A} - \Phi - \text{diag}(\E[A]) \\
+\Phi - \text{diag}(\Phi) &= \left( \tilde{A} - \text{diag}(\tilde{A}) \right) - \left( Q - \text{diag}(Q) \right)
+\end{align*}
+
+Let $\mathbb{R}_{+}^{J \times J}$ be the set of all $J \times J$ symmetric matrices with non-negative entries, $\mathbb{D}^{J \times J}$ be the set of all $J \times J$ diagonal matrices and let $\mathbb{M}^{N \times J}$ be the set of all membership matrices.^[These have binary entries with rows summing to 1.] A moment estimator for $\Theta$ and $B$ satisfies
+\begin{equation} \label{eq:estimator}
+(\hat{\Theta}, \hat{B}) = \argmin_{B \in \mathbb{R}^{J \times J}, \Theta \in \mathbb{M}^{N \times J}} \lVert \Phi - \text{diag}(\Phi) \rVert_F
+\end{equation}
+where $\lVert M \rVert_F = \left( \sum_{i} \sum_j M_{ij}^2 \right)^{\frac{1}{2}}$ is the Frobenius norm.
+
+We estimate these quantities using spectral clustering.^[@Luxberg2007 provides an overview of this family of methods.] These methods exploit the eigen-structure of $Q$. If there are $K$ gangs in the city, $Q$ will have $J$ nonzero eigenvalues. Let $\Delta = \text{diag}(\sqrt{n_1}, \dots, \sqrt{n_{J}})$ so that $\Delta B \Delta$ normalizes the connectivity matrix by the number of territories controlled by each group. $Q$ can then be written as
+\begin{align*}
+Q &= \Theta B \Theta^T \\
+&= \Theta \Delta^{-1} \Delta B \Delta \Delta^{-1} \Theta^T \\
+&= \Theta \Delta^{-1} Z \Lambda Z^T \Delta^{-1} \Theta^T \\
+&= \Theta X \Lambda X^T \Theta^T
+\end{align*}
+following @Lei2015 (Lemma 2.1), where $\Lambda = \text{diag}(\lambda_1, ..., \lambda_{J})$ stores the nonzero eigenvalues of the normalized connectivity matrix with $| \lambda_1 | \geq \dots \geq | \lambda_{J} | > 0$ and $Z_{N \times J}$ stores the associated eigenvectors. Therefore, $Z \Lambda Z^T = \Delta B \Delta$ is the eigendecomposition of the normalized connectivity matrix. Because $\Theta \Delta^{-1}$ is an orthonormal matrix, the rows of $\Theta X$ remain orthogonal and $Q = U \Lambda U^T$ is an eigendecomposition of $Q$ with $U = \Theta X$.
+
+The noise matrix $\Phi$ will distort the eigenvalues of $\tilde{A}$ away from zero. As $T \rightarrow \infty$, however, this noise matrix becomes small and the eigenvalues that take nonzero values due to noise will shrink toward zero. We therefore eigendecompose $\tilde{A} - \text{diag}(\tilde{A})$ into
+$$
+\tilde{A} - \text{diag}(\tilde{A}) = \tilde{U} \tilde{\Lambda} \tilde{U}^T
+$$
+with $\tilde{\Lambda} = \text{diag}(\tilde{\lambda}_1, \dots, \tilde{\lambda}_{J})$ and $| \tilde{\lambda}_1 | \geq \dots \geq | \tilde{\lambda}_{J} | >  | \tilde{\lambda}_i |$ for $i \notin \left\{ 1, \dots, J \right\}$. Then, the problem in \ref{eq:estimator} can be reformulated as
+\begin{align*}
+\left( \hat{\Lambda}, \hat{X}, \hat{\Theta} \right) &= \argmin_{ \Lambda \in \mathbb{D}^{J \times J}, X \in \mathbb{R}^{J \times J}, \Theta \in \mathbb{M}^{N \times J} } \lVert \tilde{U} \tilde{\Lambda} \tilde{U}^T - \left( \Theta X \Lambda X^T \Theta^T - \text{diag}(Q) \right) \rVert_F \\
+&\approx \argmin_{ \Lambda \in \mathbb{D}^{J \times J}, X \in \mathbb{R}^{J \times J}, \Theta \in \mathbb{M}^{N \times J} } \lVert \tilde{U} \tilde{\Lambda} \tilde{U}^T - \Theta X \Lambda X^T \Theta^T \rVert_F
+\end{align*}
+
+Setting $\hat{\Lambda} = \tilde{\Lambda}$, the problem reduces to
+\begin{equation} \label{eq:kmeans}
+\left( \hat{X}, \hat{\Theta} \right) = \argmin_{ X \in \mathbb{R}^{J \times J}, \Theta \in \mathbb{M}^{N \times J} } \lVert \Theta X - \tilde{U} \rVert_F
+\end{equation}
+which can be solved via K-means clustering on the leading eigenvectors of $\tilde{A} - \text{diag}(\tilde{A})$ where $\Theta$ are the cluster memberships and $X$ are the cluster centroids. An estimate for $B$ can then be recovered as
+\begin{equation} \label{eq:B}
+\hat{B} = \hat{X} \hat{\Lambda} \hat{X}^T
+\end{equation}
+
+Shootings in districts without gangs will exhibit no covariance in expectation with shootings in districts in which gangs operate, $\E[ b_{0k} ] = 0$ for all $k \neq 0$. Once we have estimated $B$, we can therefore isolate the cluster corresponding to no gang activity by finding the row of $\hat{B}$ with the smallest values, formally
+\begin{equation} \label{eq:nc}
+\min_{ k \in \left\{ 1, ..., J \right\} } \lVert ( \hat{B} - \text{diag}(\hat{B}) )^{(k)} \rVert_2
+\end{equation}
+where $M^{(k)}$ is the $k$th row of $M$ and $\lVert M^{(k)} \rVert_2$ is the Euclidean vector norm. 
+
+As discussed in the previous section, our model differs slightly from the stochastic block model. Where we observe between district covariance matrix, these models instead work with a binomial matrix of interaction counts between nodes (districts). Efforts to prove the consistency of spectral estimators therefore derive asymptotics as the number of nodes grows large.^[@Lei2015, for example, show that the spectral estimator is approximately consistent for $\Theta$. As the number of groups grows large, the estimator misclassifies a vanishing proportion of nodes with probability approaching one.] Intuitively, the off-diagonal entries of our empirical covariance matrix converge to the off diagonal entries of $Q$ as $T$ grows large. In the limit, then $\tilde{U} \rightarrow \Theta X$ and K-means should not have trouble isolating distinct clusters in $\tilde{U}$. We rely on this heuristic for esimation, as in @Trebbi2019.
+
+## Number of Gangs
+
+We rely on the cross-validation approach described in @Chen2018 to estimate the number of gangs operating in the city. For each trial $\tilde{K}$, this method iteratively splits the covariance matrix into $V$ rectangular subsets for testing. It then estimates $\Theta$ and $B$ on $V - 1$ subsets and calculates the predictive loss on the square subset of the covariance matrix held out for testing. The $\tilde{K}$ that minimizes predictive loss is chosen as $\hat{J} = \hat{K} + 1$. @Chen2018 provide no theoretical guarantees against overestimating $J$ and in practice, we find that predictive loss stochastically decreases as $\tilde{K}$ grows larger. We therefore select the first $\tilde{K}$ for which predictive loss does not decrease for $\tilde{K} + 1$ as our estimate for $\hat{J}$, averaged over many trial runs of the estimator. Let $\bar{L}_{\tilde{K}}(\tilde{A})$ be the average predictive loss on $\tilde{A}$ when $J = \tilde{K}$ and let $\delta = \left\{ \delta_1, \dots, \delta_{\bar{K}} \right\}$ be a sequence of changes in the predictive loss where $\delta_k = \bar{L}_{k}(\tilde{A}) - \bar{L}_{k+1}(\tilde{A})$. Our estimator for $J$ selects
+\begin{equation} \label{eq:hatJ}
+\hat{J} = \argmin_{k} \left\{ k \mid \delta_k < 0 \right\}_{k \in \left\{ 1, \dots, \bar{K} \right\} }
+\end{equation}
+
+We now describe how this loss function is constructed. Let $\mathcal{V} = \left\{ 1, \dots, V \right\}$ be the set of $V$ cross validation folds, $\mathcal{N}_v \subset \mathcal{N}$ disjoint sets with $\cup_{v \in \mathcal{V}} \mathcal{N}_v = \mathcal{N}$, and $\mathcal{N}_{-v} = \cup_{u \neq v \in \mathcal{V}}$. Let $M^{(u,v)}$ denote the submatrix of $M$ consisting of the rows in $u$ and the columns in $v$. 
+
+We can construct estimates for $\Theta$ from a rectangular subset of $\tilde{A}$, $\tilde{A}^{(\mathcal{N}_{-v}, \mathcal{N})}$. As shorthand, let $\tilde{A}^{(-v, v)} = \tilde{A}^{(\mathcal{N}_{-v}, \mathcal{N})}$. Then,
+$$
+Q^{(-v, v)} = \Theta^{(-v, v)} B \Theta
+$$
+and
+\begin{align*}
+\left( Q^{(-v, v)} \right)^T Q &= \Theta B^T \left( \Theta^{(-v, v)} \right)^T \Theta^{(-v, v)} B \Theta^T \\
+&= \Theta B^T \left( \Delta^{(-v, -v)} \right)^2 B \Theta^T
+\end{align*}.
+An eigendecomposition of this matrix (whose eigenvectors are the right singular vectors of $Q^{(-v, v)}$) can be clustered as above to produce estimates for $\Theta$, which we'll call $\hat{\Theta}(v)$. Then, we can construct $\hat{B}(v)$ by averaging over off-diagonal values of the clusters of the rectangular covariance matrix (excluding the rows in $\mathcal{N}_v$) 
+$$
+\hat{B}_{k, \ell} = \begin{cases}
+\frac{ \sum_{i \in \hat{\mathcal{N}}_{-v, k}, j \in \hat{\mathcal{N}}_{\ell} } \tilde{A}_{ij} }{ \hat{n}_{v, k} \hat{n}_{\ell}} & \text{if } k \neq \ell \\
+\frac{ \sum_{i, j \in \hat{\mathcal{N}}_{-v, k}, i \neq j} A_{ij} + \sum_{i \in \hat{\mathcal{N}}_{-v, k}, j \in \hat{\mathcal{N}}_{v, k} } A_{ij} }{ (\hat{n}_{-v, k} - 1) \hat{n}_{-v, k} + \hat{n}_{-v, k} \hat{n}_{v, k} } & \text{if } k = \ell
+\end{cases}
+$$
+as in @Chen2018 Equation 5. Now we can create predicted values for $A$ where
+$$
+\hat{A}(v) = \hat{\Theta}(v) \hat{B}(v) \left( \hat{\Theta}(v) \right)^T
+$$
+The predicted loss for the held out block of the covariance matrix can then be calculated as
+$$
+L_v(\tilde{A}, \hat{A}(v)) = \left\lVert \left( \tilde{A}^{(v,v)} - \text{diag}(\tilde{A}^{(v,v)}) \right) - \left( \hat{A}(v)^{(v,v)} - \text{diag}(\hat{A}(v)^{(v,v)}) \right) \right\rVert_F
+$$
+The average loss for a trial value $\tilde{K}$ is then
+$$
+\bar{L}_{k}(\tilde{A}) = \frac{1}{V} \sum_{v=1}^V L_v(\tilde{A}, \hat{A}(v))
+$$
+. A sequence $\delta$ can then be constructed for values of $k \in \left\{ 1, ..., \bar{K} \right\}$ allowing us to implement our estimator for $J$ (Equation \ref{eq:hatJ}).
+
+To summarize, our cross validation algorithm proceeds as follows:
+
+1. For each $k \in \left\{ 1, ..., \bar{K} \right\}$,
+	- Randomly split districts into folds $\mathcal{N}_1, \dots, \mathcal{N}_V$.
+	- For each fold, estimate $\hat{\Theta}(v)$ and $\hat{B}(v)$.
+	- For each fold, calculate the predictive loss on $\tilde{A}^{(v,v)}$, $L_v(\tilde{A}, \hat{A}(v))$
+	- Average the predictive loss across folds, $\bar{L}_{k}(\tilde{A})$.
+2. Construct the sequence of changes in predictive loss, $\delta$.
+3. Select $\hat{J}$ using Equation \ref{eq:hatJ}.
+
+In practice, we repeat this algorithm many times and choose the most frequent value for $\hat{J}$ as our estimate.
+
+An alternative set of approaches to estimating $J$ exploit the intuition discussed in the preceding subsection regarding the eigenvalues of $\tilde{A} - \text{diag}(\tilde{A})$. As $T \rightarrow \infty$, the eigenvalues associated with noise shrink toward zero while those associated with clusters remain positive. This generates a "eigengap" between the eigenvectors associated with true clusters and those associated with noise. @Ahn2013 investigate this inuition and construct an estimator for the number of factors in a similar class of models. In the next section, we show that this "eigengap" presents near our estimate for $\hat{J}$, consistent with this intuition.
