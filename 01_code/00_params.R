@@ -51,14 +51,11 @@ geoids_path <- paste0(output_path, "geoids.csv")
 tadjacency_path <- paste0(output_path, "t_adjacency.csv")
 
 
-chi_t_geoid_path <- "output/chi_t_geoid.csv"
-chi_dgeoid_path <- "output/chi_dgeoid.csv"
-chi_geoid_cor_path <- "output/chi_geoid_cor.csv"
 
 
-chi_dmatrix_path <- "output/chi_dmatrix.csv"  # tracts, aggregation given in 02_clean
+### STOPPING POINT ###
 
-chi_dadjacency_path <- "output/chi_dadjacency.csv"
+
 
 # clustering (all)
 chi_clust_fpath <- "output/chi_ts_clust"
