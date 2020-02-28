@@ -11,20 +11,31 @@ for (i in helperFiles) {
 aggregation <- "month"
 y_chunk <- 6
 screeN <- 50
+covar_y <- 2016 # year to take district covariates from
 
 city <- "chicago"
+period <- "all"
+
+### PATHS ###
 
 # base paths
 
+code_dir <- "01_code"
 data_path_base <- "../02_data/"
 output_path_base <- "../03_output/"
+results_path_base <- "../04_results/"
+figs_path_base <- "../05_figs/"
 shiny_path <- "../shiny/"
 
 data_path <- paste0(data_path_base, city, "/")
 output_path <- paste0(output_path_base, city, "/")
+results_path <- paste0(results_path_base, city, "/")
+results_city_period_path <- paste0(results_path, period, "/")
+figs_path <- paste0(figs_path_base, city, "/")
 
-# paths
+# data and output
 
+shp_path <- paste0(data_path, city, "/shp/")
 tracts_path <- paste0(output_path, "tracts/") # output once blocks have been added
 crimes_clean_path <- paste0(output_path, "crimes_clean.csv") # cleaned crime data
 covariates_path <- paste0(output_path, "covariates/")
@@ -41,38 +52,35 @@ th_mat_path <- paste0(output_path, "th_mat.csv")  # matrix of homicides per trac
 tn_mat_path <- paste0(output_path, "tn_mat.csv") # matrix of narcotics per tract (row) by aggregation (column)
 ts_mat_path <- paste0(output_path, "ts_mat.csv") # matrix of hnfs per tract (row) by aggregation (column)
 
-# year chunk path
-ts_chunk_path <- paste0(output_path, "ts_mat_")  # need to append year and .csv in cleaning
-
 # geoids
 geoids_path <- paste0(output_path, "geoids.csv")
 
 # adjacency matrices
 tadjacency_path <- paste0(output_path, "t_adjacency.csv")
 
+# results
 
+ts_period_path <- paste0(results_city_period_path, "ts_mat.csv")
+geoids_keep_path <- paste0(results_city_period_path, "geoid_keep.csv")
+geoids_zero_path <- paste0(results_city_period_path, "geoid_zero.csv")  # geoids with no shootings to throw out of clustering
 
+cov_mat_path <- paste0(results_city_period_path, "cov_mat.csv")
+clusters_path <- paste0(results_city_period_path, "clusters.csv")
+nc_path <- paste0(results_city_period_path, "noise_cluster.csv")
+P_path <- paste0(results_city_period_path, "P.csv")
+P_sorted_path <- paste0(results_city_period_path, "P_sorted.csv")
+J_path <- paste0(results_city_period_path, "J.csv")
+eig_path <- paste0(results_city_period_path, "eig.csv")
+Bhat_path <- paste0(results_city_period_path, "Bhat.csv")
 
-### STOPPING POINT ###
+# figures
 
-
-
-# clustering (all)
-chi_clust_fpath <- "output/chi_ts_clust"
-chi_clust_fpath_all <- paste0(chi_clust_fpath, "/", "all")
-analysisSub <- chi_clust_fpath_all
-
-chi_ts_matrix_y_file <- "chi_ts_matrix.csv"
-chi_ts_matrix_path <- paste0(chi_clust_fpath_all, "/", chi_ts_matrix_y_file)
-
-crimes_raw_url <- "https://www.dropbox.com/s/h7da81i9qt876tf/chi_crimes.csv?dl=1"
-ss_raw_url <- "https://www.dropbox.com/s/3qfruwbsg1t7g23/shotspotter.csv?dl=1"
-
-
+hnfs_animated_path <- paste0(figs_path, "shootings_animated.gif")
 
 ### chicago ###
 
 chi_shape_path <- paste0(data_path, "shp/")
+chi_crimes_raw_url <- "https://www.dropbox.com/s/h7da81i9qt876tf/chi_crimes.csv?dl=1"
 
 chicago_id <- 1714000  # for U.S. municipal population data
 
@@ -90,26 +98,16 @@ lk_col <- "#d3cb1c"
 nc_col <- "#e3e3e5"
 other_col <- "#8e178b"
 
-### results ###
 
-# end file names for clustering output...place in relevant chi_clust_fpath folder
-J_path <- "J.csv"
-eig_path <- "eig.csv"
-cov_mat_path <- "cov_mat.csv"
-P_path <- "P.csv"
-P_sorted_path <- "P_sorted.csv"
-geoid_keep_path <- "geoid_keep.csv"
-geoid_zero_path <- "geoid_zero.csv"
-clusters_path <- "clusters.csv"
-nc_path <- "noise_cluster.csv"
-Bhat_path <- "Bhat.csv"
-
-# save for python
-
-save.image('params.Rdata')
+# save params
+if (code_dir %in% strsplit(getwd(), "/")[[1]]) {
+  save.image('params.Rdata')
+}
 
 # make directory structure
 
 mkdir(data_path)
 mkdir(output_path)
+mkdir(results_path)
+mkdir(results_city_period_path)
 mkdir(covariates_path)

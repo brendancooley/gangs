@@ -36,4 +36,5 @@ agg_crimes <- function(crimes_tagged, aggregation) {
   crimes_agg_all$count <- ifelse(is.na(crimes_agg_all$count), 0, crimes_agg_all$count)
   
   return(crimes_agg_all)
+  
 }

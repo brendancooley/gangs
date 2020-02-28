@@ -15,7 +15,7 @@ revealPath = "~/Dropbox\ \(Princeton\)/8_Templates/reveal.js-3.8.0"
 sectionsPath = "sections/"
 sectionsTemplate = "templates/cooley-plain.latex"
 
-figsPath = "figs/"
+figsPath = "figs/cartoons/"
 figsTemplate = "templates/cooley-plain.latex"
 
 sourcePath = "source/"
@@ -76,7 +76,7 @@ def task_prep_slides():
 		'name': "moving slide files",
 		'actions': ["mkdir -p css",
 					"cp -a " + templatesPath + "slides/ " + "css/"]
-	}	
+	}
 
 def task_slides():
 	"""

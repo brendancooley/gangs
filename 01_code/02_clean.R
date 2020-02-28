@@ -1,11 +1,6 @@
 ### SETUP ###
 
 rm(list = ls())
-
-if (!'chicago' %in% strsplit(getwd(), "/")[[1]]) {
-  setwd('chicago')
-}
-
 source("00_params.R")
 source("helpers.R")
 
@@ -76,14 +71,18 @@ write_csv(mat_s, ts_mat_path, col_names=FALSE)
 write_csv(mat_n, tn_mat_path, col_names=FALSE)
 write_csv(geoids, geoids_path, col_names=FALSE)
 
+# migrate primary matrix (all) to results path for analysis
+write_csv(mat_s, paste0(results_path, "all/", "ts_mat.csv"), col_names=FALSE)
+
 # year chunks (just shootings)
 for (i in 1:n_y_chunk) {
   miny <- minY + (i-1) * y_chunk
+  mkdir(paste0(results_path, miny, "/"))
   maxy <- miny + y_chunk 
   minyd <- ymd(miny, truncated=2L)
   maxyd <- ymd(maxy, truncated=2L)
   mat_s_chunk <- agg_s %>% filter(.[[aggregation]] >= minyd & .[[aggregation]] < maxyd) %>% spread_(aggregation, "count") %>% select(-GEOID)
-  fname <- paste0(ts_chunk_path, miny, ".csv")
+  fname <- paste0(results_path, miny, "/", "ts_mat.csv")
   write_csv(mat_s_chunk, fname, col_names=FALSE)
 }
 

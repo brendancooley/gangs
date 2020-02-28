@@ -1,12 +1,6 @@
 ### SETUP ###
 
 rm(list = ls())
-
-if (!'chicago' %in% strsplit(getwd(), "/")[[1]]) {
-  setwd('chicago')
-}
-# getwd()
-
 source("00_params.R")
 
 libs <- c("tidyverse", "lubridate", "acs", "tigris", "sp", "rgdal", "tigris", "leaflet", "leaflet.extras")
@@ -41,7 +35,7 @@ if (!dir.exists(chi_tracts_path)) {
 
 ### Victim-Based Crime Reports ###
 
-crimes <- read_csv(crimes_raw_url)
+crimes <- read_csv(chi_crimes_raw_url)
 
 crimes$dateChr <- substr(crimes$Date, 1, 10)
 crimes$date <- as.Date(crimes$dateChr, format="%m/%d/%Y")
