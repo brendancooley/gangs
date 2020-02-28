@@ -72,13 +72,19 @@ geoids_zero_path <- paste0(results_city_period_path, "geoid_zero.csv")  # geoids
 geoids_zero_bs_path <- paste0(bootstrap_path, "geoid_zero/")
 
 cov_mat_path <- paste0(results_city_period_path, "cov_mat.csv")
+cov_mat_bs_path <- paste0(bootstrap_path, "cov_mat/")
 clusters_path <- paste0(results_city_period_path, "clusters.csv")
+clusters_bs_path <- paste0(bootstrap_path, "clusters/")
 nc_path <- paste0(results_city_period_path, "noise_cluster.csv")
+nc_bs_path <- paste0(bootstrap_path, "noise_cluster/")
+J_path <- paste0(results_city_period_path, "J.csv")
+J_bs_path <- paste0(bootstrap_path, "J/")
+Bhat_path <- paste0(results_city_period_path, "Bhat.csv")
+Bhat_bs_path <- paste0(bootstrap_path, "Bhat/")
+
+eig_path <- paste0(results_city_period_path, "eig.csv")
 P_path <- paste0(results_city_period_path, "P.csv")
 P_sorted_path <- paste0(results_city_period_path, "P_sorted.csv")
-J_path <- paste0(results_city_period_path, "J.csv")
-eig_path <- paste0(results_city_period_path, "eig.csv")
-Bhat_path <- paste0(results_city_period_path, "Bhat.csv")
 
 # figures
 
@@ -118,5 +124,14 @@ mkdir(output_path)
 mkdir(bootstrap_path)
 mkdir(results_path)
 mkdir(results_city_period_path)
-mkdir(ts_period_bs_path)
 mkdir(covariates_path)
+
+# bootstrap folders
+mkdir(ts_period_bs_path)
+mkdir(geoids_keep_bs_path)
+mkdir(geoids_zero_bs_path)
+mkdir(cov_mat_bs_path)
+mkdir(clusters_bs_path)
+mkdir(nc_bs_path)
+mkdir(J_bs_path)
+mkdir(Bhat_bs_path)
