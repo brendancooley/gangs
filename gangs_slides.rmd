@@ -121,7 +121,7 @@ source("chicago/0x_analysis.R")
 
 . . .
 
-**Existing Approaches:**
+**Inductive Approaches (Gangs and DTOs):**
 
 - Police records: @Bruhn2019, @Melnikov2019
 - Newspapers, Natural Language Processing: @Sobrino2019 
@@ -256,7 +256,7 @@ chi_shootings_tracts_mfirst_map
 **Inter-Gang**
 
 - $\epsilon_{k, \ell}^t$ - the probability a member of gang $k$ shoots a member of gang $\ell$
-- **Assumption `r Aintergang_symmetry` (Symmetry):** $c_{k} \epsilon_{k, \ell}^t = c_{\ell} \epsilon_{\ell, k}^{t}$ with the normalization $c_1 = 1$. If $k = 0$ or $\ell = 0$ then $\epsilon_{k, \ell}^t = 0$ for all $t$
+- **Assumption `r Aintergang_symmetry` (Quasi-symmetry):** $c_{k} \epsilon_{k, \ell}^t = c_{\ell} \epsilon_{\ell, k}^{t}$ with the normalization $c_1 = 1$. If $k = 0$ or $\ell = 0$ then $\epsilon_{k, \ell}^t = 0$ for all $t$
 - **Assumption `r Aintergang_iid` (Independence):** $\mathbb{E} [ \epsilon_{k, \ell}^t \epsilon_{m, n}^t ] - \mathbb{E} [ \epsilon_{k, \ell}^t ] \mathbb{E} [ \epsilon_{m, n}^t ] = 0$ for $m, n \notin \left\{ k, \ell \right\}$
 
 ## Varieties of Violence
