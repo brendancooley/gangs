@@ -9,7 +9,7 @@ if (!'chicago' %in% strsplit(getwd(), "/")[[1]]) {
 source("00_params.R")
 source("helpers.R")
 
-libs <- c("tidyverse", "sp", "rgdal", "rgeos", "maptools", "tigris", "leaflet", "leaflet.extras", "spdep")
+libs <- c("tidyverse", "sp", "rgdal", "rgeos", "maptools", "tigris", "leaflet", "leaflet.extras", "lubridate", "spdep")
 ipak(libs)
 
 crimes_clean <- read_csv(crimes_clean_path) # %>% filter(hnfs==1)
@@ -43,146 +43,62 @@ write_csv(chi_pop, pop_path)
 
 ### TAG CRIMES TO TRACTS (ALL) ###
 
-###
-### STOPPING POINT
-###
-
-chi_clean <- tag_crimes(chi_clean, chi_tracts)
+crimes_clean <- tag_crimes(crimes_clean, tracts)
 # chi_clean %>% filter(is.na(GEOID))  # 41 events untagged
-chi_clean <- chi_clean %>% filter(!is.na(GEOID))  # drop these from data
+crimes_clean <- crimes_clean %>% filter(!is.na(GEOID))  # drop these from data
 
 # all events
-chi_clean_h <- chi_clean %>% filter(homicide==1)
-chi_clean_s <- chi_clean %>% filter(hnfs==1)
-chi_clean_n <- chi_clean %>% filter(narcotics==1, arrest==1) # narcotics arrests
+clean_h <- crimes_clean %>% filter(homicide==1)
+clean_s <- crimes_clean %>% filter(hnfs==1)  # homicides and non-fatal shootings
+clean_n <- crimes_clean %>% filter(narcotics==1, arrest==1) # narcotics arrests
 
-chi_all_h <- agg_crimes(chi_clean_h, "all")
-chi_all_s <- agg_crimes(chi_clean_s, "all")
-chi_all_n <- agg_crimes(chi_clean_n, "all") 
-write_csv(chi_all_h, chi_tha_path)
-write_csv(chi_all_s, chi_tsa_path)
-write_csv(chi_all_n, chi_tna_path)
+all_h <- agg_crimes(clean_h, "all")
+all_s <- agg_crimes(clean_s, "all")
+all_n <- agg_crimes(clean_n, "all") 
+write_csv(all_h, tha_path)
+write_csv(all_s, tsa_path)
+write_csv(all_n, tna_path)
 
 # by aggregation
 # TODO group by hnfs versus narcotics as above under "all events"
-chi_agg_h <- agg_crimes(chi_clean_h, aggregation)
-chi_agg_s <- agg_crimes(chi_clean_s, aggregation)
-chi_agg_n <- agg_crimes(chi_clean_n, aggregation)
+agg_h <- agg_crimes(clean_h, aggregation)
+agg_s <- agg_crimes(clean_s, aggregation)
+agg_n <- agg_crimes(clean_n, aggregation)
 
-# convert to matrix and vector storing geoid
-chi_mat_h <- chi_agg_h %>% spread_(aggregation, "count") %>% select(-GEOID)
-chi_mat_s <- chi_agg_s %>% spread_(aggregation, "count") %>% select(-GEOID)
-chi_mat_n <- chi_agg_n %>% spread_(aggregation, "count") %>% select(-GEOID)
-chi_geoid <- chi_agg_h %>% spread_(aggregation, "count") %>% select(GEOID)
+# convert to matrix and vector storing geoids
+mat_h <- agg_h %>% spread_(aggregation, "count") %>% select(-GEOID)
+mat_s <- agg_s %>% spread_(aggregation, "count") %>% select(-GEOID)
+mat_n <- agg_n %>% spread_(aggregation, "count") %>% select(-GEOID)
+geoids <- agg_h %>% spread_(aggregation, "count") %>% select(GEOID)
 
-write_csv(chi_mat_h, chi_th_matrix_path, col_names=FALSE)
-write_csv(chi_mat_s, chi_ts_matrix_path, col_names=FALSE)
-write_csv(chi_mat_n, chi_tn_matrix_path, col_names=FALSE)
-write_csv(chi_geoid, chi_t_geoid_path, col_names=FALSE)
+write_csv(mat_h, th_mat_path, col_names=FALSE)
+write_csv(mat_s, ts_mat_path, col_names=FALSE)
+write_csv(mat_n, tn_mat_path, col_names=FALSE)
+write_csv(geoids, geoids_path, col_names=FALSE)
 
-# year chunks
+# year chunks (just shootings)
 for (i in 1:n_y_chunk) {
   miny <- minY + (i-1) * y_chunk
   maxy <- miny + y_chunk 
   minyd <- ymd(miny, truncated=2L)
   maxyd <- ymd(maxy, truncated=2L)
-  chi_mat_s_y <- chi_agg_s %>% filter(.[[aggregation]] >= minyd & .[[aggregation]] < maxyd) %>% spread_(aggregation, "count") %>% select(-GEOID)
-  fname <- paste0(chi_clust_fpath, miny)
-  mkdir(fname)
-  write_csv(chi_mat_s_y, paste0(fname, "/", chi_ts_matrix_y_file), col_names=FALSE)
+  mat_s_chunk <- agg_s %>% filter(.[[aggregation]] >= minyd & .[[aggregation]] < maxyd) %>% spread_(aggregation, "count") %>% select(-GEOID)
+  fname <- paste0(ts_chunk_path, miny, ".csv")
+  write_csv(mat_s_chunk, fname, col_names=FALSE)
 }
 
 
 ### CONSTRUCT ADJACENCY MATRIX ###
 
-adjacency <- poly2nb(chi_tracts, queen=FALSE)  # queen allows corner merges
+adjacency <- poly2nb(tracts, queen=FALSE)  # queen allows corner merges
 adjacency <- nb2mat(adjacency)
 adjacency[adjacency > 0] <- 1
 # adjacency <- gTouches(chi_tracts, byid=T) * 1 # TODO: currently allowing corner merges, need to convert neighbors code if we use poly2nb
 
-geoid_order <- chi_tracts@data$GEOID
-id_df <- data.frame(geoid_order, seq(1, nrow(chi_all)))
+geoid_order <- tracts@data$GEOID
+id_df <- data.frame(geoid_order, seq(1, nrow(geoids)))
 colnames(id_df) <- c("GEOID", "id")
 
-colnames(adjacency) <- seq(1, nrow(chi_all))
-rownames(adjacency) <- seq(1, nrow(chi_all))
-write_csv(adjacency %>% as.data.frame(), chi_tadjacency_path, col_names=FALSE)
-
-chi_all <- chi_all %>% left_join(id_df)
-
-chi_distr_counts <- chi_all %>% select(id, count)
-chi_distr_ids <- chi_all %>% select(id, GEOID)
-
-c <- 0
-
-# TODO: alternative merge criterion - only combine if proposed district is smaller than certain upper limite
-  # will enforce more homogeneity between districts than we currently have
-while(nrow(chi_distr_counts) > target) {
-  
-  chi_distr_counts <- chi_distr_counts %>% arrange(count)
-  print(c)
-  
-  for (i in 1:nrow(chi_distr_counts)) {
-    
-    if (i <= nrow(chi_distr_counts)) {
-      # loop through each district
-      id <- chi_distr_counts$id[i]
-      count <- chi_distr_counts$count[i]
-
-      if (count <= c) {  # if count is low enough...
-        
-        neighbors <- rownames(adjacency)[which(adjacency[rownames(adjacency)==id, ] >= 1)] %>% as.numeric()  # get neighbors (gTouches)
-        chi_distr_n <- chi_distr_counts %>% filter(id %in% neighbors)
-        
-        if (nrow(chi_distr_n) > 0) {
-          for (j in 1:nrow(chi_distr_n)) {  # loop through each neighbor...
-            count_n <- chi_distr_n[j, ]$count
-            if (count_n <= c) {  # if neighbor count is low enough...
-              id_n <- chi_distr_n[j, ]$id  # get id
-              chi_distr_counts[chi_distr_counts$id == id, ]$count <- chi_distr_counts[chi_distr_counts$id == id, ]$count + count_n  # increase count for district "id"
-              chi_distr_ids[chi_distr_ids$id == id_n, ]$id <- id  # associate district "id_n" GEOID with "id"
-              chi_distr_counts <- chi_distr_counts %>% filter(id != id_n)  # remove district "id_n" from chi_distr_counts
-              adjacency[rownames(adjacency)==id, ] <- adjacency[rownames(adjacency)==id, ] + adjacency[rownames(adjacency)==id_n, ]  # udpate adjacency matrix
-              adjacency[ ,colnames(adjacency)==id] <- adjacency[ ,colnames(adjacency)==id] + adjacency[ ,colnames(adjacency)==id_n]  # udpate adjacency matrix
-              adjacency <- adjacency[rownames(adjacency) != id_n, ]
-              adjacency <- adjacency[ ,colnames(adjacency) != id_n]
-              adjacency[rownames(adjacency)==id, colnames(adjacency)==id] <- 0
-            }
-          }
-        }
-        
-      }
-      
-    }
-  }
-  
-  c <- c + 1
-  
-}
-
-# reconvert adjacency matrix to binary
-adjacency[adjacency > 1] <- 1
-
-# exports
-write_csv(chi_distr_counts, chi_dsa_path)  # counts
-write_csv(adjacency %>% as.data.frame(), chi_dadjacency_path, col_names=FALSE)  # reduced adjacency matrix
-write_csv(chi_distr_ids, chi_geoid_cor_path)  # correspondence between ids
-
-# recompute panel for districts
-chi_agg <- chi_agg %>% left_join(chi_distr_ids)
-chi_dagg <- chi_agg %>% group_by_("id", aggregation) %>% 
-  summarise(count=sum(count)) %>% ungroup()
-chi_dmat <- chi_dagg %>% spread_(aggregation, "count") %>% select(-id)
-chi_dids <- chi_dagg %>% spread_(aggregation, "count") %>% select(id)
-
-# export
-write_csv(chi_dmat, chi_dmatrix_path, col_names=FALSE)  # district counts
-write_csv(chi_dids, chi_dgeoid_path, col_names=FALSE)  # district geoids
-
-# export new geography
-chi_tracts <- geo_join(chi_tracts, chi_distr_ids, "GEOID", "GEOID")
-chi_districts <- raster::aggregate(chi_tracts, by="id")
-
-mkdir(chi_districts_path)
-writeOGR(chi_districts, chi_districts_path, driver="ESRI Shapefile", layer='chi_districts', overwrite_layer=TRUE)
-# NOTE: warnings ok, see https://github.com/r-spatial/sf/issues/306
+colnames(adjacency) <- seq(1, nrow(geoids))
+rownames(adjacency) <- seq(1, nrow(geoids))
+write_csv(adjacency %>% as.data.frame(), tadjacency_path, col_names=FALSE)

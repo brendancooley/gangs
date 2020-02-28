@@ -34,7 +34,7 @@ chi_tracts_ids <- chi_tracts@data$GEOID
 detach("package:raster", unload=TRUE)  # masks select from dplyr
 
 if (!dir.exists(chi_tracts_path)) {
-  mkdir(chi_tracts_path)
+  mkdir(tracts_path)
   writeOGR(chi_tracts, tracts_path, driver="ESRI Shapefile", layer='tracts')
   # NOTE: warnings ok, see https://github.com/r-spatial/sf/issues/306
 }
@@ -64,7 +64,7 @@ narcotics_fbi <- c("18") # http://gis.chicagopolice.org/clearmap_crime_sums/crim
 crimes$homicide <- ifelse(crimes$IUCR %in% homicide_iucr, 1, 0)
 crimes$hnfs <- ifelse(crimes$IUCR %in% hnfs_iucr, 1, 0)
 crimes$narcotics <- ifelse(crimes$`FBI Code` %in% narcotics_fbi, 1, 0)
-crimes$arrest <- ifelse(crimes$Arrest=="true", 1, 0)
+crimes$arrest <- ifelse(crimes$Arrest==TRUE, 1, 0)
 
 crimesClean <- crimes %>% filter(hnfs==1 | narcotics==1) %>% filter(!is.na(lat) & !is.na(lng) & lat > 40) %>% select(date, year, month, week, lat, lng, homicide, hnfs, narcotics, arrest)
 

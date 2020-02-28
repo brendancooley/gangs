@@ -31,30 +31,33 @@ covariates_path <- paste0(output_path, "covariates/")
 
 pop_path <- paste0(output_path, "population.csv")
 
+# counts of homicides, shootings, and narcotics by geoid
+tha_path <- paste0(output_path, "tha.csv")  # tracts, homicides, all
+tsa_path <- paste0(output_path, "tsa.csv") # tracts, shootings (including homicides), all
+tna_path <- paste0(output_path, "tna.csv") # tracts, narcotics, all
 
+# matrics of homicides, shootings, and narcotics
+th_mat_path <- paste0(output_path, "th_mat.csv")  # matrix of homicides per tract (row) by aggregation (column)
+tn_mat_path <- paste0(output_path, "tn_mat.csv") # matrix of narcotics per tract (row) by aggregation (column)
+ts_mat_path <- paste0(output_path, "ts_mat.csv") # matrix of hnfs per tract (row) by aggregation (column)
 
+# year chunk path
+ts_chunk_path <- paste0(output_path, "ts_mat_")  # need to append year and .csv in cleaning
 
+# geoids
+geoids_path <- paste0(output_path, "geoids.csv")
 
-chi_cov_path_pre <- "data/covariates" # income, population, etc by tract, tack year on end
-chi_cov_path_pre_shiny <- "shiny/covariates"
-chi_pop_path <- "data/population.csv"  # population by year
+# adjacency matrices
+tadjacency_path <- paste0(output_path, "t_adjacency.csv")
 
-
-chi_tha_path <- "output/chi_tha.csv"  # tracts, homicides, all
-chi_tsa_path <- "output/chi_tsa.csv" # tracts, shootings (including homicides), all
-chi_tna_path <- "output/chi_tna.csv" # tracts, narcotics, all
-
-chi_dsa_path <- "output/chi_dsa.csv"  # districts (combined), shootings, all
 
 chi_t_geoid_path <- "output/chi_t_geoid.csv"
 chi_dgeoid_path <- "output/chi_dgeoid.csv"
 chi_geoid_cor_path <- "output/chi_geoid_cor.csv"
 
-chi_th_matrix_path <- "output/chi_th_matrix.csv"  # tracts, aggregation given in 02_clean
-chi_tn_matrix_path <- "output/chi_tn_matrix.csv"
+
 chi_dmatrix_path <- "output/chi_dmatrix.csv"  # tracts, aggregation given in 02_clean
 
-chi_tadjacency_path <- "output/chi_tadjacency.csv"
 chi_dadjacency_path <- "output/chi_dadjacency.csv"
 
 # clustering (all)
