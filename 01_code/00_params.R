@@ -16,6 +16,9 @@ covar_y <- 2016 # year to take district covariates from
 city <- "chicago"
 period <- "all"
 
+runBootstrap <- TRUE
+L <- 100 # number of bootstrap iterations
+
 ### PATHS ###
 
 # base paths
@@ -31,6 +34,7 @@ data_path <- paste0(data_path_base, city, "/")
 output_path <- paste0(output_path_base, city, "/")
 results_path <- paste0(results_path_base, city, "/")
 results_city_period_path <- paste0(results_path, period, "/")
+bootstrap_path <- paste0(results_city_period_path, "bootstrap/")
 figs_path <- paste0(figs_path_base, city, "/")
 
 # data and output
@@ -61,8 +65,11 @@ tadjacency_path <- paste0(output_path, "t_adjacency.csv")
 # results
 
 ts_period_path <- paste0(results_city_period_path, "ts_mat.csv")
+ts_period_bs_path <- paste0(bootstrap_path, "ts_mat/")
 geoids_keep_path <- paste0(results_city_period_path, "geoid_keep.csv")
+geoids_keep_bs_path <- paste0(bootstrap_path, "geoid_keep/")
 geoids_zero_path <- paste0(results_city_period_path, "geoid_zero.csv")  # geoids with no shootings to throw out of clustering
+geoids_zero_bs_path <- paste0(bootstrap_path, "geoid_zero/")
 
 cov_mat_path <- paste0(results_city_period_path, "cov_mat.csv")
 clusters_path <- paste0(results_city_period_path, "clusters.csv")
@@ -108,6 +115,8 @@ if (code_dir %in% strsplit(getwd(), "/")[[1]]) {
 
 mkdir(data_path)
 mkdir(output_path)
+mkdir(bootstrap_path)
 mkdir(results_path)
 mkdir(results_city_period_path)
+mkdir(ts_period_bs_path)
 mkdir(covariates_path)

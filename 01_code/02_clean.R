@@ -101,3 +101,15 @@ colnames(id_df) <- c("GEOID", "id")
 colnames(adjacency) <- seq(1, nrow(geoids))
 rownames(adjacency) <- seq(1, nrow(geoids))
 write_csv(adjacency %>% as.data.frame(), tadjacency_path, col_names=FALSE)
+
+### BOOTSTRAP ###
+
+N <- nrow(clean_s)
+
+for (i in 1:L) {
+  sample_ids <- sample(seq(1, N), N, replace=T)
+  clean_s_L <- clean_s[sample_ids, ]
+  agg_s_L <- agg_crimes(clean_s_L, aggregation)
+  mat_s_L <- agg_s_L %>% spread_(aggregation, "count") %>% select(-GEOID)
+  write_csv(mat_s_L, paste0(ts_period_bs_path, i, ".csv"), col_names=FALSE)
+}
