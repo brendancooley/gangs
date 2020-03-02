@@ -3,52 +3,48 @@
 rm(list = ls())
 source("../01_code/00_params.R")
 
-libs <- c("tidyverse", "tigris", "tmap", "rgdal")
+libs <- c("tidyverse", "tigris", "tmap", "rgdal", "GISTools")
 ipak(libs)
 
+# base
 clusters <- read_csv(clusters_path, col_names=FALSE) %>% pull(.)
 geoids_keep <- read_csv(geoids_keep_path, col_names=FALSE) %>% pull(.)
 geoids_zero <- read_csv(geoids_zero_path, col_names=FALSE) %>% pull(.)
 nc <- read_csv(nc_path, col_names=FALSE) %>% pull(.) # noise cluster
+nc <- nc + 1
+
 tracts <- readOGR(tracts_path)
+
+# props
+cluster_props <- read_csv(cluster_props_path)
+cp_mat <- cluster_props %>% dplyr::select(-c("GEOID", as.character(nc))) %>% as.matrix()
+cluster_props$max_id <- apply(cp_mat, 1, which.max)
+cluster_props$alpha <- apply(cp_mat, 1, max) 
+table(cluster_props$max_id)
 
 ### CLEAN ###
 
-clusters_keep_df <- data.frame(clusters, geoids_keep)
-colnames(clusters_keep_df) <- c("cluster", "GEOID")
-zero_df <- data.frame(nc, geoids_zero)
-colnames(zero_df) <- c("cluster", "GEOID")
-
-clusters_df <- bind_rows(clusters_keep_df, zero_df) %>% as_tibble()
-clusters_df$cluster <- as.factor(clusters_df$cluster)
-
 # match representative districts
-lk_id <- clusters_df %>% filter(GEOID==lk_geoid) %>% pull(cluster) %>% as.integer() - 1
-gd_id <- clusters_df %>% filter(GEOID==gd_geoid) %>% pull(cluster) %>% as.integer() - 1
-vl_id <- clusters_df %>% filter(GEOID==vl_geoid) %>% pull(cluster) %>% as.integer() - 1
+lk_id <- cluster_props %>% filter(GEOID==lk_geoid) %>% pull(max_id) %>% as.integer()
+gd_id <- cluster_props %>% filter(GEOID==gd_geoid) %>% pull(max_id) %>% as.integer()
+vl_id <- cluster_props %>% filter(GEOID==vl_geoid) %>% pull(max_id) %>% as.integer()
 
-known_ids <- c(lk_id, gd_id, vl_id, nc)
-known_cols <- c(lk_col, gd_col, vl_col, nc_col)
+known_ids <- c(lk_id, gd_id, vl_id)
+known_cols <- c(lk_col, gd_col, vl_col)
 
 # construct color mapping
 col_mapping <- data.frame(known_ids, known_cols)
-colnames(col_mapping) <- c("cluster", "color")
-
-other_ids <- setdiff(clusters_df$cluster %>% unique(), known_ids) %>% as.integer()
-other_cols <- rep(other_col, length(other_ids))
-col_mapping_other <- data.frame(other_ids, other_cols)
-colnames(col_mapping_other) <- c("cluster", "color")
-
-col_mapping <- bind_rows(col_mapping, col_mapping_other)
-col_mapping$cluster <- as.factor(col_mapping$cluster)
+colnames(col_mapping) <- c("max_id", "color")
 
 # merge and construct map
-clusters_df_col <- left_join(clusters_df, col_mapping)
+clusters_df_col <- left_join(cluster_props, col_mapping)
+clusters_df_col$color_a <- add.alpha(clusters_df_col$color, clusters_df_col$alpha)
 clusters_geo <- geo_join(tracts, clusters_df_col, "GEOID", "GEOID")
 
 ### FIGURE ###
 
 chi_clusters_map <- tm_shape(clusters_geo) +
-  tm_fill(col="color") +
+  tm_fill(col="color_a") +
+  tm_polygons(tracts) +
   # tm_polygons("cluster", title=paste0("Cluster ID"), palette="Set3") +
-  tm_layout(bg.color="#d0c7be", outer.bg.color="white", legend.position=c("left", "bottom"))
+  tm_layout(bg.color="white", outer.bg.color="white", legend.position=c("left", "bottom"))

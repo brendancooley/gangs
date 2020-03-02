@@ -86,6 +86,9 @@ eig_path <- paste0(results_city_period_path, "eig.csv")
 P_path <- paste0(results_city_period_path, "P.csv")
 P_sorted_path <- paste0(results_city_period_path, "P_sorted.csv")
 
+Bhat_mean_path <- paste0(bootstrap_path, "Bhat_mean.csv")
+cluster_props_path <- paste0(bootstrap_path, "cluster_props.csv")
+
 # figures
 
 hnfs_animated_path <- paste0(figs_path, "shootings_animated.gif")
@@ -102,7 +105,8 @@ drop_ids <- c("17031770700", "17031770602", "17031811701", "17031770800", "17031
 
 # representative suspected districts for each gang
 vl_geoid <- "17031252202"
-gd_geoid <- "17031671500"
+# gd_geoid <- "17031671500"
+gd_geoid <- "17031834600"
 lk_geoid <- "17031630800"
 
 vl_col <- "#e3052a"
