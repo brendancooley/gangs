@@ -74,8 +74,9 @@ map3 <- leaflet() %>%
 map3
 
 ##############Just Chicago (Not Cook County) ##############
+setwd("~/Desktop/gangs/chicago/shapefiles")
 require(rgdal)
-Chicago <- readOGR(".","Chicago")
+Chicago <- readOGR(".","chicago")
 
 ###Checking to see that Chicago shapefile is Chicago
 
