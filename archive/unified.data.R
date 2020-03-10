@@ -6,6 +6,17 @@ for (i in helperFiles) {
   source(paste0(helperPath, i))
 }
 
+ ###ipak function
+ipak <- function(pkg){
+  new.pkg <- pkg[!(pkg %in% installed.packages()[, "Package"])]
+  if (length(new.pkg)) 
+    install.packages(new.pkg, dependencies = TRUE)
+  sapply(pkg, require, character.only = TRUE)
+}
+
+###
+
+
 libs <- c("tidyverse", "leaflet", "leaflet.extras", "htmltools", "htmlwidgets", "mapview", "tigris",
           "acs", "stringr", "sf", "sp", "rgeos", "rgdal", "maptools", "spdep")
 ipak(libs)
