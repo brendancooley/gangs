@@ -5,38 +5,26 @@ library(raster)
 library(rgdal)
 library(rgeos)
 library(leaflet)
+library(tigris)
 library(tidyverse) ###Still works with sf objects!
 gang.maps <- load(file = "/Bruhn Data/gangMaps.rda")
 
 
-###Testing to see if the Data works
-gangs2017 <- filter(gang.maps,year==2017)
-
-popup <- paste0("Gang: ", gangs2017$gang)
-map4 <- leaflet() %>%
-  addProviderTiles(providers$CartoDB.Positron) %>%
-  addPolygons(data = gangs2017, 
-              popup = popup)
-  
-map4
-
 ###ASSIGNING TRACTS TO GANGS
-library(tigris)
-library(rgdal)
-city.blocks <- block_groups(17, county = 031, year = 2017) #an SP object (3,993 block groups)
-city.blocks <- tracts(17,county = 031, year = 2017) #1319 tracts
-gang.maps.sf <- gang.maps
 gang.maps <- as(gang.maps,'Spatial') #Transform to an SP object too
-gang.maps <- spTransform(gang.maps,proj4string(city.blocks))
 
-
-n <- 53                        ##Number of gangs in 2017
-k <- length(city.blocks$GEOID) ##Number of blockgroups in Cook County
-overlap <- matrix(NA, nrow=n, ncol=(k)) 
-geoids <- city.blocks$GEOID
-
+for (m in 2004:2017) {
+  city.blocks <- tracts(17,county = 031, year = 2017) #FOR TRACTS
+  gang.maps <- spTransform(gang.maps,proj4string(city.blocks))
+  #city.blocks <- block_groups(17, county = 031, year = 2017) #FOR BLOCK GROUPS
+  k <- length(city.blocks$GEOID) ##Number of blockgroups in Cook County
+  placeholder <- gang.maps[gang.maps$year==m,]
+  n <- length(placeholder$gang)
+  geoids <- city.blocks$GEOID
+  overlap <- matrix(NA, nrow=n, ncol=(k)) 
+  
 for (i in 1:n) {
-  placeholder <- gang.maps[gang.maps$year==2017,]
+  placeholder <- gang.maps[gang.maps$year==m,]
   gang.names <- unique(placeholder$gang)
   placeholder <- placeholder[placeholder$gang==gang.names[i],]
   placeholder <- spTransform(placeholder, CRSobj = "+proj=moll")
@@ -62,7 +50,8 @@ for (i in 1:n) {
     }
   }
 }
-
+  assign(paste0("overlap_", m), overlap)
+}
 
 map5 <- leaflet() %>%
   addProviderTiles(providers$CartoDB.Positron) %>%

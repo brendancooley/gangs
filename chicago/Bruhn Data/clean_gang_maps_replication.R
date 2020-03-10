@@ -65,15 +65,16 @@ gang.maps <- gangReader("raw_maps/gangs2017.shp", 2017)
 gang.maps <- gangReader("raw_maps/gangs2016.shp", 2016, gang.maps) 
 gang.maps <- gangReader("raw_maps/gangs2015.shp", 2015, gang.maps) 
 gang.maps <- gangReader("raw_maps/gangs2014.shp", 2014, gang.maps) 
-gang.maps <- gangReader("raw_data/gangs2012.shp", 2012, gang.maps)   ###Doesn't work for some reason?
-gang.maps <- gangReader("raw_data/gangs2011.shp", 2011, gang.maps)   ###Also doesn't work
-gang.maps <- gangReader("raw_data/gangs2010.shp", 2010, gang.maps)   ###Doesn't work at all past this point
-gang.maps <- gangReader("raw_data/gangs2009.shp", 2009, gang.maps) 
-gang.maps <- gangReader("raw_data/gang2008.shp", 2008, gang.maps)
-gang.maps <- gangReader("raw_data/gangs2007.shp", 2007, gang.maps)
-gang.maps <- gangReader("raw_data/gangs2006.shp", 2006, gang.maps)
-gang.maps <- gangReader("raw_data/gangs2005.shp", 2005, gang.maps)
-gang.maps <- gangReader("raw_data/gangs2004.shp", 2004, gang.maps)
+gang.maps <- gangReader("raw_maps/gangs2012.shp", 2012, gang.maps)   ###Doesn't work for some reason?
+gang.maps <- gangReader("raw_maps/gangs2011.shp", 2011, gang.maps)   ###Also doesn't work
+gang.maps <- gangReader("raw_maps/gangs2010.shp", 2010, gang.maps)   ###Doesn't work at all past this point
+gang.maps <- gangReader("raw_maps/gangs2009.shp", 2009, gang.maps) 
+gang.maps <- gangReader("raw_maps/gang2008.shp", 2008, gang.maps)
+gang.maps <- gangReader("raw_maps/gangs2007.shp", 2007, gang.maps)
+gang.maps <- gangReader("raw_maps/gangs2006.shp", 2006, gang.maps)
+gang.maps <- gangReader("raw_maps/gangs2005.shp", 2005, gang.maps)
+gang.maps <- gangReader("raw_maps/gangs2004.shp", 2004, gang.maps)
+
 
 #Load blocks map
 load("clean_data/blocksMap.rda")
