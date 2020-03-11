@@ -4,7 +4,8 @@ rm(list = ls())
 source("00_params.R")
 source("helpers.R")
 
-libs <- c("tidyverse", "sp", "rgdal", "rgeos", "maptools", "tigris", "leaflet", "leaflet.extras", "lubridate", "spdep")
+libs <- c("tidyverse", "sp", "rgdal", "rgeos", "maptools", "tigris", 
+          "leaflet", "leaflet.extras", "lubridate", "spdep", "sf", "rgdal", "rgeos")
 ipak(libs)
 
 crimes_clean <- read_csv(crimes_clean_path) # %>% filter(hnfs==1)
@@ -28,8 +29,8 @@ pop20102018 <- read_csv(paste0(data_path_base, "pop20102018.csv"))
 pop20002010$id <- paste0(pop20002010$STATE, pop20002010$PLACE)
 pop20102018$id <- pop20102018$`Target Geo Id2`
 
-chi_pop20002009 <- pop20002010 %>% filter(id==chicago_id, COUNTY=="000") %>% select(-SUMLEV, -STATE, -COUNTY, -PLACE, -COUSUB, -NAME, -STNAME, -ESTIMATESBASE2000, -id, -CENSUS2010POP, -POPESTIMATE2010)
-chi_pop20102018 <- pop20102018 %>% filter(id==chicago_id) %>% select(-Id, -Id2, -Geography, -`Target Geo Id`, -`Target Geo Id2`, -Rank, -Geography_1, -Geography_2, -`April 1, 2010 - Census`, -`April 1, 2010 - Estimates Base`, -id)
+chi_pop20002009 <- pop20002010 %>% filter(id==chicago_id, COUNTY=="000") %>% dplyr::select(-SUMLEV, -STATE, -COUNTY, -PLACE, -COUSUB, -NAME, -STNAME, -ESTIMATESBASE2000, -id, -CENSUS2010POP, -POPESTIMATE2010)
+chi_pop20102018 <- pop20102018 %>% filter(id==chicago_id) %>% dplyr::select(-Id, -Id2, -Geography, -`Target Geo Id`, -`Target Geo Id2`, -Rank, -Geography_1, -Geography_2, -`April 1, 2010 - Census`, -`April 1, 2010 - Estimates Base`, -id)
 chi_pop_y <- seq(2000, 2018)
 
 chi_pop <- data.frame(chi_pop_y, c(t(chi_pop20002009), t(chi_pop20102018)))
@@ -61,10 +62,10 @@ agg_s <- agg_crimes(clean_s, aggregation)
 agg_n <- agg_crimes(clean_n, aggregation)
 
 # convert to matrix and vector storing geoids
-mat_h <- agg_h %>% spread_(aggregation, "count") %>% select(-GEOID)
-mat_s <- agg_s %>% spread_(aggregation, "count") %>% select(-GEOID)
-mat_n <- agg_n %>% spread_(aggregation, "count") %>% select(-GEOID)
-geoids <- agg_h %>% spread_(aggregation, "count") %>% select(GEOID)
+mat_h <- agg_h %>% spread_(aggregation, "count") %>% dplyr::select(-GEOID)
+mat_s <- agg_s %>% spread_(aggregation, "count") %>% dplyr::select(-GEOID)
+mat_n <- agg_n %>% spread_(aggregation, "count") %>% dplyr::select(-GEOID)
+geoids <- agg_h %>% spread_(aggregation, "count") %>% dplyr::select(GEOID)
 
 write_csv(mat_h, th_mat_path, col_names=FALSE)
 write_csv(mat_s, ts_mat_path, col_names=FALSE)
@@ -81,7 +82,7 @@ for (i in 1:n_y_chunk) {
   maxy <- miny + y_chunk 
   minyd <- ymd(miny, truncated=2L)
   maxyd <- ymd(maxy, truncated=2L)
-  mat_s_chunk <- agg_s %>% filter(.[[aggregation]] >= minyd & .[[aggregation]] < maxyd) %>% spread_(aggregation, "count") %>% select(-GEOID)
+  mat_s_chunk <- agg_s %>% filter(.[[aggregation]] >= minyd & .[[aggregation]] < maxyd) %>% spread_(aggregation, "count") %>% dplyr::select(-GEOID)
   fname <- paste0(results_path, miny, "/", "ts_mat.csv")
   write_csv(mat_s_chunk, fname, col_names=FALSE)
 }
@@ -111,7 +112,59 @@ if (runBootstrap==TRUE) {
     sample_ids <- sample(seq(1, N), N, replace=T)
     clean_s_L <- clean_s[sample_ids, ]
     agg_s_L <- agg_crimes(clean_s_L, aggregation)
-    mat_s_L <- agg_s_L %>% spread_(aggregation, "count") %>% select(-GEOID)
+    mat_s_L <- agg_s_L %>% spread_(aggregation, "count") %>% dplyr::select(-GEOID)
     write_csv(mat_s_L, paste0(ts_period_bs_path, i, ".csv"), col_names=FALSE)
   }
+}
+
+### CPD GANG MAPS ###
+
+# first run clean_gang_maps_replication.R in bruhn_path
+
+load(file=paste0(bruhn_path, "gangMaps.rda"))
+# gang.maps
+
+# assign tracts to gangs
+gang.maps <- as(gang.maps, 'Spatial') #Transform to an SP object too
+city.blocks <- tracts(17, county = 031, year = 2016) #FOR TRACTS
+gang.maps <- spTransform(gang.maps, proj4string(city.blocks))
+
+ownership <- list()
+
+for (m in 2004:2017) {
+  
+  k <- length(city.blocks$GEOID) ##Number of blockgroups in Cook County
+  gang_maps_y <- gang.maps[gang.maps$year==m,]
+  n <- length(unique(gang_maps_y$gang))
+  geoids <- city.blocks$GEOID
+  ownership_y <- matrix(NA, nrow=n, ncol=(k)) 
+  
+  gang.names <- unique(gang_maps_y$gang)
+  print(paste0("year: ", m))
+  
+  for (i in 1:n) {
+    print(paste0("gang: ", gang.names[i]))
+    gang_maps_yi <- gang_maps_y[gang_maps_y$gang==gang.names[i],]
+    gang_maps_yi <- spTransform(gang_maps_yi, CRSobj = "+proj=moll")
+    gang_maps_yi <- gBuffer(gang_maps_yi, byid = T, width = -1)
+    gang_maps_yi <- spTransform(gang_maps_yi, CRSobj = proj4string(city.blocks))
+    for (j in 1:k) {
+      blocks_j <- city.blocks[city.blocks$GEOID==geoids[j],]
+      if(gIntersects(gang_maps_yi, blocks_j)){
+        intersection_yij <- gIntersection(gang_maps_yi, blocks_j)
+        print(area(intersection_yij)/area(city.blocks[city.blocks$GEOID==geoids[j],]))
+        ownership_y[i,j] <- area(intersection_yij)/area(city.blocks[city.blocks$GEOID==geoids[j],])
+      }
+      else {
+        ownership_y[i,j] <- 0
+      }
+    }
+  }
+  print(ownership_y)
+  ownership[[m]] <- ownership_y
+}
+
+# write to csv
+for (m in 2004:2017) {
+  write_csv(ownership[[m]] %>% as.data.frame(), paste0(gang_territory_path, m, ".csv"))
 }

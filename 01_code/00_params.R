@@ -43,6 +43,8 @@ shp_path <- paste0(data_path, city, "/shp/")
 tracts_path <- paste0(output_path, "tracts/") # output once blocks have been added
 crimes_clean_path <- paste0(output_path, "crimes_clean.csv") # cleaned crime data
 covariates_path <- paste0(output_path, "covariates/")
+bruhn_path <- paste0(data_path, "bruhn/")
+cpd_maps_path <- paste0(bruhn_path, "raw_maps/")
 
 pop_path <- paste0(output_path, "population.csv")
 
@@ -61,6 +63,10 @@ geoids_path <- paste0(output_path, "geoids.csv")
 
 # adjacency matrices
 tadjacency_path <- paste0(output_path, "t_adjacency.csv")
+
+# cpd gang territorial shares by year
+gang_territory_path <- paste0(output_path, "territory/")
+
 
 # results
 

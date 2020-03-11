@@ -30,7 +30,7 @@ agg_crimes <- function(crimes_tagged, aggregation) {
   # aggregate and merge
   crimes_agg_all <- crimes_blank %>% left_join(crimes_agg, by=c("GEOID", aggregation)) %>% 
     mutate(count = coalesce(count.x, count.y)) %>% 
-    select(-count.x, -count.y)
+    dplyr::select(-count.x, -count.y)
   
   # replace NA with zero
   crimes_agg_all$count <- ifelse(is.na(crimes_agg_all$count), 0, crimes_agg_all$count)
