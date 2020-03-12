@@ -130,41 +130,48 @@ city.blocks <- tracts(17, county = 031, year = 2016) #FOR TRACTS
 gang.maps <- spTransform(gang.maps, proj4string(city.blocks))
 
 ownership <- list()
+gang.names <- unique(gang.maps$gang)
+n <- length(gang.names)
+geoids <- city.blocks$GEOID
+k <- length(city.blocks$GEOID)
 
 for (m in 2004:2017) {
   
-  k <- length(city.blocks$GEOID) ##Number of blockgroups in Cook County
   gang_maps_y <- gang.maps[gang.maps$year==m,]
-  n <- length(unique(gang_maps_y$gang))
-  geoids <- city.blocks$GEOID
   ownership_y <- matrix(NA, nrow=n, ncol=(k)) 
-  
-  gang.names <- unique(gang_maps_y$gang)
   print(paste0("year: ", m))
   
   for (i in 1:n) {
     print(paste0("gang: ", gang.names[i]))
     gang_maps_yi <- gang_maps_y[gang_maps_y$gang==gang.names[i],]
-    gang_maps_yi <- spTransform(gang_maps_yi, CRSobj = "+proj=moll")
-    gang_maps_yi <- gBuffer(gang_maps_yi, byid = T, width = -1)
-    gang_maps_yi <- spTransform(gang_maps_yi, CRSobj = proj4string(city.blocks))
-    for (j in 1:k) {
-      blocks_j <- city.blocks[city.blocks$GEOID==geoids[j],]
-      if(gIntersects(gang_maps_yi, blocks_j)){
-        intersection_yij <- gIntersection(gang_maps_yi, blocks_j)
-        print(area(intersection_yij)/area(city.blocks[city.blocks$GEOID==geoids[j],]))
-        ownership_y[i,j] <- area(intersection_yij)/area(city.blocks[city.blocks$GEOID==geoids[j],])
+    if (nrow(gang_maps_yi) != 0) {
+      gang_maps_yi <- spTransform(gang_maps_yi, CRSobj = "+proj=moll")
+      gang_maps_yi <- gBuffer(gang_maps_yi, byid = T, width = -1)
+      gang_maps_yi <- spTransform(gang_maps_yi, CRSobj = proj4string(city.blocks))
+      for (j in 1:k) {
+        blocks_j <- city.blocks[city.blocks$GEOID==geoids[j],]
+        if(gIntersects(gang_maps_yi, blocks_j)){
+          intersection_yij <- gIntersection(gang_maps_yi, blocks_j)
+          print(area(intersection_yij)/area(city.blocks[city.blocks$GEOID==geoids[j],]))
+          ownership_y[i,j] <- area(intersection_yij)/area(city.blocks[city.blocks$GEOID==geoids[j],])
+        }
+        else {
+          ownership_y[i,j] <- 0
+        }
       }
-      else {
+    } else {
+      for (j in 1:k) {
         ownership_y[i,j] <- 0
       }
     }
+    ownership[[m]] <- ownership_y
   }
-  print(ownership_y)
-  ownership[[m]] <- ownership_y
 }
 
 # write to csv
 for (m in 2004:2017) {
-  write_csv(ownership[[m]] %>% as.data.frame(), paste0(gang_territory_path, m, ".csv"))
+  write_csv(ownership[[m]] %>% as.data.frame(), paste0(gang_territory_path, m, ".csv"), col_names=FALSE)
 }
+write_csv(geoids %>% as.data.frame(), paste0(gang_territory_path, "geoids.csv"), col_names=FALSE)  # columns
+write_csv(gang.names %>% as.data.frame(), paste0(gang_territory_path, "gang.names.csv"), col_names=FALSE)  # rows
+gang.names %>% sort()

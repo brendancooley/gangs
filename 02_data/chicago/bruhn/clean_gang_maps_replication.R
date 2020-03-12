@@ -189,6 +189,7 @@ seperate.names <- c("gangster disciples", "black disciples")
 gang.maps <- boundaryFixer(gang.maps, problem.name, seperate.names)
 
 #fix "bd gd imperial vice lords"
+problem.name <- "bd gd imperial vice lords"
 seperate.names <- c("gangster disciples", "black disciples", "imperial insane vice lords")
 gang.maps <- boundaryFixer(gang.maps, problem.name, seperate.names)
 
@@ -218,4 +219,4 @@ gang.maps <- gang.maps %>%
 
 #save gang maps
 save(gang.maps, file="gangMaps.rda")
-
+# gang.maps$gang %>% unique()
