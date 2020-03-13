@@ -19,6 +19,9 @@ period <- "all"
 runBootstrap <- TRUE
 L <- 100 # number of bootstrap iterations
 
+bruhn_sy <- 2004 # bruhn start year
+bruhn_ey <- 2017 # bruhn end year
+
 ### PATHS ###
 
 # base paths
@@ -66,7 +69,7 @@ tadjacency_path <- paste0(output_path, "t_adjacency.csv")
 
 # cpd gang territorial shares by year
 gang_territory_path <- paste0(output_path, "territory/")
-
+turf_shares_path <- paste0(output_path, "turf_shares.csv")
 
 # results
 
@@ -118,8 +121,8 @@ lk_geoid <- "17031630800"
 vl_col <- "#e3052a"
 gd_col <- "#3794d7"
 lk_col <- "#d3cb1c"
-nc_col <- "#e3e3e5"
-other_col <- "#8e178b"
+bps_col <- "#8e178b"
+other_col <- "#383838"
 
 
 # save params

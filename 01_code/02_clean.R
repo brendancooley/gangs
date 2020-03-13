@@ -126,16 +126,18 @@ load(file=paste0(bruhn_path, "gangMaps.rda"))
 
 # assign tracts to gangs
 gang.maps <- as(gang.maps, 'Spatial') #Transform to an SP object too
-city.blocks <- tracts(17, county = 031, year = 2016) #FOR TRACTS
-gang.maps <- spTransform(gang.maps, proj4string(city.blocks))
+# city.blocks <- tracts(17, county = 031, year = 2016) #FOR TRACTS
+gang.maps <- spTransform(gang.maps, proj4string(tracts))
 
 ownership <- list()
 gang.names <- unique(gang.maps$gang)
 n <- length(gang.names)
-geoids <- city.blocks$GEOID
-k <- length(city.blocks$GEOID)
+geoids <- tracts$GEOID
+k <- length(tracts$GEOID)
 
-for (m in 2004:2017) {
+library(raster)
+
+for (m in bruhn_sy:bruhn_ey) {
   
   gang_maps_y <- gang.maps[gang.maps$year==m,]
   ownership_y <- matrix(NA, nrow=n, ncol=(k)) 
@@ -147,13 +149,13 @@ for (m in 2004:2017) {
     if (nrow(gang_maps_yi) != 0) {
       gang_maps_yi <- spTransform(gang_maps_yi, CRSobj = "+proj=moll")
       gang_maps_yi <- gBuffer(gang_maps_yi, byid = T, width = -1)
-      gang_maps_yi <- spTransform(gang_maps_yi, CRSobj = proj4string(city.blocks))
+      gang_maps_yi <- spTransform(gang_maps_yi, CRSobj = proj4string(tracts))
       for (j in 1:k) {
-        blocks_j <- city.blocks[city.blocks$GEOID==geoids[j],]
+        blocks_j <- tracts[tracts$GEOID==geoids[j],]
         if(gIntersects(gang_maps_yi, blocks_j)){
           intersection_yij <- gIntersection(gang_maps_yi, blocks_j)
-          print(area(intersection_yij)/area(city.blocks[city.blocks$GEOID==geoids[j],]))
-          ownership_y[i,j] <- area(intersection_yij)/area(city.blocks[city.blocks$GEOID==geoids[j],])
+          print(area(intersection_yij)/area(tracts[tracts$GEOID==geoids[j],]))
+          ownership_y[i,j] <- area(intersection_yij)/area(tracts[tracts$GEOID==geoids[j],])
         }
         else {
           ownership_y[i,j] <- 0
@@ -164,14 +166,13 @@ for (m in 2004:2017) {
         ownership_y[i,j] <- 0
       }
     }
+    print(i)
     ownership[[m]] <- ownership_y
+    # write to csv
+    write_csv(ownership[[m]] %>% as.data.frame(), paste0(gang_territory_path, m, ".csv"), col_names=FALSE)
   }
 }
 
-# write to csv
-for (m in 2004:2017) {
-  write_csv(ownership[[m]] %>% as.data.frame(), paste0(gang_territory_path, m, ".csv"), col_names=FALSE)
-}
 write_csv(geoids %>% as.data.frame(), paste0(gang_territory_path, "geoids.csv"), col_names=FALSE)  # columns
 write_csv(gang.names %>% as.data.frame(), paste0(gang_territory_path, "gang.names.csv"), col_names=FALSE)  # rows
 gang.names %>% sort()
