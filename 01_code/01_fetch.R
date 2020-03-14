@@ -7,8 +7,6 @@ libs <- c("tidyverse", "lubridate", "acs", "tigris", "sp", "rgdal", "tigris", "l
 ipak(libs)
 
 years <- c(2009, 2016)  # years for which to get census data
-start_year <- 2001
-end_year <- 2019
 aggregation <- "week"
 
 # Reading in Census Tract Boundaries

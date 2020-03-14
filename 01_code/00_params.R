@@ -13,6 +13,9 @@ y_chunk <- 6
 screeN <- 50
 covar_y <- 2016 # year to take district covariates from
 
+start_year <- 2001
+end_year <- 2019
+
 city <- "chicago"
 period <- "all"
 
