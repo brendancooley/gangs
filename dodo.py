@@ -12,10 +12,10 @@ verticatorPath = "~/Dropbox\ \(Princeton\)/8_Templates/plugin/verticator"
 pluginDest = "index_files/reveal.js-3.8.0/plugin"
 revealPath = "~/Dropbox\ \(Princeton\)/8_Templates/reveal.js-3.8.0"
 
-sectionsPath = "sections/"
+sectionsPath = "06_sections/"
 sectionsTemplate = "templates/cooley-plain.latex"
 
-figsPath = "figs/cartoons/"
+figsPath = "05_figs/cartoons/"
 figsTemplate = "templates/cooley-plain.latex"
 
 sourcePath = "source/"
@@ -44,8 +44,8 @@ def task_sections():
 def task_figs():
 	figsFiles = helpers.getFiles(figsPath)
 	for i in range(len(figsFiles)):
-		fName = figsFiles[i].split("/")[1].split(".")[0]
-		suffix = figsFiles[i].split("/")[1].split(".")[1]
+		fName = figsFiles[i].split("/")[2].split(".")[0]
+		suffix = figsFiles[i].split("/")[2].split(".")[1]
 		if suffix == "tex":
 			yield {
 				'name': figsFiles[i],

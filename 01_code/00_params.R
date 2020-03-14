@@ -105,7 +105,8 @@ hnfs_animated_path <- paste0(figs_path, "shootings_animated.gif")
 ### chicago ###
 
 chi_shape_path <- paste0(data_path, "shp/")
-chi_crimes_raw_url <- "https://www.dropbox.com/s/h7da81i9qt876tf/chi_crimes.csv?dl=1"
+# chi_crimes_raw_url <- "https://www.dropbox.com/s/h7da81i9qt876tf/chi_crimes.csv?dl=1"
+chi_crimes_raw_url <- "https://data.cityofchicago.org/api/views/ijzp-q8t2/rows.csv?accessType=DOWNLOAD"
 
 chicago_id <- 1714000  # for U.S. municipal population data
 
