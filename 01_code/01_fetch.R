@@ -27,7 +27,7 @@ chi_tracts <- subset(chi_tracts, !(GEOID %in% drop_ids)) # drop other Cook weird
 chi_tracts_ids <- chi_tracts@data$GEOID
 detach("package:raster", unload=TRUE)  # masks select from dplyr
 
-if (!dir.exists(chi_tracts_path)) {
+if (!dir.exists(tracts_path)) {
   mkdir(tracts_path)
   writeOGR(chi_tracts, tracts_path, driver="ESRI Shapefile", layer='tracts')
   # NOTE: warnings ok, see https://github.com/r-spatial/sf/issues/306
@@ -35,13 +35,18 @@ if (!dir.exists(chi_tracts_path)) {
 
 ### Victim-Based Crime Reports ###
 
-crimes <- read_csv(chi_crimes_raw_url)
+crimes <- read_csv(chi_crimes_raw_url, 
+                   col_types=list(`X Coordinate`=col_double(), `Y Coordinate`=col_double(), Latitude=col_double(), Longitude=col_double(), Location=col_character()))
 
 crimes$dateChr <- substr(crimes$Date, 1, 10)
 crimes$date <- as.Date(crimes$dateChr, format="%m/%d/%Y")
 crimes$month <- floor_date(crimes$date, "month")
 crimes$week <- floor_date(crimes$date, "week")
 crimes$year <- as.Date(paste0(crimes$Year, "-01-01"))
+# crimes$year %>% unique() 
+
+# subset years
+crimes <- crimes %>% filter(year >= ymd(start_year, truncated=2L), year < ymd(end_year+1, truncated=2L))
 
 crimes$lat <- crimes$Latitude
 crimes$lng <- crimes$Longitude
@@ -61,6 +66,7 @@ crimes$narcotics <- ifelse(crimes$`FBI Code` %in% narcotics_fbi, 1, 0)
 crimes$arrest <- ifelse(crimes$Arrest==TRUE, 1, 0)
 
 crimesClean <- crimes %>% filter(hnfs==1 | narcotics==1) %>% filter(!is.na(lat) & !is.na(lng) & lat > 40) %>% select(date, year, month, week, lat, lng, homicide, hnfs, narcotics, arrest)
+# crimesClean %>% filter(hnfs==1)
 
 write_csv(crimesClean, crimes_clean_path)  # to data folder
 write_csv(crimesClean, paste0(shiny_path, "crimes_clean.csv")) # to shiny folder
