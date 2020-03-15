@@ -13,7 +13,7 @@ abstract: Street gangs are conjectured to engage in violent territorial competit
 thanks: Thanks go here.
 # jelcodes: JEL codes go here
 
-bibliography: /Users/bcooley/Dropbox (Princeton)/References/library.bib
+bibliography: /Users/brendancooley/Dropbox (Princeton)/References/library.bib
 biblio-style: apsr
 
 papersize: letter
@@ -28,15 +28,6 @@ output:
 ---
 
 ```{r libs, echo=FALSE, warning=FALSE, message=FALSE, results='hide'}
-
-helperPath <- "source/R/"
-helperFiles <- list.files(helperPath)
-for (i in helperFiles) {
-  source(paste0(helperPath, i))
-}
-
-libs <- c("tidyverse", "tigris", "leaflet", "leaflet.extras", "tmap", "rgdal", "RColorBrewer", "reshape2", "lubridate", "patchwork", "ggnewscale")
-ipak(libs)
 
 # not available
 Aintragang_nz <- "NA"
@@ -63,23 +54,26 @@ Ctick <- 1
 
 # Introduction
 
+```{r, child = "06_sections/introduction.rmd"}
+```
+
 # Literature
 
 # Data
 
 # Model
 
-```{r, child = "sections/model.rmd"}
+```{r, child = "06_sections/model.rmd"}
 ```
 
 # Estimation
 
-```{r, child = "sections/estimation.rmd"}
+```{r, child = "06_sections/estimation.rmd"}
 ```
 
 # Results
 
-```{r, child = "sections/results.rmd"}
+```{r, child = "06_sections/results.rmd"}
 ```
 
 # Conclusion
@@ -99,7 +93,7 @@ Apdx_cov <- LETTERS[a]
 
 ## Appendix `r Apdx_cov`: Covariance Derivation
 
-```{r, child="sections/Apdx_cov.rmd"}
+```{r, child="06_sections/Apdx_cov.rmd"}
 ```
 
 \clearpage

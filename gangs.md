@@ -13,7 +13,7 @@ abstract: Street gangs are conjectured to engage in violent territorial competit
 thanks: Thanks go here.
 # jelcodes: JEL codes go here
 
-bibliography: /Users/bcooley/Dropbox (Princeton)/References/library.bib
+bibliography: /Users/brendancooley/Dropbox (Princeton)/References/library.bib
 biblio-style: apsr
 
 papersize: letter
@@ -32,6 +32,11 @@ output:
 \newpage
 
 # Introduction
+
+
+
+
+testing...
 
 # Literature
 
@@ -64,7 +69,7 @@ Gangs also war with one another with varying intensity. The probability a member
 
 
 
-**Assumption 3:** $c_{k} \epsilon_{k \ell}^t = c_{\ell} \epsilon_{\ell, k}^{t}$ with the normalization $c_1 = 1$. If $k = 0$ or $\ell = 0$ then $\epsilon_{k \ell}^t = 0$ for all $t$.
+**Assumption 3:** $c_{k} \epsilon_{k, \ell}^t = c_{\ell} \epsilon_{\ell, k}^{t}$ with the normalization $c_1 = 1$. If $k = 0$ or $\ell = 0$ then $\epsilon_{k, \ell}^t = 0$ for all $t$.
 
 Second, we assume inter-gang shocks are independent across gang dyads.^[Of course, the intensity of conflict between any two gangs is almost certainly affected by the broader conflict environment. This assumption is made for purposes of model tractability. In future work, we plan to model the genesis of conflict shocks and perhaps relax this assumption.]
 
@@ -74,7 +79,7 @@ Second, we assume inter-gang shocks are independent across gang dyads.^[Of cours
 
 The expected number of gang-related shootings in district $i$ during period $t$ can then be calculated as 
 $$
-x_i^t = \underbrace{ \frac{m_{\pi(i)}}{n_{\pi(i)}} \E [ \xi_{\pi(i)}^t ]}_{ \text{intra-gang} } + \underbrace{\sum_{k \neq \pi(i)} \frac{m_k}{n_{\pi(i)}}  \E [ \epsilon_{k, \pi(i)}^t ]}_{ \text{inter-gang} }
+\E [ x_i^t ] = \underbrace{ \frac{m_{\pi(i)}}{n_{\pi(i)}} \E [ \xi_{\pi(i)}^t ]}_{ \text{intra-gang} } + \underbrace{\sum_{k \neq \pi(i)} \frac{m_k}{n_{\pi(i)}}  \E [ \epsilon_{k, \pi(i)}^t ]}_{ \text{inter-gang} }
 $$
 The total number of shootings in district $i$ during period $t$ is
 $$
@@ -162,9 +167,9 @@ $$
 
 Figure \ref{fig:blocks} shows a schematic representation of this permutation. In the right column blocks and bottom row blocks are districts that are not controlled by any gang. These exhibit no covariance with other districts because the only shootings that occur there are from residents, and these are i.i.d. across districts. Along the block-diagonal are districts owned by the same gang. Shootings within a gang's territory covary for two reasons. First, shocks to within-gang relations ($\xi_k^t$) are shared by all districts controlled by a given gang. Second, members of gang $k$ operating in these districts share equally the risk of attacks that comes from *all* gang wars in which $k$ is a belligerent ($\epsilon_{k, \ell}^t$). On the off block-diagonal are covariances produced through *specific* gang wars. For example, $k, \ell$ block of the matrix is positive whenever $\E [ \epsilon_{k, \ell}^t ] > 0$, or there is a positive probability of conflict between gangs $k$ and $\ell$. These reason that shootings in the districts controlled by gangs $k$ and $\ell$ covary is because inter-gang shocks generate retaliatory violence (Assumption 3).
 
-![The input covariance matrix $A$ is shown in the left panel. Applying the transformation $P A P$ produces the block diagonal structure shown in the right panel. \label{fig:blocks}](figs/block_mat.png)
+![The input covariance matrix $A$ is shown in the left panel. Applying the transformation $P A P$ produces the block diagonal structure shown in the right panel. \label{fig:blocks}](05_figs/cartoons/block_mat.png)
 
-This covariance matrix can be compactly represented as a function of our estimands, $K$ and $\pi$. Let $\Psi = \text{diag}(\psi_1, \dots \psi_N)$ and $Q = A - \Psi$. Let $B_{K + 1 \times K + 1} = (b_{k \ell})_{ \left\{ k, \ell \in \mathcal{K} \right\} }$ store the constant block covariance values defined in Corollary 1 and note that $b_{k0} = 0$ for all $k$. Finally, let $\Theta_{N \times K + 1} = (\theta_{ik})_{\left\{ i \in \mathcal{N}, k \in \mathcal{N} \right\} }$ be a membership matrix with $\theta_{ik} = 1$ if $\pi(i) = k$ and $0$ otherwise. Then, 
+This covariance matrix can be compactly represented as a function of our estimands, $K$ and $\pi$. Let $\Psi = \text{diag}(\psi_1, \dots \psi_N)$ and $Q = A - \Psi$. Let $B_{K + 1 \times K + 1} = (b_{k \ell})_{ \left\{ k, \ell \in \mathcal{K} \right\} }$ store the constant block covariance values defined in Corollary 1 and note that $b_{k0} = 0$ for all $k$. Finally, let $\Theta_{N \times K + 1} = (\theta_{ik})_{\left\{ i \in \mathcal{N}, k \in \mathcal{K} \cup 0 \right\} }$ be a membership matrix with $\theta_{ik} = 1$ if $\pi(i) = k$ and $0$ otherwise. Then, 
 $$
 Q = \Theta B \Theta^T
 $$.
@@ -197,7 +202,7 @@ Let $\mathbb{R}_{+}^{J \times J}$ be the set of all $J \times J$ symmetric matri
 \end{equation}
 where $\lVert M \rVert_F = \left( \sum_{i} \sum_j M_{ij}^2 \right)^{\frac{1}{2}}$ is the Frobenius norm.
 
-We estimate these quantities using spectral clustering.^[@Luxberg2007 provides an overview of this family of methods.] These methods exploit the eigen-structure of $Q$. If there are $K$ gangs in the city, $Q$ will have $J$ positive eigenvalues. Let $\Delta = \text{diag}(\sqrt{n_1}, \dots, \sqrt{n_{J}})$ so that $\Delta B \Delta$ normalizes the connectivity matrix by the number of territories controlled by each group. $Q$ can then be written as
+We estimate these quantities using spectral clustering.^[@Luxberg2007 provides an overview of this family of methods.] These methods exploit the eigen-structure of $Q$. If there are $K$ gangs in the city, $Q$ will have $J$ nonzero eigenvalues. Let $\Delta = \text{diag}(\sqrt{n_1}, \dots, \sqrt{n_{J}})$ so that $\Delta B \Delta$ normalizes the connectivity matrix by the number of territories controlled by each group. $Q$ can then be written as
 \begin{align*}
 Q &= \Theta B \Theta^T \\
 &= \Theta \Delta^{-1} \Delta B \Delta \Delta^{-1} \Theta^T \\
@@ -225,9 +230,9 @@ which can be solved via K-means clustering on the leading eigenvectors of $\tild
 \hat{B} = \hat{X} \hat{\Lambda} \hat{X}^T
 \end{equation}
 
-Shootings in districts without gangs will exhibit no covariance in expectation with shootings in districts in which gangs operate, $\E[ b_{0k} ] = 0$ for all $k \neq 0$. Once we have estimated $B$, we can therefore isolate the cluster corresponding to no gang activity by finding the row of $B$ with the smallest values, formally
+Shootings in districts without gangs will exhibit no covariance in expectation with shootings in districts in which gangs operate, $\E[ b_{0k} ] = 0$ for all $k \neq 0$. Once we have estimated $B$, we can therefore isolate the cluster corresponding to no gang activity by finding the row of $\hat{B}$ with the smallest values, formally
 \begin{equation} \label{eq:nc}
-\min_{ k \in \left\{ 1, ..., J \right\} } \lVert ( B - \text{diag}(B) )^{(k)} \rVert_2
+\min_{ k \in \left\{ 1, ..., J \right\} } \lVert ( \hat{B} - \text{diag}(\hat{B}) )^{(k)} \rVert_2
 \end{equation}
 where $M^{(k)}$ is the $k$th row of $M$ and $\lVert M^{(k)} \rVert_2$ is the Euclidean vector norm. 
 
@@ -291,21 +296,36 @@ An alternative set of approaches to estimating $J$ exploit the intuition discuss
 
 
 
-We detect the presence of 4 gangs in Chicago. Figure \ref{fig:scree} displays the 50 eigenvalues of the covariance matrix of shootings across census tracts. The first several eigenvalues stand out from the remainder, indicative of the presence of unique clusters of gang activity in the data.
+We detect the presence of 3 gangs in Chicago. Figure \ref{fig:scree} displays the 50 eigenvalues of the covariance matrix of shootings across census tracts. The first several eigenvalues stand out from the remainder, indicative of the presence of unique clusters of gang activity in the data.
 
-![Leading eigenvalues of the matrix of covariances in shootings across districs. Dashed line is drawn through the $J$th eigenvalue. Eigenvectors associated with values above this line are used in the clustering analysis. \label{fig:scree}](figure/unnamed-chunk-13-1.png)
+![Leading eigenvalues of the matrix of covariances in shootings across districs. Dashed line is drawn through the $J$th eigenvalue. Eigenvectors associated with values above this line are used in the clustering analysis. \label{fig:scree}](figure/unnamed-chunk-15-1.png)
 
 These clusters are easily visualized by examining the permuted covariance matrix, the empirical equivalent to Figure \ref{fig:blocks}. This can be seen in Figure \ref{fig:block_hm}. Each square on the right panel highlights the districts controlled with a single gang, with the bottom right block corresponding to districts estimated to have no gang activity. Gang wars generate positive covariance in the off-block diagonal entries. Darker off-block-diagonal entries indicate more intense conflict between the gangs controlling the pairs of districts in question. 
 
-![The left panel shows the values of the unclustered covariance matrix. Darker values indicate higher tract-to-tract covariance in shootings. The permutes these entries in accordance with the estimated partition function. The black squares highlight covariances within a given gang's territory. The bottom right block corresponds to the districts estimated to have no gang activity. \label{fig:block_hm}](figure/unnamed-chunk-14-1.png)
+![The left panel shows the values of the unclustered covariance matrix. Darker values indicate higher tract-to-tract covariance in shootings. The permutes these entries in accordance with the estimated partition function. The black squares highlight covariances within a given gang's territory. The bottom right block corresponds to the districts estimated to have no gang activity. \label{fig:block_hm}](figure/unnamed-chunk-16-1.png)
 
 Figure \ref{fig:map} shows the distribution of gang territory in the Chicago. Like the distribution of shootings, gang activity is concentrated in the south and west of the city. Large tracts of the central and northern parts of the city are estimated to be devoid of gang activity. Gangs territories are somewhat locally compact, consistent with data published by the Chicago Police. However, some neighborhoods of the city are quite contested. All of the gangs we detect operate in both the southern and western of the city.
 
-![Estimated territorial partition of Chicago, 2001-2018. Light gray tracts are estimated to have no gang activity. \label{fig:map}](figure/unnamed-chunk-15-1.png)
+
+```
+## OGR data source with driver: ESRI Shapefile 
+## Source: "/Users/brendancooley/GitHub/gangs/03_output/chicago/tracts", layer: "tracts"
+## with 861 features
+## It has 16 fields
+```
+
+![Estimated territorial partition of Chicago, 2004-2017. Light gray tracts are estimated to have no gang activity. \label{fig:map}](figure/unnamed-chunk-17-1.png)![Estimated territorial partition of Chicago, 2004-2017. Light gray tracts are estimated to have no gang activity. \label{fig:map}](figure/unnamed-chunk-17-2.png)![Estimated territorial partition of Chicago, 2004-2017. Light gray tracts are estimated to have no gang activity. \label{fig:map}](figure/unnamed-chunk-17-3.png)![Estimated territorial partition of Chicago, 2004-2017. Light gray tracts are estimated to have no gang activity. \label{fig:map}](figure/unnamed-chunk-17-4.png)![Estimated territorial partition of Chicago, 2004-2017. Light gray tracts are estimated to have no gang activity. \label{fig:map}](figure/unnamed-chunk-17-5.png)![Estimated territorial partition of Chicago, 2004-2017. Light gray tracts are estimated to have no gang activity. \label{fig:map}](figure/unnamed-chunk-17-6.png)![Estimated territorial partition of Chicago, 2004-2017. Light gray tracts are estimated to have no gang activity. \label{fig:map}](figure/unnamed-chunk-17-7.png)
 
 So far, we have focused on our results for the esimated partition function, $\hat{\pi}$. Our estimates for $\hat{B}$ describe the intensity of conflict between gangs in our sample. Figure \ref{fig:Bhat_hm} displays the magnitudes of these conflict intensities. 
 
-![Estimated inter-gang conflict intensities, $\hat{B}$, exempting non-gang occupied areas. Colors along the diagonal correspond to the gangs occupying the territories shown in Figure \ref{fig:map}. Darker grays indicate the corresponding gangs on the diagonal tend to experience more intense conflict with one another. \label{fig:Bhat_hm}](figure/unnamed-chunk-16-1.png)
+
+```
+## Error in eval(ei, envir): object 'nc_col' not found
+```
+
+```
+## Error in eval(expr, envir, enclos): object 'Bhat_hm' not found
+```
 
 ## Validation on Chicago Police Department Gang Maps
 

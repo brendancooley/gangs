@@ -1,0 +1,11 @@
+```{r, echo=FALSE, warning=FALSE, message=FALSE, results='hide'}
+
+source("../01_code/00_params.R")
+libs <- c("tidyverse")
+ipak(libs)
+
+chi_clean <- read_csv(crimes_clean_path)  
+
+```
+
+testing...

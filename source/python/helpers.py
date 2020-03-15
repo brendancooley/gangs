@@ -1,5 +1,9 @@
 import os
 
+def mkdir(dir):
+    if not os.path.exists(dir):
+        os.makedirs(dir)
+	
 def files(path):
     for file in os.listdir(path):
         if os.path.isfile(os.path.join(path, file)):
