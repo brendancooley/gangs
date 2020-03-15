@@ -1,9 +1,9 @@
 ---
-title: | 
+title: |
 	| Gunshots and Turf Wars
 	| \tiny \hfill
     | \Large Inferring Gang Territories from Administrative Data
-author: 
+author:
 	- name: Brendan Cooley
       affiliation: Ph.D. Candidate, Department of Politics, Princeton University
     - name: Noam Reich
@@ -13,7 +13,7 @@ abstract: Street gangs are conjectured to engage in violent territorial competit
 thanks: Thanks go here.
 # jelcodes: JEL codes go here
 
-bibliography: /Users/bcooley/Dropbox (Princeton)/References/library.bib
+bibliography: /Users/brendancooley/Dropbox (Princeton)/References/library.bib
 biblio-style: apsr
 
 papersize: letter
@@ -33,20 +33,13 @@ output:
 
 # Introduction
 
+
+
+
+testing...
+
 # Literature
 
 # Data
 
 # Model
-
-
-
-
-
-
-
-
-
-
-
-

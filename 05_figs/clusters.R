@@ -1,7 +1,7 @@
 ### SETUP ###
 
-rm(list = ls())
-invisible(lapply(paste0('package:', names(sessionInfo()$otherPkgs)), detach, character.only=TRUE, unload=TRUE))
+# rm(list = ls())
+# invisible(lapply(paste0('package:', names(sessionInfo()$otherPkgs)), detach, character.only=TRUE, unload=TRUE))
 source("../01_code/00_params.R")
 
 libs <- c("tidyverse", "tigris", "tmap", "rgdal", "GISTools", "scales")

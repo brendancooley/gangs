@@ -1,6 +1,6 @@
 ### SETUP ###
 
-rm(list = ls())
+# rm(list = ls())
 source("../01_code/00_params.R")
 
 libs <- c("tidyverse")
