@@ -10,7 +10,7 @@ ipak(libs)
 
 crimes_clean <- read_csv(crimes_clean_path) # %>% filter(hnfs==1)
 tracts <- readOGR(tracts_path)
-crimes_clean %>% pull(year) %>% unique()
+crimes_clean %>% filter(hnfs==1) %>% filter(year=="2019-01-01")
 
 minY <- min(crimes_clean$year) %>% year()
 maxY <- max(crimes_clean$year) %>% year()
