@@ -127,6 +127,7 @@ gd_col <- "#3794d7"
 lk_col <- "#d3cb1c"
 bps_col <- "#8e178b"
 other_col <- "#383838"
+nc_col <- "#ffffff"
 
 
 # save params

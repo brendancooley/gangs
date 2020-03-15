@@ -306,26 +306,11 @@ These clusters are easily visualized by examining the permuted covariance matrix
 
 Figure \ref{fig:map} shows the distribution of gang territory in the Chicago. Like the distribution of shootings, gang activity is concentrated in the south and west of the city. Large tracts of the central and northern parts of the city are estimated to be devoid of gang activity. Gangs territories are somewhat locally compact, consistent with data published by the Chicago Police. However, some neighborhoods of the city are quite contested. All of the gangs we detect operate in both the southern and western of the city.
 
-
-```
-## OGR data source with driver: ESRI Shapefile 
-## Source: "../03_output/chicago/tracts/", layer: "tracts"
-## with 861 features
-## It has 16 fields
-```
-
-![Estimated territorial partition of Chicago, 2004-2017. Light gray tracts are estimated to have no gang activity. \label{fig:map}](figure/unnamed-chunk-17-1.png)![Estimated territorial partition of Chicago, 2004-2017. Light gray tracts are estimated to have no gang activity. \label{fig:map}](figure/unnamed-chunk-17-2.png)![Estimated territorial partition of Chicago, 2004-2017. Light gray tracts are estimated to have no gang activity. \label{fig:map}](figure/unnamed-chunk-17-3.png)![Estimated territorial partition of Chicago, 2004-2017. Light gray tracts are estimated to have no gang activity. \label{fig:map}](figure/unnamed-chunk-17-4.png)![Estimated territorial partition of Chicago, 2004-2017. Light gray tracts are estimated to have no gang activity. \label{fig:map}](figure/unnamed-chunk-17-5.png)![Estimated territorial partition of Chicago, 2004-2017. Light gray tracts are estimated to have no gang activity. \label{fig:map}](figure/unnamed-chunk-17-6.png)![Estimated territorial partition of Chicago, 2004-2017. Light gray tracts are estimated to have no gang activity. \label{fig:map}](figure/unnamed-chunk-17-7.png)
+![Estimated territorial partition of Chicago, 2004-2017. Light gray tracts are estimated to have no gang activity. \label{fig:map}](figure/unnamed-chunk-17-1.png)
 
 So far, we have focused on our results for the esimated partition function, $\hat{\pi}$. Our estimates for $\hat{B}$ describe the intensity of conflict between gangs in our sample. Figure \ref{fig:Bhat_hm} displays the magnitudes of these conflict intensities. 
 
-
-```
-## Error in eval(ei, envir): object 'nc_col' not found
-```
-
-```
-## Error in eval(expr, envir, enclos): object 'Bhat_hm' not found
-```
+![Estimated inter-gang conflict intensities, $\hat{B}$, exempting non-gang occupied areas. Colors along the diagonal correspond to the gangs occupying the territories shown in Figure \ref{fig:map}. Darker grays indicate the corresponding gangs on the diagonal tend to experience more intense conflict with one another. \label{fig:Bhat_hm}](figure/unnamed-chunk-18-1.png)
 
 ## Validation on Chicago Police Department Gang Maps
 
