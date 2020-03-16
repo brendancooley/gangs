@@ -310,4 +310,4 @@ for (m in 2004:2017) { #Loop Over Years
 
 potential.mergers <- data.frame(years,gangs1,gangs2,overlap1,overlap2)
 library(readr)
-write_csv(potential.mergers, ".csv")
+write_csv(potential.mergers, path = "C:/Users/Noam Reich/Desktop", ".csv")
