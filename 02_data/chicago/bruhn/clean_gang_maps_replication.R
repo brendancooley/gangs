@@ -311,3 +311,11 @@ for (m in 2004:2017) { #Loop Over Years
 potential.mergers <- data.frame(years,gangs1,gangs2,overlap1,overlap2)
 library(readr)
 write_csv(potential.mergers, path = "C:/Users/Noam Reich/Desktop", ".csv")
+
+
+testing1 <- gang.maps[gang.maps$year==2016,]
+testing1 <- testing1[testing1$gang=="insane unknowns",]
+map5 <- leaflet() %>%
+       addProviderTiles(providers$CartoDB.Positron) %>%
+       addPolygons(data = testing1)
+map5
