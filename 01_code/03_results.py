@@ -71,8 +71,10 @@ P = P[:,np.sum(P0, axis=0)!=0]
 np.savetxt(P_path, P, delimiter=',', fmt='%f')
 
 # CLUSTERING #
-M = helpers.est_J(P, V, S=50)
+M = helpers.est_J(P, V, S=25)
 np.savetxt(J_path, np.array([M]), delimiter=",")
+
+print("J estimation complete, " + str(M-1) + " gangs detected")
 
 # return eigvals
 lbda, U = np.linalg.eigh(P)
@@ -93,7 +95,6 @@ np.savetxt(nc_path, noise_cluster, delimiter=",")
 P_sorted = helpers.permute_covM(P, clusters, nc=noise_cluster)
 # plt.imshow(P_sorted, cmap="hot", interpolation="nearest")
 np.savetxt(P_sorted_path, P_sorted, delimiter=',', fmt='%f')
-
 
 ### BOOTSTRAP ###
 

@@ -243,6 +243,8 @@ def est_J(P, V, S=50):
 
             Loss.append(np.mean(loss_v))
 
+        print("Loss vec " + str(s) + ":")
+        print(Loss)
         Ldelta = Loss - np.append(Loss[1:], 0)
         # len(np.where(np.array([1, 0, 0]) == 2)[0])
         if len(np.where(Ldelta < 0)[0]) > 0:
@@ -253,7 +255,9 @@ def est_J(P, V, S=50):
             Jvec.append(Kbar)
 
     Jhat_counts = np.bincount(Jvec)
-    out = np.argmax(Jhat_counts)
+    print("Jhat_counts:")
+    print(Jhat_counts)
+    out = np.argmax(Jhat_counts) + 1
 
     return(out)
 

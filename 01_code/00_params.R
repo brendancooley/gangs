@@ -75,6 +75,7 @@ tadjacency_path <- paste0(output_path, "t_adjacency.csv")
 # cpd gang territorial shares by year
 gang_territory_path <- paste0(output_path, "territory/")
 turf_shares_path <- paste0(output_path, "turf_shares.csv")
+turf_binary_path <- paste0(output_path, "turf_binary.csv")
 
 # results
 
@@ -102,6 +103,7 @@ P_sorted_path <- paste0(results_city_period_path, "P_sorted.csv")
 
 Bhat_mean_path <- paste0(bootstrap_path, "Bhat_mean.csv")
 cluster_props_path <- paste0(bootstrap_path, "cluster_props.csv")
+cluster_binary_path <- paste0(bootstrap_path, "cluster_binary.csv")
 
 # figures
 
@@ -119,16 +121,17 @@ airport_ids <- c("17031980000", "17031980100", "17031990000")
 drop_ids <- c("17031770700", "17031770602", "17031811701", "17031770800", "17031770500", "17031811600")  # Cook area surrounding airport
 
 # representative suspected districts for each gang
-vl_geoid <- "17031252202"
+# vl_geoid <- "17031252202"
 # gd_geoid <- "17031671500"
-gd_geoid <- "17031834600"
-lk_geoid <- "17031630800"
+# gd_geoid <- "17031834600"
+# lk_geoid <- "17031630800"
+# bps_geoid <- "17031460100"
 
 vl_col <- "#e3052a"
 gd_col <- "#3794d7"
 lk_col <- "#d3cb1c"
 bps_col <- "#8e178b"
-other_col <- "#383838"
+other_col <- "#C0C0C0"
 nc_col <- "#ffffff"
 
 

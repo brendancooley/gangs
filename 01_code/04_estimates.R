@@ -75,6 +75,16 @@ cluster_props <- cluster_props %>% select(GEOID, everything())
 
 write_csv(cluster_props, cluster_props_path)
 
+### CONVERT TO BINARY OWNERSHIP MATRIX ###
+
+owner <- cluster_props %>% select(-GEOID) %>% apply(1, function(x) which.max(x))
+cluster_binary <- data.frame(cluster_props$GEOID, owner) %>% as_tibble()
+colnames(cluster_binary) <- c("GEOID", "cluster")
+
+write_csv(cluster_binary, cluster_binary_path)
+
+### B_HAT ###
+
 Bhat_mean <- Reduce("+", BhatL) / length(BhatL)
 
 write_csv(Bhat_mean %>% as.data.frame(), Bhat_mean_path, col_names=FALSE)
