@@ -43,6 +43,8 @@ results_city_period_path <- paste0(results_path, period, "/")
 bootstrap_path <- paste0(results_city_period_path, "bootstrap/")
 figs_path <- paste0(figs_path_base, city, "/")
 
+gang_correspondence_path <- paste0(data_path_base, "chicago/bruhn/gang_name_correspondence.csv")
+
 # data and output
 
 shp_path <- paste0(data_path, city, "/shp/")
