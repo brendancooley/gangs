@@ -5,7 +5,7 @@ source("00_params.R")
 source("helpers.R")
 
 libs <- c("tidyverse", "sp", "rgdal", "rgeos", "maptools", "tigris", 
-          "leaflet", "leaflet.extras", "lubridate", "spdep", "sf", "rgdal", "rgeos")
+          "leaflet", "leaflet.extras", "lubridate", "spdep", "sf", "rgeos")
 ipak(libs)
 
 crimes_clean <- read_csv(crimes_clean_path) # %>% filter(hnfs==1)
