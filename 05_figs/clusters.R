@@ -37,7 +37,7 @@ clusters_base_map <- tm_shape(clusters_base_geo) +
   # tm_polygons("cluster", title=paste0("Cluster ID"), palette="Set3") +
   tm_layout(bg.color="white", outer.bg.color="white", legend.position=c("left", "bottom"))
 
-leaflet() %>% addPolygons(data=tracts, popup=~GEOID)
+# leaflet() %>% addPolygons(data=tracts, popup=~GEOID)
 
 ### ALL BOOTSTRAPS AND CPD MAPS ###
 
@@ -45,6 +45,7 @@ turf_shares <- read_csv(turf_shares_path)
 turf_binary <- read_csv(turf_binary_path)
 
 tracts <- readOGR(tracts_path, verbose=FALSE)
+chi_cluster_correspondence <- read_csv(chi_cluster_correspondence_path)
 
 # cluster props
 cluster_props <- read_csv(cluster_props_path)
@@ -55,6 +56,7 @@ cluster_binary <- read_csv(cluster_binary_path)
 # find max cluster_prop
 cp_mat <- cluster_props %>% dplyr::select(-c("GEOID", as.character(nc))) %>% as.matrix()
 cluster_props$max_id <- apply(cp_mat, 1, which.max)
+cluster_props$max_id <- ifelse(cluster_props$max_id >= nc, cluster_props$max_id+1, cluster_props$max_id)
 cluster_props$alpha <- apply(cp_mat, 1, max) 
 
 # aggregate smaller gangs (cpd)
@@ -78,18 +80,12 @@ turf_shares_reduced$alpha <- ifelse(turf_shares_reduced$alpha >= 1, .99, turf_sh
 
 ### CLEAN ###
 
-# match representative districts
-lk_id <- cluster_props %>% filter(GEOID==lk_geoid) %>% pull(max_id) %>% as.integer()
-gd_id <- cluster_props %>% filter(GEOID==gd_geoid) %>% pull(max_id) %>% as.integer()
-vl_id <- cluster_props %>% filter(GEOID==vl_geoid) %>% pull(max_id) %>% as.integer()
-bps_id <- cluster_props %>% filter(GEOID==bps_geoid) %>% pull(max_id) %>% as.integer()
+chi_cluster_correspondence <- chi_cluster_correspondence %>% arrange(cluster)
 
 # construct color mappings
-known_ids <- c(lk_id, gd_id, vl_id)
-known_cols <- c(lk_col, gd_col, vl_col)
-col_mapping <- data.frame(known_ids, known_cols)
-colnames(col_mapping) <- c("max_id", "color")
-# show_col(col_mapping$color %>% as.character(), labels=FALSE)
+cor_cols <- c(bps_col, nc_col, gd_col, vl_col, fch_col)
+chi_cluster_correspondence$color <- cor_cols
+# show_col(chi_cluster_correspondence$color %>% as.character(), labels=FALSE)
 
 turf_cols <- c(gd_col, bps_col, lk_col, vl_col, other_col)
 col_mapping_turf <- data.frame(reduced_gangs, turf_cols)
@@ -98,16 +94,16 @@ col_mapping_turf$owner <- as.character(col_mapping_turf$owner)
 # show_col(col_mapping_turf$color %>% as.character())
 
 # merge and construct map
-cluster_props_df_col <- left_join(cluster_props, col_mapping)
+cluster_props_df_col <- left_join(cluster_props, chi_cluster_correspondence, by=c("max_id"="cluster"))
 cluster_props_df_col$color_a <- add.alpha(cluster_props_df_col$color, cluster_props_df_col$alpha)
 cluster_props_geo <- geo_join(tracts, cluster_props_df_col, "GEOID", "GEOID")
 # show_col(clusters_df_col$color, labels=FALSE)
 # show_col(clusters_df_col$color_a, labels=FALSE)
 
-cluster_binary <- cluster_binary %>% filter(cluster!=nc)
-cluster_binary$cluster <- ifelse(cluster_binary$cluster > nc, cluster_binary$cluster-1, cluster_binary$cluster)
+# cluster_binary <- cluster_binary %>% filter(cluster!=nc)
+# cluster_binary$cluster <- ifelse(cluster_binary$cluster > nc, cluster_binary$cluster-1, cluster_binary$cluster)
 
-cluster_binary_df_col <- left_join(cluster_binary, col_mapping, by=c("cluster"="max_id"))
+cluster_binary_df_col <- left_join(cluster_binary, chi_cluster_correspondence)
 cluster_binary_df_col$color <- cluster_binary_df_col$color %>% as.character()
 cluster_binary_geo <- geo_join(tracts, cluster_binary_df_col, "GEOID", "GEOID")
 

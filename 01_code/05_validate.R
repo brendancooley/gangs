@@ -74,9 +74,10 @@ cluster_binary$assignment <- permn_results[[1]]
 # table(cluster_binary$assignment)
 
 cluster_binary <- cluster_binary %>% left_join(labels, by=c("assignment"="gang_id"))
-cluster_binary %>% select(cluster, assignment, owner) %>% unique()
+cluster_correspondence <- cluster_binary %>% select(cluster, owner) %>% unique()
 
-# NOTES
-# for metric, do this on every bootstrap iteration
-# but how to present map?
-# check Jhat estimate...argmax is going to return wrong number with python indexing
+write_csv(cluster_correspondence, chi_cluster_correspondence_path)
+
+
+# think about how to do this and present results matching on every bootstrap iteration
+# do we fit the kings sometimes and four hustlers on others?

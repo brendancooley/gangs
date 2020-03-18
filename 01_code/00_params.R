@@ -104,6 +104,7 @@ P_sorted_path <- paste0(results_city_period_path, "P_sorted.csv")
 Bhat_mean_path <- paste0(bootstrap_path, "Bhat_mean.csv")
 cluster_props_path <- paste0(bootstrap_path, "cluster_props.csv")
 cluster_binary_path <- paste0(bootstrap_path, "cluster_binary.csv")
+chi_cluster_correspondence_path <- paste0(output_path, "cluster_correspondence.csv")
 
 # figures
 
@@ -131,6 +132,7 @@ vl_col <- "#e3052a"
 gd_col <- "#3794d7"
 lk_col <- "#d3cb1c"
 bps_col <- "#8e178b"
+fch_col <- "#88540b"  # four corner huslters
 other_col <- "#C0C0C0"
 nc_col <- "#ffffff"
 
