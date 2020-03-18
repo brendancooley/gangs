@@ -1,11 +1,12 @@
 ### SETUP ###
 
 rm(list = ls())
+# invisible(lapply(paste0('package:', names(sessionInfo()$otherPkgs)), detach, character.only=TRUE, unload=TRUE))
 source("00_params.R")
 source("helpers.R")
 
 libs <- c("tidyverse", "sp", "rgdal", "rgeos", "maptools", "tigris", 
-          "leaflet", "leaflet.extras", "lubridate", "spdep", "sf", "rgeos")
+          "leaflet", "leaflet.extras", "lubridate", "spdep", "sf")
 ipak(libs)
 
 tracts <- readOGR(tracts_path)
@@ -20,9 +21,9 @@ gang_correspondence <- read_csv(gang_correspondence_path, col_names=FALSE)
 colnames(gang_correspondence) <- c("old_name", "new_name")
 
 # assign tracts to gangs
+# gang.maps <- sf::as_Spatial(gang.maps)
 gang.maps <- as(gang.maps, 'Spatial') #Transform to an SP object too
-# city.blocks <- tracts(17, county = 031, year = 2016) #FOR TRACTS
-gang.maps <- spTransform(gang.maps, proj4string(tracts))
+gang.maps <- spTransform(gang.maps, CRSobj=proj4string(tracts))
 
 # merge gang polygons
 for (i in unique(gang.maps$gang)) {
@@ -63,6 +64,8 @@ gang_area_means <- gang.maps@data %>% as_tibble() %>% group_by(gang) %>% summari
 
 # export
 gang_area_means %>% write_csv(paste0(gang_territory_path, "gang_area_means.csv"))
+major_gangs <- gang_area_means$gang[1:gangs_V]
+write_csv(major_gangs %>% as.data.frame(), paste0(gang_territory_path, "major_gangs.csv"), col_names=FALSE)
 
 # construct ownership matrices over tracts
 ownership <- list()
@@ -101,10 +104,10 @@ for (m in bruhn_sy:bruhn_ey) {
       }
     }
     print(i)
-    ownership[[m]] <- ownership_y
     # write to csv
-    write_csv(ownership[[m]] %>% as.data.frame(), paste0(gang_territory_path, m, ".csv"), col_names=FALSE)
   }
+  ownership[[m]] <- ownership_y
+  write_csv(ownership[[m]] %>% as.data.frame(), paste0(gang_territory_path, m, ".csv"), col_names=FALSE)
 }
 
 write_csv(geoids %>% as.data.frame(), paste0(gang_territory_path, "geoids.csv"), col_names=FALSE)  # columns

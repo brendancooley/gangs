@@ -20,7 +20,7 @@ for (i in bruhn_sy:bruhn_ey) {
 geoids <- read_csv(paste0(gang_territory_path, "geoids.csv"), col_names=FALSE)
 gang_names <- read_csv(paste0(gang_territory_path, "gang.names.csv"), col_names=FALSE)
 
-cluster_binary <- read_csv(cluster_binary_path)
+major_gangs <- read_csv(paste0(gang_territory_path, "major_gangs.csv"), col_names=FALSE) %>% pull(.)
 
 ### CLEAN ###
 
@@ -35,45 +35,31 @@ ownership_mean$GEOID <- geoids_vec
 ownership_mean <- ownership_mean %>% select(GEOID, everything())
 
 ownership_mean_long <- ownership_mean %>% pivot_longer(-GEOID, names_to="gang", values_to="share")
-turf_size <- ownership_mean_long %>% group_by(gang) %>% summarise(turf=sum(share)) %>% arrange(desc(turf))
-gang_order <- turf_size$gang
+# turf_size <- ownership_mean_long %>% group_by(gang) %>% summarise(turf=sum(share)) %>% arrange(desc(turf))
+# turf_size %>% print(n=100)
+# gang_order <- turf_size$gang
 
-ownership_mean <- ownership_mean %>% select(GEOID, gang_order)
+# subset to major gangs
+ownership_mean_long <- ownership_mean_long %>% filter(gang %in% major_gangs)
+
+ownership_mean <- ownership_mean_long %>% pivot_wider(id_cols=c("GEOID", "gang"), names_from="gang", values_from="share")
+# ownership_mean <- ownership_mean %>% select(GEOID, gang_order)
 
 write_csv(ownership_mean, turf_shares_path)
 
 ### CONVERT TO BINARY OWNERSHIP MATRICES ###
 
-ownership_all <- ownership_mean %>% select(-GEOID) %>% rowSums()
-ownership_all <- ifelse(ownership_all > 1, 1, ownership_all)
-ownership_mean$peaceful <- 1 - ownership_all
+# ownership_all <- ownership_mean %>% select(-GEOID) %>% rowSums()
+# ownership_all <- ifelse(ownership_all > 1, 1, ownership_all)
+# ownership_mean$peaceful <- 1 - ownership_all
 
 owner_id <- ownership_mean %>% select(-GEOID) %>% apply(1, function(x) which.max(x))
+owner_frac <- ownership_mean %>% select(-GEOID) %>% apply(1, function(x) max(x))
 names <- setdiff(colnames(ownership_mean), "GEOID")
 owner <- names[owner_id]
-ownership_binary <- data.frame(ownership_mean$GEOID, owner) %>% as_tibble()
-colnames(ownership_binary) <- c("GEOID", "owner")
+ownership_binary <- data.frame(ownership_mean$GEOID, owner, owner_frac) %>% as_tibble()
+colnames(ownership_binary) <- c("GEOID", "owner", "owner_prop")
+ownership_binary$owner <- ownership_binary$owner %>% as.character()
+ownership_binary$owner <- ifelse(ownership_binary$owner_prop < gang_tract_thres, "peaceful", ownership_binary$owner)
 
 write_csv(ownership_binary, turf_binary_path)
-
-### METRICS ###
-
-gangs_major <- colnames(ownership_mean[2:7])
-ownership_binary$owner <- as.character(ownership_binary$owner)
-ownership_binary$owner <- ifelse(ownership_binary$owner %in% c(gangs_major, "peaceful"), ownership_binary$owner, "other")
-
-owners_all <- ownership_binary %>% pull(owner) %>% unique()
-labels <- data.frame(owners_all, seq(1, length(owners_all)))
-colnames(labels) <- c("owner", "gang_id")
-
-ownership_binary <- ownership_binary %>% left_join(labels) %>% arrange(GEOID)
-cluster_binary <- cluster_binary %>% arrange(GEOID)
-
-permn_results <- permute_clusters(cluster_binary$cluster, ownership_binary$gang_id)
-cluster_binary$assignment <- permn_results[[1]]
-# table(cluster_binary$assignment)
-
-cluster_binary <- cluster_binary %>% left_join(labels, by=c("assignment"="gang_id"))
-cluster_correspondence <- cluster_binary %>% select(cluster, owner) %>% unique()
-
-write_csv(cluster_correspondence, chi_cluster_correspondence_path)

@@ -54,5 +54,6 @@ permute_clusters <- function(clusters_i, clusters_base) {
   clusters <- permutations_c[,which.min(Loss)]
   labels <- permutations[,which.min(Loss)]
   
-  return(list("clusters"=clusters, "labels"=labels))
+  # print(Loss)
+  return(list("clusters"=clusters, "labels"=labels, "loss"=min(Loss)))
 }
