@@ -24,6 +24,8 @@ L <- 100 # number of bootstrap iterations
 
 bruhn_sy <- 2004 # bruhn start year
 bruhn_ey <- 2017 # bruhn end year
+gang_tract_thres <- .1  # gang must own at least this percent of tract to gain binary ownership
+gangs_V <- 6  # number of gangs to include in validation
 
 ### PATHS ###
 
@@ -132,7 +134,9 @@ vl_col <- "#e3052a"
 gd_col <- "#3794d7"
 lk_col <- "#d3cb1c"
 bps_col <- "#8e178b"
-fch_col <- "#88540b"  # four corner huslters
+ts_col <- "#88540b"  # two six
+# sd_col <- "#2c493f"
+bd_col <- "#2c493f" # black disciples
 other_col <- "#C0C0C0"
 nc_col <- "#ffffff"
 

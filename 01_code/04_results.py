@@ -6,9 +6,12 @@ import time
 import os
 import pyreadr
 import matplotlib.pyplot as plt
+import warnings
 
 import helpers
 imp.reload(helpers)
+
+warnings.filterwarnings("ignore")
 
 paths = pyreadr.read_r('params.RData') # also works for Rds
 
@@ -98,8 +101,6 @@ np.savetxt(P_sorted_path, P_sorted, delimiter=',', fmt='%f')
 
 ### BOOTSTRAP ###
 
-# NOTE: need to keep J fixed for comparability purposes across bootstrap runs. Estimate this in first stage (above) and use throughout
-
 if runBootstrap == True:
 
     for i in range(1, L+1):
@@ -119,6 +120,11 @@ if runBootstrap == True:
 
         P = P0[np.sum(P0, axis=0)!=0,:]
         P = P[:,np.sum(P0, axis=0)!=0]
+        
+        M = helpers.est_J(P, V, S=25)
+        np.savetxt(J_bs_path + str(i) + ".csv", np.array([M]), delimiter=",")
+
+        print("J estimation complete, " + str(M-1) + " gangs detected")
 
         clusters, centroids = helpers.spect_clust(P, M, normalize=False, eig_plot=False)
         theta = np.eye(M)[clusters]
