@@ -117,7 +117,7 @@ cluster_binary_geo <- geo_join(tracts, cluster_binary_df_col, "GEOID", "GEOID")
 turf_shares_reduced_col <- left_join(turf_shares, col_mapping_turf)
 # turf_shares_reduced_col$owner
 turf_shares_reduced_col$color_a <- add.alpha(turf_shares_reduced_col$color, turf_shares_reduced_col$alpha)
-turf_shares_reduced_col %>% filter(owner=="black p stones")
+# turf_shares_reduced_col %>% filter(owner=="black p stones")
 turf_shares_geo <- geo_join(tracts, turf_shares_reduced_col, "GEOID", "GEOID")
 # show_col(turf_shares_reduced_col$color %>% as.character(), labels=FALSE)
 # show_col(turf_shares_reduced_col$color_a, labels=FALSE)

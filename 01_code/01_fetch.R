@@ -139,7 +139,7 @@ for (i in years) {
                     "two.or.more.including.some.other.and.three.or.more")
   
   #Pulling up black/african american table to get total identifying as black in a tract
-  black <- acs.fetch(endyear = 2016, span = 5, geography = geo,
+  black <- acs.fetch(endyear = i, span = 5, geography = geo,
                      table.number = c("B02009"), col.names = "pretty")
   black_df <- data.frame(paste0(str_pad(race@geography$state, 2, "left", pad="0"),
                                 str_pad(race@geography$county, 3, "left", pad="0"),
@@ -150,7 +150,7 @@ for (i in years) {
   names(black_df)<-c("GEOID", "black")
   
   #Pulling up hispanic table (not included in race table)
-  latino <- acs.fetch(endyear = 2016, span = 5, geography = geo,
+  latino <- acs.fetch(endyear = i, span = 5, geography = geo,
                       table.number = c("B03003"), col.names = "pretty")
   latino_df <- data.frame(paste0(str_pad(race@geography$state, 2, "left", pad="0"),
                                  str_pad(race@geography$county, 3, "left", pad="0"),
@@ -165,9 +165,11 @@ for (i in years) {
   ethnicity$percentage.black <- ethnicity$black/ethnicity$total
   ethnicity$percentage.latino <- ethnicity$latino/ethnicity$total
   
+  ethnicity <- ethnicity %>% as_tibble()
   ethnicity <- ethnicity %>% filter(GEOID %in% chi_tracts_ids)
   
-  income_df <- income_df %>% left_join(ethnicity)
+  income_df <- income_df %>% left_join(ethnicity, by="GEOID")
+  income_df %>% select(percentage.black, percentage.latino)
   
   write_csv(income_df, paste0(covariates_path, i, ".csv"))
   
