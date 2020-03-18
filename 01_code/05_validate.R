@@ -77,7 +77,3 @@ cluster_binary <- cluster_binary %>% left_join(labels, by=c("assignment"="gang_i
 cluster_correspondence <- cluster_binary %>% select(cluster, owner) %>% unique()
 
 write_csv(cluster_correspondence, chi_cluster_correspondence_path)
-
-
-# think about how to do this and present results matching on every bootstrap iteration
-# do we fit the kings sometimes and four hustlers on others?
