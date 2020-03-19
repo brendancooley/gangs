@@ -1,6 +1,6 @@
 ### SETUP ###
 
-rm(list = ls())
+# rm(list = ls())
 # invisible(lapply(paste0('package:', names(sessionInfo()$otherPkgs)), detach, character.only=TRUE, unload=TRUE))
 source("../01_code/00_params.R")
 

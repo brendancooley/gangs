@@ -129,7 +129,10 @@ for (i in 1:L) {
 }
 
 # cpd agreement
-write_csv(cpd_agreement_ratio_vec %>% as.data.frame(), cpd_agreement_ratio_path)
+write_csv(cpd_agreement_ratio_vec %>% as.data.frame(), cpd_agreement_ratio_path, col_names=FALSE)
+# cpd_agreement_ratio <- read_csv(cpd_agreement_ratio_path, col_names=FALSE) %>% pull()
+# quantile(cpd_agreement_ratio, c(.025, .975))
+
 
 cluster_props <- apply(clustersM, 1, function(x) table(factor(x, levels=owners_all))/L)
 cluster_props <- t(cluster_props) %>% as_tibble()
@@ -169,4 +172,4 @@ for (i in 1:10000) {
   # print(sum(sample(cpd_turf_gangs_all$owner, replace=F) != cpd_turf_gangs_all$owner) / nrow(cpd_turf_gangs_all))
 }
 
-write_csv(sample_agreement %>% mean() %>% as.data.frame(), sample_agreement_ratio_path)
+write_csv(sample_agreement %>% mean() %>% as.data.frame(), sample_agreement_ratio_path, col_names=FALSE)
