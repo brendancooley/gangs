@@ -108,6 +108,7 @@ cluster_props_path <- paste0(bootstrap_path, "cluster_props.csv")
 cluster_binary_path <- paste0(bootstrap_path, "cluster_binary.csv")
 
 cpd_agreement_ratio_path <- paste0(results_path, "cpd_agreement_ratio.csv")
+sample_agreement_ratio_path <- paste0(results_path, "sample_agreement_ratio.csv")
 
 # figures
 

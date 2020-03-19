@@ -129,7 +129,7 @@ for (i in 1:L) {
 }
 
 # cpd agreement
-write_csv(cpd_agreement_ratio_vec %>% as.data.frame(), cpd_agreement_ratio_vec)
+write_csv(cpd_agreement_ratio_vec %>% as.data.frame(), cpd_agreement_ratio_path)
 
 cluster_props <- apply(clustersM, 1, function(x) table(factor(x, levels=owners_all))/L)
 cluster_props <- t(cluster_props) %>% as_tibble()
@@ -159,12 +159,14 @@ write_csv(cluster_binary, cluster_binary_path)
 
 Bhat_mean <- apply(simplify2array(BhatL), 1:2, mean, na.rm=T)
 
-write_csv(Bhat_mean %>% as.data.frame(), Bhat_mean_path, col_names=FALSE)
+write_csv(Bhat_mean %>% as.data.frame(), Bhat_mean_path)
 
 
 ### LOSS BASELINE ###
 
-for (i in 1:100) {
-  print(sum(sample(cpd_turf_binary$owner, replace=F) != cpd_turf_binary$owner) / nrow(clusters_i_df))
-  print(sum(sample(cpd_turf_gangs_all$owner, replace=F) != cpd_turf_gangs_all$owner) / nrow(cpd_turf_gangs_all))
+for (i in 1:10000) {
+  sample_agreement <- sum(sample(cpd_turf_binary$owner, replace=F) == cpd_turf_binary$owner) / nrow(clusters_i_df)
+  # print(sum(sample(cpd_turf_gangs_all$owner, replace=F) != cpd_turf_gangs_all$owner) / nrow(cpd_turf_gangs_all))
 }
+
+write_csv(sample_agreement %>% mean() %>% as.data.frame(), sample_agreement_ratio_path)
