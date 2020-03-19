@@ -74,7 +74,7 @@ GEOID,owner
 17031051100,peaceful
 17031051200,peaceful
 17031051300,peaceful
-17031051400,peaceful
+17031051400,gangster disciples
 17031060100,peaceful
 17031060200,peaceful
 17031060300,peaceful
@@ -166,7 +166,7 @@ GEOID,owner
 17031130200,peaceful
 17031130300,peaceful
 17031140100,peaceful
-17031140200,gangster disciples
+17031140200,black p stones
 17031140301,peaceful
 17031140302,peaceful
 17031140400,peaceful
@@ -239,7 +239,7 @@ GEOID,owner
 17031200402,black p stones
 17031210100,peaceful
 17031210400,peaceful
-17031210501,peaceful
+17031210501,gangster disciples
 17031210502,gangster disciples
 17031210601,peaceful
 17031210602,peaceful
@@ -271,10 +271,10 @@ GEOID,owner
 17031230100,peaceful
 17031230200,peaceful
 17031230300,peaceful
-17031230400,peaceful
+17031230400,gangster disciples
 17031230500,gangster disciples
 17031230600,gangster disciples
-17031230700,black p stones
+17031230700,gangster disciples
 17031230800,peaceful
 17031230900,vice lords
 17031231100,black p stones
@@ -300,7 +300,7 @@ GEOID,owner
 17031242300,peaceful
 17031242400,peaceful
 17031242500,black p stones
-17031242600,gangster disciples
+17031242600,black p stones
 17031242700,peaceful
 17031242800,black p stones
 17031242900,peaceful
@@ -315,7 +315,7 @@ GEOID,owner
 17031250400,vice lords
 17031250500,peaceful
 17031250600,vice lords
-17031250700,black p stones
+17031250700,vice lords
 17031250800,black p stones
 17031251000,gangster disciples
 17031251100,vice lords
@@ -372,13 +372,13 @@ GEOID,owner
 17031301100,vice lords
 17031301200,gangster disciples
 17031301600,gangster disciples
-17031301701,peaceful
+17031301701,vice lords
 17031301702,gangster disciples
 17031301801,gangster disciples
 17031301802,gangster disciples
 17031301803,vice lords
 17031310200,peaceful
-17031310300,vice lords
+17031310300,gangster disciples
 17031310400,gangster disciples
 17031310500,gangster disciples
 17031310600,gangster disciples
@@ -395,10 +395,10 @@ GEOID,owner
 17031340500,peaceful
 17031340600,peaceful
 17031350100,peaceful
-17031350400,black p stones
+17031350400,gangster disciples
 17031351000,peaceful
-17031351100,black p stones
-17031351400,peaceful
+17031351100,gangster disciples
+17031351400,gangster disciples
 17031351500,peaceful
 17031360200,gangster disciples
 17031380100,gangster disciples
@@ -450,7 +450,7 @@ GEOID,owner
 17031430600,gangster disciples
 17031430700,black p stones
 17031430800,gangster disciples
-17031430900,peaceful
+17031430900,gangster disciples
 17031431200,gangster disciples
 17031431301,gangster disciples
 17031431302,black p stones
@@ -463,15 +463,15 @@ GEOID,owner
 17031440600,gangster disciples
 17031440700,gangster disciples
 17031440800,black p stones
-17031440900,black p stones
+17031440900,gangster disciples
 17031450300,gangster disciples
 17031460100,gangster disciples
 17031460200,gangster disciples
-17031460301,black p stones
+17031460301,gangster disciples
 17031460302,gangster disciples
 17031460400,black p stones
-17031460500,vice lords
-17031460600,peaceful
+17031460500,gangster disciples
+17031460600,gangster disciples
 17031460700,black p stones
 17031461000,peaceful
 17031470100,gangster disciples
@@ -505,7 +505,7 @@ GEOID,owner
 17031520400,peaceful
 17031520500,peaceful
 17031520600,peaceful
-17031530100,gangster disciples
+17031530100,black p stones
 17031530200,black p stones
 17031530300,gangster disciples
 17031530400,peaceful
@@ -555,7 +555,7 @@ GEOID,owner
 17031611200,black p stones
 17031611300,gangster disciples
 17031611400,gangster disciples
-17031611500,black p stones
+17031611500,gangster disciples
 17031611600,gangster disciples
 17031611700,black p stones
 17031611800,gangster disciples
@@ -572,7 +572,7 @@ GEOID,owner
 17031630400,gangster disciples
 17031630500,gangster disciples
 17031630800,gangster disciples
-17031630900,peaceful
+17031630900,gangster disciples
 17031640100,peaceful
 17031640300,peaceful
 17031640400,peaceful
@@ -586,7 +586,7 @@ GEOID,owner
 17031650302,peaceful
 17031650400,black p stones
 17031650500,peaceful
-17031660301,peaceful
+17031660301,gangster disciples
 17031660302,gangster disciples
 17031660400,gangster disciples
 17031660500,peaceful
@@ -600,7 +600,7 @@ GEOID,owner
 17031670200,gangster disciples
 17031670300,gangster disciples
 17031670400,black p stones
-17031670500,black p stones
+17031670500,gangster disciples
 17031670600,gangster disciples
 17031670700,gangster disciples
 17031670800,gangster disciples
@@ -616,8 +616,8 @@ GEOID,owner
 17031672000,gangster disciples
 17031680500,vice lords
 17031680600,gangster disciples
-17031680900,gangster disciples
-17031681000,vice lords
+17031680900,black p stones
+17031681000,gangster disciples
 17031681100,gangster disciples
 17031681200,gangster disciples
 17031681300,gangster disciples
@@ -667,7 +667,7 @@ GEOID,owner
 17031730202,gangster disciples
 17031730300,gangster disciples
 17031730400,black p stones
-17031730500,vice lords
+17031730500,gangster disciples
 17031730600,vice lords
 17031730700,vice lords
 17031740100,peaceful
@@ -752,7 +752,7 @@ GEOID,owner
 17031826500,peaceful
 17031830500,gangster disciples
 17031830600,peaceful
-17031830700,gangster disciples
+17031830700,black p stones
 17031830800,peaceful
 17031830900,peaceful
 17031831000,peaceful
@@ -789,16 +789,16 @@ GEOID,owner
 17031835000,gangster disciples
 17031835100,black p stones
 17031835200,peaceful
-17031835500,black p stones
+17031835500,gangster disciples
 17031835600,gangster disciples
 17031835700,peaceful
-17031835800,black p stones
+17031835800,vice lords
 17031835900,gangster disciples
 17031836000,gangster disciples
 17031836100,gangster disciples
 17031836200,peaceful
 17031836300,peaceful
-17031836400,gangster disciples
+17031836400,black p stones
 17031836500,peaceful
 17031836600,gangster disciples
 17031836700,vice lords
@@ -818,9 +818,9 @@ GEOID,owner
 17031838800,black p stones
 17031839000,peaceful
 17031839100,peaceful
-17031839200,peaceful
+17031839200,gangster disciples
 17031839500,peaceful
-17031839600,black p stones
+17031839600,gangster disciples
 17031839700,peaceful
 17031839800,peaceful
 17031839900,peaceful
@@ -834,7 +834,7 @@ GEOID,owner
 17031841000,peaceful
 17031841100,peaceful
 17031841200,vice lords
-17031841300,peaceful
+17031841300,gangster disciples
 17031841400,vice lords
 17031841500,vice lords
 17031841600,peaceful
@@ -842,8 +842,8 @@ GEOID,owner
 17031841800,black p stones
 17031841900,peaceful
 17031842000,peaceful
-17031842100,black p stones
-17031842200,black p stones
+17031842100,gangster disciples
+17031842200,gangster disciples
 17031842300,peaceful
 17031842400,vice lords
 17031842500,gangster disciples

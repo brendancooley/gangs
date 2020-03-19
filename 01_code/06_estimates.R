@@ -53,9 +53,9 @@ clusters_base_df <- clusters_base_df %>% arrange(GEOID)
 
 ### GATHER BOOTSTRAP ESTIMATES ###
 
-L <- 90
 clustersM <- matrix(nrow=nrow(clusters_base_df), ncol=L)
 BhatL <- list()
+cpd_agreement_ratio_vec <- c()
 
 for (i in 1:L) {
   
@@ -85,27 +85,28 @@ for (i in 1:L) {
   permn_results <- permute_clusters(clusters_i_df$cluster, cpd_turf_binary$owner)
   # print(permn_results[[1]] %>% unique())
   clusters_i_df$assignment <- permn_results[[1]]
-  print(table(clusters_i_df$assignment))
+  # print(table(clusters_i_df$assignment))
   
   # pc_out <- permute_clusters(clusters_i_df$cluster, clusters_base_df$cluster)
   # clusters_i_df$cluster <- pc_out["clusters"][[1]]
   # clustersM[,i] <- clusters_i_df$cluster
   labels <- permn_results["labels"][[1]]
-  loss_frac_all <- permn_results[["loss"]] / nrow(clusters_i_df)
-  print("loss all:")
-  print(loss_frac_all)
+  cpd_agreement_ratio_i <- 1 - permn_results[["loss"]] / nrow(clusters_i_df)
+  cpd_agreement_ratio_vec <- c(cpd_agreement_ratio_vec, cpd_agreement_ratio_i)
+  # print("loss all:")
+  # print(loss_frac_all)
   
   clusters_gangs_all_i <- clusters_i_df %>% filter(GEOID %in% cpd_turf_gangs_all$GEOID)
   loss_frac_gangs_all <- sum(clusters_gangs_all_i$assignment != cpd_turf_gangs_all$owner) / nrow(cpd_turf_gangs_all) 
-  print("loss gangs:")
-  print(loss_frac_gangs_all)
+  # print("loss gangs:")
+  # print(loss_frac_gangs_all)
   
   clusters_gangs_i <- clusters_i_df %>% filter(assignment!="peaceful")
   gangs_i <- clusters_gangs_i$assignment %>% unique()
   cpd_gangs_i <- cpd_turf_binary %>% filter(GEOID %in% clusters_gangs_i$GEOID)
   loss_frac_gangs_i <- sum(clusters_gangs_i$assignment != cpd_gangs_i$owner) / nrow(clusters_gangs_i)
-  print("loss gangs i:")
-  print(loss_frac_gangs_i)
+  # print("loss gangs i:")
+  # print(loss_frac_gangs_i)
   
   clustersM[,i] <- clusters_i_df$assignment
   
@@ -123,11 +124,12 @@ for (i in 1:L) {
   
   # Bhat_i <- Bhat_i[labels, labels]
   
-  BhatL[[i]] <- Bhat_i
+  BhatL[[i]] <- Bhat_mat
   
 }
 
-# table(clustersM)
+# cpd agreement
+write_csv(cpd_agreement_ratio_vec %>% as.data.frame(), cpd_agreement_ratio_vec)
 
 cluster_props <- apply(clustersM, 1, function(x) table(factor(x, levels=owners_all))/L)
 cluster_props <- t(cluster_props) %>% as_tibble()
@@ -153,16 +155,11 @@ table(cluster_binary$owner)
 cluster_binary <- cluster_binary %>% select(-owner_prop)
 write_csv(cluster_binary, cluster_binary_path)
 
-print("hello")
-
 ### B_HAT ###
 
-# Bhat_mean <- Reduce("+", BhatL) / length(BhatL)
+Bhat_mean <- apply(simplify2array(BhatL), 1:2, mean, na.rm=T)
 
-# write_csv(Bhat_mean %>% as.data.frame(), Bhat_mean_path, col_names=FALSE)
-
-
-
+write_csv(Bhat_mean %>% as.data.frame(), Bhat_mean_path, col_names=FALSE)
 
 
 ### LOSS BASELINE ###
@@ -171,7 +168,3 @@ for (i in 1:100) {
   print(sum(sample(cpd_turf_binary$owner, replace=F) != cpd_turf_binary$owner) / nrow(clusters_i_df))
   print(sum(sample(cpd_turf_gangs_all$owner, replace=F) != cpd_turf_gangs_all$owner) / nrow(cpd_turf_gangs_all))
 }
-
-# two more metrics
-  # 2) gangs overall
-  # 3) among gangs we match to
