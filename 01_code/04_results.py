@@ -48,6 +48,7 @@ clusters_bs_path = paths['clusters_bs_path'].iloc[0, 0]
 nc_bs_path = paths['nc_bs_path'].iloc[0, 0]
 J_bs_path = paths['J_bs_path'].iloc[0, 0]
 Bhat_bs_path = paths['Bhat_bs_path'].iloc[0, 0]
+eig_bs_path = paths['eig_bs_path'].iloc[0, 0]
 
 V = 3 # number of folds for cross validation
 
@@ -120,6 +121,10 @@ if runBootstrap == True:
 
         P = P0[np.sum(P0, axis=0)!=0,:]
         P = P[:,np.sum(P0, axis=0)!=0]
+        
+        # eigenvalues
+        lbda, U = np.linalg.eigh(P)
+        np.savetxt(eig_bs_path + str(i) + ".csv", lbda, delimiter=",")
         
         M = helpers.est_J(P, V, S=25)
         np.savetxt(J_bs_path + str(i) + ".csv", np.array([M]), delimiter=",")

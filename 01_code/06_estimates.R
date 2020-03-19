@@ -57,6 +57,8 @@ clustersM <- matrix(nrow=nrow(clusters_base_df), ncol=L)
 BhatL <- list()
 cpd_agreement_ratio_vec <- c()
 J_estimates_vec <- c()
+label_counts <- data.frame(owners_all, 0) %>% as_tibble()
+colnames(label_counts) <- c("owner", "count")
 
 for (i in 1:L) {
   
@@ -85,7 +87,12 @@ for (i in 1:L) {
   nc_i <- nc_i + 1
   
   permn_results <- permute_clusters(clusters_i_df$cluster, cpd_turf_binary$owner)
-  # print(permn_results[[1]] %>% unique())
+  
+  labels_in <- permn_results[[1]] %>% unique()
+  for (j in labels_in) {
+    label_counts$count[label_counts$owner==j] <- label_counts$count[label_counts$owner==j] + 1
+  }
+  
   clusters_i_df$assignment <- permn_results[[1]]
   # print(table(clusters_i_df$assignment))
   
@@ -133,6 +140,9 @@ for (i in 1:L) {
 # J
 write_csv(J_estimates_vec %>% as.data.frame(), J_all_path, col_names=FALSE)
 # J_estimates_vec <- J_estimates_vec %>% sort()
+
+# label counts
+write_csv(label_counts, label_counts_path)
 
 
 # cpd agreement

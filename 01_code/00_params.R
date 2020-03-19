@@ -1,11 +1,3 @@
-# grab functions
-
-helperPath <- "../source/R/"
-helperFiles <- list.files(helperPath)
-for (i in helperFiles) {
-  source(paste0(helperPath, i))
-}
-
 # parameters
 
 aggregation <- "month"
@@ -101,6 +93,7 @@ Bhat_path <- paste0(results_city_period_path, "Bhat.csv")
 Bhat_bs_path <- paste0(bootstrap_path, "Bhat/")
 
 eig_path <- paste0(results_city_period_path, "eig.csv")
+eig_bs_path <- paste0(bootstrap_path, "eig/")
 P_path <- paste0(results_city_period_path, "P.csv")
 P_sorted_path <- paste0(results_city_period_path, "P_sorted.csv")
 
@@ -108,6 +101,7 @@ Bhat_mean_path <- paste0(bootstrap_path, "Bhat_mean.csv")
 cluster_props_path <- paste0(bootstrap_path, "cluster_props.csv")
 cluster_binary_path <- paste0(bootstrap_path, "cluster_binary.csv")
 
+label_counts_path <- paste0(results_path, "label_counts.csv")
 cpd_agreement_ratio_path <- paste0(results_path, "cpd_agreement_ratio.csv")
 sample_agreement_ratio_path <- paste0(results_path, "sample_agreement_ratio.csv")
 
@@ -149,6 +143,15 @@ if (code_dir %in% strsplit(getwd(), "/")[[1]]) {
   save.image('params.Rdata')
 }
 
+# grab functions
+
+helperPath <- "../source/R/"
+helperFiles <- list.files(helperPath)
+for (i in helperFiles) {
+  source(paste0(helperPath, i))
+}
+
+
 # make directory structure
 
 mkdir(data_path)
@@ -167,3 +170,4 @@ mkdir(clusters_bs_path)
 mkdir(nc_bs_path)
 mkdir(J_bs_path)
 mkdir(Bhat_bs_path)
+mkdir(eig_bs_path)

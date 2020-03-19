@@ -1,6 +1,8 @@
 ```{r, echo=FALSE, warning=FALSE, message=FALSE, results='hide'}
 
 source("../01_code/00_params.R")
+libs <- c("knitr", "kableExtra", "stringi")
+ipak(libs)
 
 J_all <- read_csv(J_all_path, col_names=FALSE) %>% pull(.)
 K <- J_all - 1
@@ -9,9 +11,25 @@ K <- K %>% sort()
 K_lower <- K[3]
 K_upper <- K[97]
 
+label_counts <- read_csv(label_counts_path) %>% filter(owner != "peaceful") %>% arrange(desc(count))
+label_counts$count <- label_counts$count / L
+colnames(label_counts) <- c("Gang", "Proportion")
+label_counts$Gang <- stri_trans_totitle(label_counts$Gang)
+
 ```
 
-We detect the presence of `r K` gangs in Chicago. Figure \ref{fig:scree} displays the `r screeN` eigenvalues of the covariance matrix of shootings across census tracts. The first several eigenvalues stand out from the remainder, indicative of the presence of unique clusters of gang activity in the data.
+The data cleaning procedure discussed above produces a $N \times T$ matrix of homicide and non-fatal shooting counts for each census tract-month. We construct the covariance matrix $A$ from the rows of this matrix, where each entry $a_{ij}$ stores the covariance in shootings between census tracts $i$ and $j$ over our sample period.^[Some districts experience no shootings over the sample period. We exclude these from the estimation and assign them to the peaceful cluster ex-post.] To quantify the uncertainty surrounding our estimates, we sample the set of homicides with replacement `r L` times, reconstruct the count and covariance matrices, and re-run our estimators on the bootstrapped data. This produces sets of bootstrapped estimates of the number of gangs $K$ and associated territorial partitions, $\Theta$. For purposes of validation, we match each of these bootstrapped estimates to the CPD classifications by permuting their cluster labels to most-closely match those of the CPD. This procedure allows for the possibility that different bootstrap iterations return different sets of matched gangs.^[The procedure also leaves open the possibility that we disagree with the CPD on the identity of the non-gang cluster. In practice, we agree on this quantity in all bootstrap iterations.] For purposes of presentation, we aggregate our census tract labels and conflict intensity estimates at the matched-gang level, meaning that the set of gangs for which we assign territory in *some* bootstrap iteration is larger than any bootstrapped estimate for the number of gangs. Uncertainty intervals presented below correspond to 95 percent confidence intervals unless otherwise noted.
+
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+
+kable(label_counts, "latex", booktabs=T, caption="Matched-Gang Counts \\label{tab:label_counts}") %>%
+	kable_styling(latex_options = c("striped"))
+
+```
+
+We detect the presence of `r K_lower`-`r K_upper` gangs in Chicago. Table \ref{tab:label_counts} reports the frequency with which each gang is included in the analysis. 
+
+Figure \ref{fig:scree} displays the `r screeN` eigenvalues of the covariance matrix of shootings across census tracts. The first several eigenvalues stand out from the remainder, indicative of the presence of unique clusters of gang activity in the data.
 
 ```{r, echo=FALSE, warning=FALSE, message=FALSE, fig.cap = "Leading eigenvalues of the matrix of covariances in shootings across districs. Dashed line is drawn through the $J$th eigenvalue. Eigenvectors associated with values above this line are used in the clustering analysis. \\label{fig:scree}", fig.height=4, dpi=300, fig.pos="t"}
 
@@ -46,7 +64,3 @@ source("../05_figs/Bhat.R")
 Bhat_hm
 
 ```
-
-## Validation on Chicago Police Department Gang Maps
-
-*In progress...*

@@ -55,6 +55,7 @@ clean_n <- crimes_clean %>% filter(narcotics==1, arrest==1) # narcotics arrests
 
 all_h <- agg_crimes(clean_h, "all")
 all_s <- agg_crimes(clean_s, "all")
+# all_s %>% arrange(count) %>% print(n=1000)
 all_n <- agg_crimes(clean_n, "all") 
 write_csv(all_h, tha_path)
 write_csv(all_s, tsa_path)

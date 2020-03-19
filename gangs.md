@@ -49,7 +49,7 @@ We estimate the model on the observed spatial covariance in homicides and non-fa
 
 We permute our most-likely census tract labels to best-approximate a smoothed (over time) map of gang territories and peaceful tracts produced by the CPD. We then compare our estimated partition to the CPD gang maps. In 95 percent of bootstrap iterations, 56.6-60.4 percent of our census tract labels agree with those of the CPD.^[These agreement ratios are constructed by permuting our labels to most-closely match those of the CPD.] Random permutations of the CPD's labels produce agreement in only 34.7 percent of cases.
 
-Methodologically, our paper is most closely related to the literature on stochastic block models (SBMs), starting with @Holland1983. These models partition actors (nodes) into communities who interact with one another in a Bernoulli process according to community-dyad-specific probabilities. Various methods have been developed for "community detection" -- estimating the underlying communities from observed interactions [@Copic2009; @Jin2015]. Like @Trebbi2019, we replace the binary matrices that describe these interactions with continuous spatial covariance matrices describing the likelihood that shootings occur in a pair of locations during the same period. The model of @Trebbi2019 is akin to a special case of the SBM in which actors only interact (commit acts of violence) with members of their own community. In our model, interactions occur both within and between the underyling communities (gangs in our case). 
+Methodologically, our paper is most closely related to the literature on stochastic block models (SBMs), starting with @Holland1983. These models partition actors (nodes) into communities who interact with one another in a Bernoulli process according to community dyad-specific probabilities. Various methods have been developed for "community detection" -- estimating the underlying communities from observed interactions [@Copic2009; @Jin2015]. Like @Trebbi2019, we replace the binary matrices that describe these interactions with continuous spatial covariance matrices describing the likelihood that shootings occur in a pair of locations during the same period. The model of @Trebbi2019 is akin to a special case of the SBM in which actors only interact (commit acts of violence) with members of their own community. In our model, interactions occur both within and between the underyling communities (gangs in our case). 
 
 We leverage "spectral" estimators developed in the statistics literature to estimate our model [@Luxberg2007; @Jin2015; @Lei2015; @Chen2018]. These estimators exploit the relationship between an eigen-decomposition of the spatial covariance matrix and the underlying parameters. In doing so, they render the estimation problem solvable via k-means clustering. @Lei2015 provide conditions under which these estimators are asymptotically consistent for the parameters of the SBM *in the number of nodes*. We are not aware of any papers studying the properties of these estimators, applied to the covariance matrix, in the number of *periods*. We estimate the number of gangs in operation using the cross-validation approach of @Chen2018, which iteratively estimates model parameters on rectangular subsets of the covariance matrix and predicts held-out covariances under different assumptions about the underlying number of communities.^[Here we also depart from the approach of @Trebbi2019, who employ permutation tests on the geographic proximity of within-community locations to estimate the number of communities. Given the strong non-convexity of gang territory in Chicago [@Bruhn2019], we sought a more flexible approach.]
 
@@ -253,7 +253,7 @@ Shootings in districts without gangs will exhibit no covariance in expectation w
 \end{equation}
 where $M^{(k)}$ is the $k$th row of $M$ and $\lVert M^{(k)} \rVert_2$ is the Euclidean vector norm. 
 
-As discussed in the previous section, our model differs slightly from the stochastic block model. Where we observe between district covariance matrix, these models instead work with a binomial matrix of interaction counts between nodes (districts). Efforts to prove the consistency of spectral estimators therefore derive asymptotics as the number of nodes grows large.^[@Lei2015, for example, show that the spectral estimator is approximately consistent for $\Theta$. As the number of groups grows large, the estimator misclassifies a vanishing proportion of nodes with probability approaching one.] Intuitively, the off-diagonal entries of our empirical covariance matrix converge to the off diagonal entries of $Q$ as $T$ grows large. In the limit, then $\tilde{U} \rightarrow \Theta X$ and K-means should not have trouble isolating distinct clusters in $\tilde{U}$. We rely on this heuristic for esimation, as in @Trebbi2019.
+As discussed in the previous section, our model differs slightly from the stochastic block model. Where we observe between district covariance matrix, these models instead work with a binomial matrix of interaction counts between nodes (districts). Efforts to prove the consistency of spectral estimators therefore derive asymptotics as the number of nodes grows large.^[@Lei2015, for example, show that the spectral estimator is approximately consistent for $\Theta$. As the number of groups grows large, the estimator misclassifies a vanishing proportion of nodes with probability approaching one.] Intuitively, the off-diagonal entries of our empirical covariance matrix converge to the off diagonal entries of $Q$ as $T$ grows large. In the limit, then $\tilde{U} \rightarrow \Theta X$ and K-means should not have trouble isolating distinct clusters in $\tilde{U}$. We rely on this heuristic for estimation, as in @Trebbi2019.
 
 ## Number of Gangs
 
@@ -313,13 +313,35 @@ An alternative set of approaches to estimating $J$ exploit the intuition discuss
 
 
 
-We detect the presence of 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 5, 5, 6 gangs in Chicago. Figure \ref{fig:scree} displays the 50 eigenvalues of the covariance matrix of shootings across census tracts. The first several eigenvalues stand out from the remainder, indicative of the presence of unique clusters of gang activity in the data.
+The data cleaning procedure discussed above produces a $N \times T$ matrix of homicide and non-fatal shooting counts for each census tract-month. We construct the covariance matrix $A$ from the rows of this matrix, where each entry $a_{ij}$ stores the covariance in shootings between census tracts $i$ and $j$ over our sample period.^[Some districts experience no shootings over the sample period. We exclude these from the estimation and assign them to the peaceful cluster ex-post.] To quantify the uncertainty surrounding our estimates, we sample the set of homicides with replacement 100 times, reconstruct the count and covariance matrices, and re-run our estimators on the bootstrapped data. This produces sets of bootstrapped estimates of the number of gangs $K$ and associated territorial partitions, $\Theta$. For purposes of validation, we match each of these bootstrapped estimates to the CPD classifications by permuting their cluster labels to most-closely match those of the CPD. This procedure allows for the possibility that different bootstrap iterations return different sets of matched gangs.^[The procedure also leaves open the possibility that we disagree with the CPD on the identity of the non-gang cluster. In practice, we agree on this quantity in all bootstrap iterations.] For purposes of presentation, we aggregate our census tract labels and conflict intensity estimates at the matched-gang level, meaning that the set of gangs for which we assign territory in *some* bootstrap iteration is larger than any bootstrapped estimate for the number of gangs. Table \ref{tab:label_counts} reports the frequency with which each gang is included in the analysis.
 
-![Leading eigenvalues of the matrix of covariances in shootings across districs. Dashed line is drawn through the $J$th eigenvalue. Eigenvectors associated with values above this line are used in the clustering analysis. \label{fig:scree}](figure/unnamed-chunk-15-1.png)
+\begin{table}
+
+\caption{\label{tab:unnamed-chunk-15}Matched-Gang Counts \label{tab:label_counts}}
+\centering
+\begin{tabular}[t]{lr}
+\toprule
+Gang & Proportion\\
+\midrule
+\rowcolor{gray!6}  Gangster Disciples & 1.00\\
+Vice Lords & 1.00\\
+\rowcolor{gray!6}  Black P Stones & 0.99\\
+Latin Kings & 0.16\\
+\rowcolor{gray!6}  Black Disciples & 0.11\\
+\addlinespace
+Two-Six & 0.05\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+
+We detect the presence of 3-4 gangs in Chicago. Figure \ref{fig:scree} displays the 50 eigenvalues of the covariance matrix of shootings across census tracts. The first several eigenvalues stand out from the remainder, indicative of the presence of unique clusters of gang activity in the data.
+
+![Leading eigenvalues of the matrix of covariances in shootings across districs. Dashed line is drawn through the $J$th eigenvalue. Eigenvectors associated with values above this line are used in the clustering analysis. \label{fig:scree}](figure/unnamed-chunk-16-1.png)
 
 These clusters are easily visualized by examining the permuted covariance matrix, the empirical equivalent to Figure \ref{fig:blocks}. This can be seen in Figure \ref{fig:block_hm}. Each square on the right panel highlights the districts controlled with a single gang, with the bottom right block corresponding to districts estimated to have no gang activity. Gang wars generate positive covariance in the off-block diagonal entries. Darker off-block-diagonal entries indicate more intense conflict between the gangs controlling the pairs of districts in question. 
 
-![The left panel shows the values of the unclustered covariance matrix. Darker values indicate higher tract-to-tract covariance in shootings. The permutes these entries in accordance with the estimated partition function. The black squares highlight covariances within a given gang's territory. The bottom right block corresponds to the districts estimated to have no gang activity. \label{fig:block_hm}](figure/unnamed-chunk-16-1.png)
+![The left panel shows the values of the unclustered covariance matrix. Darker values indicate higher tract-to-tract covariance in shootings. The permutes these entries in accordance with the estimated partition function. The black squares highlight covariances within a given gang's territory. The bottom right block corresponds to the districts estimated to have no gang activity. \label{fig:block_hm}](figure/unnamed-chunk-17-1.png)
 
 Figure \ref{fig:map} shows the distribution of gang territory in the Chicago. Like the distribution of shootings, gang activity is concentrated in the south and west of the city. Large tracts of the central and northern parts of the city are estimated to be devoid of gang activity. Gangs territories are somewhat locally compact, consistent with data published by the Chicago Police. However, some neighborhoods of the city are quite contested. All of the gangs we detect operate in both the southern and western of the city.
 
@@ -330,7 +352,7 @@ Figure \ref{fig:map} shows the distribution of gang territory in the Chicago. Li
 
 So far, we have focused on our results for the esimated partition function, $\hat{\pi}$. Our estimates for $\hat{B}$ describe the intensity of conflict between gangs in our sample. Figure \ref{fig:Bhat_hm} displays the magnitudes of these conflict intensities. 
 
-![Estimated inter-gang conflict intensities, $\hat{B}$, exempting non-gang occupied areas. Colors along the diagonal correspond to the gangs occupying the territories shown in Figure \ref{fig:map}. Darker grays indicate the corresponding gangs on the diagonal tend to experience more intense conflict with one another. \label{fig:Bhat_hm}](figure/unnamed-chunk-18-1.png)
+![Estimated inter-gang conflict intensities, $\hat{B}$, exempting non-gang occupied areas. Colors along the diagonal correspond to the gangs occupying the territories shown in Figure \ref{fig:map}. Darker grays indicate the corresponding gangs on the diagonal tend to experience more intense conflict with one another. \label{fig:Bhat_hm}](figure/unnamed-chunk-19-1.png)
 
 ## Validation on Chicago Police Department Gang Maps
 
