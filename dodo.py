@@ -63,7 +63,8 @@ def task_paper():
         }
 	yield {
     	'name': "writing paper...",
-    	'actions':["R --slave -e \"set.seed(100);knitr::knit('gangs.rmd')\"",
+    	'actions':["cd 06_sections/; R --slave -e \"set.seed(100);knitr::knit('abstract.rmd')\"; cd ..",
+    			   "R --slave -e \"set.seed(100);knitr::knit('gangs.rmd')\"",
                    "pandoc --template=templates/cooley-paper-template.latex --filter pandoc-citeproc -o gangs.pdf gangs.md"],
                    'verbosity': 2,
 	}

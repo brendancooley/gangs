@@ -9,7 +9,8 @@ author:
     - name: Noam Reich
       affiliation: Ph.D. Candidate, Department of Politics, Princeton University
 date: \today
-abstract: Street gangs are conjectured to engage in violent territorial competition. This competition can be difficult to study empirically as the number of gangs and the division of territory between them are usually unobserved to the analyst. However, traces of gang conflict manifest themselves in police and administrative data on violent crime. In this paper, we show that the frequency and location of shootings are sufficient statistics for the territorial partition under mild assumptions about the data generating processes for gang-related and non-gang related shootings. We then show how to estimate this territorial partition from a panel of geolocated shooting data. We apply our method to analyze the structure of gang territorial competition in Chicago using victim-based crime reports from the Chicago Police Department. The method reveals both the number of gangs in operation in Chicago and their territorial boundaries.
+abstract: |
+	| `r paste(readLines('06_sections/abstract.md'), collapse=' ')`
 thanks: Thanks go here.
 # jelcodes: JEL codes go here
 

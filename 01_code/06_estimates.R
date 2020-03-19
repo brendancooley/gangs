@@ -56,6 +56,7 @@ clusters_base_df <- clusters_base_df %>% arrange(GEOID)
 clustersM <- matrix(nrow=nrow(clusters_base_df), ncol=L)
 BhatL <- list()
 cpd_agreement_ratio_vec <- c()
+J_estimates_vec <- c()
 
 for (i in 1:L) {
   
@@ -69,6 +70,7 @@ for (i in 1:L) {
   geoids_zero_i <- read_csv(paste0(geoids_zero_bs_path, i, ".csv"), col_names=FALSE, col_types=cols()) %>% pull(.)
   
   J_i <- read_csv(paste0(J_bs_path, i, ".csv"), col_names=FALSE, col_types=cols()) %>% pull(.)
+  J_estimates_vec <- c(J_estimates_vec, J_i)
   
   Bhat_i <- read_csv(paste0(Bhat_bs_path, i, ".csv"), col_names=FALSE, col_types=cols()) %>% as.matrix()
   
@@ -127,6 +129,11 @@ for (i in 1:L) {
   BhatL[[i]] <- Bhat_mat
   
 }
+
+# J
+write_csv(J_estimates_vec %>% as.data.frame(), J_all_path, col_names=FALSE)
+# J_estimates_vec <- J_estimates_vec %>% sort()
+
 
 # cpd agreement
 write_csv(cpd_agreement_ratio_vec %>% as.data.frame(), cpd_agreement_ratio_path, col_names=FALSE)

@@ -2,8 +2,12 @@
 
 source("../01_code/00_params.R")
 
-J <- read_csv(J_path, col_names=FALSE) %>% pull(.)
-K <- J - 1
+J_all <- read_csv(J_all_path, col_names=FALSE) %>% pull(.)
+K <- J_all - 1
+K <- K %>% sort()
+
+K_lower <- K[3]
+K_upper <- K[97]
 
 ```
 

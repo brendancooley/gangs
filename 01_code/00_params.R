@@ -96,6 +96,7 @@ nc_path <- paste0(results_city_period_path, "noise_cluster.csv")
 nc_bs_path <- paste0(bootstrap_path, "noise_cluster/")
 J_path <- paste0(results_city_period_path, "J.csv")
 J_bs_path <- paste0(bootstrap_path, "J/")
+J_all_path <- paste0(results_path, "J_all.csv")
 Bhat_path <- paste0(results_city_period_path, "Bhat.csv")
 Bhat_bs_path <- paste0(bootstrap_path, "Bhat/")
 
