@@ -6,6 +6,9 @@ ipak(libs)
 area_min <- 2000000
 gang_area_means <- read_csv(paste0(gang_territory_path, "gang_area_means.csv"))
 
+# gd_vl_bps_area <- gang_area_means %>% filter(gang %in% c("black p stones", "gangster disciples", "vice lords")) %>% pull(area_mean) %>% sum()
+# all_area <- gang_area_means %>% pull(area_mean) %>% sum()
+
 gang_area_plot_data <- gang_area_means %>% filter(area_mean>area_min)
 gang_area_other <- gang_area_means %>% filter(area_mean<area_min) %>% pull(area_mean) %>% sum()
 gang_area_plot_data <- gang_area_plot_data %>% add_row(gang="", area_mean=0)
