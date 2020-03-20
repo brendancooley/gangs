@@ -1,4 +1,4 @@
-We will first show how to estimate the territorial partition, described by the matrix $\Theta$, holding the number of groups, $K$, fixed. We will then proceed to estimate $K$ using cross validation, following @Chen2018. Let $J = K + 1$ for convenience.
+We will first show how to estimate the territorial partition, described by the matrix $\Theta$, holding the number of groups, $K$, fixed. We will then proceed to estimate $K$ using cross validation, following @Chen2018. Let $J = K + 1$ for convenience. We will refer to this quantity as the number of clusters.
 
 ## Territorial Partition
 
@@ -19,7 +19,7 @@ Let $\mathbb{R}_{+}^{J \times J}$ be the set of all $J \times J$ symmetric matri
 \end{equation}
 where $\lVert M \rVert_F = \left( \sum_{i} \sum_j M_{ij}^2 \right)^{\frac{1}{2}}$ is the Frobenius norm.
 
-We estimate these quantities using spectral clustering.^[@Luxberg2007 provides an overview of this family of methods.] These methods exploit the eigen-structure of $Q$. If there are $K$ gangs in the city, $Q$ will have $J$ nonzero eigenvalues. Let $\Delta = \text{diag}(\sqrt{n_1}, \dots, \sqrt{n_{J}})$ so that $\Delta B \Delta$ normalizes the connectivity matrix by the number of territories controlled by each group. $Q$ can then be written as
+We estimate these quantities using spectral clustering.^[@Luxberg2007 provides an overview of this family of methods.] These methods exploit the eigen-structure of $Q$. If there are $K$ gangs in the city, $Q$ will have $J$ nonzero eigenvalues.^[All of the rows of $A$ corresponding to districts owned by gang $k$ will be equivalent and thus linearly dependent.] Let $\Delta = \text{diag}(\sqrt{n_1}, \dots, \sqrt{n_{J}})$ so that $\Delta B \Delta$ normalizes the connectivity matrix by the number of territories controlled by each group. $Q$ can then be written as
 \begin{align*}
 Q &= \Theta B \Theta^T \\
 &= \Theta \Delta^{-1} \Delta B \Delta \Delta^{-1} \Theta^T \\
@@ -53,7 +53,7 @@ Shootings in districts without gangs will exhibit no covariance in expectation w
 \end{equation}
 where $M^{(k)}$ is the $k$th row of $M$ and $\lVert M^{(k)} \rVert_2$ is the Euclidean vector norm. 
 
-As discussed in the previous section, our model differs slightly from the stochastic block model. Where we observe between district covariance matrix, these models instead work with a binomial matrix of interaction counts between nodes (districts). Efforts to prove the consistency of spectral estimators therefore derive asymptotics as the number of nodes grows large.^[@Lei2015, for example, show that the spectral estimator is approximately consistent for $\Theta$. As the number of groups grows large, the estimator misclassifies a vanishing proportion of nodes with probability approaching one.] Intuitively, the off-diagonal entries of our empirical covariance matrix converge to the off diagonal entries of $Q$ as $T$ grows large. In the limit, then $\tilde{U} \rightarrow \Theta X$ and K-means should not have trouble isolating distinct clusters in $\tilde{U}$. We rely on this heuristic for estimation, as in @Trebbi2019.
+As discussed in the previous section, our model differs slightly from the stochastic block model. Where we observe between district covariance matrix, these models instead work with a binomial matrix of interaction counts between nodes (districts). Efforts to prove the consistency of spectral estimators therefore derive asymptotics as the number of nodes grows large.^[@Lei2015, for example, show that the spectral estimator is approximately consistent for $\Theta$. As the number of groups grows large, the estimator misclassifies a vanishing proportion of nodes with probability approaching one.] Intuitively, the off-diagonal entries of our empirical covariance matrix converge to the off diagonal entries of $Q$ as $T$ grows large. In the limit, then $\tilde{U} \rightarrow \Theta X$ and K-means should not have trouble isolating distinct clusters in $\tilde{U}$. We rely on this heuristic for estimation, like @Trebbi2019.
 
 ## Number of Gangs
 
@@ -71,8 +71,8 @@ $$
 and
 \begin{align*}
 \left( Q^{(-v, v)} \right)^T Q &= \Theta B^T \left( \Theta^{(-v, v)} \right)^T \Theta^{(-v, v)} B \Theta^T \\
-&= \Theta B^T \left( \Delta^{(-v, -v)} \right)^2 B \Theta^T
-\end{align*}.
+&= \Theta B^T \left( \Delta^{(-v, -v)} \right)^2 B \Theta^T .
+\end{align*}
 An eigendecomposition of this matrix (whose eigenvectors are the right singular vectors of $Q^{(-v, v)}$) can be clustered as above to produce estimates for $\Theta$, which we'll call $\hat{\Theta}(v)$. Then, we can construct $\hat{B}(v)$ by averaging over off-diagonal values of the clusters of the rectangular covariance matrix (excluding the rows in $\mathcal{N}_v$) 
 $$
 \hat{B}_{k, \ell} = \begin{cases}
@@ -90,9 +90,9 @@ L_v(\tilde{A}, \hat{A}(v)) = \left\lVert \left( \tilde{A}^{(v,v)} - \text{diag}(
 $$
 The average loss for a trial value $\tilde{K}$ is then
 $$
-\bar{L}_{k}(\tilde{A}) = \frac{1}{V} \sum_{v=1}^V L_v(\tilde{A}, \hat{A}(v))
+\bar{L}_{k}(\tilde{A}) = \frac{1}{V} \sum_{v=1}^V L_v(\tilde{A}, \hat{A}(v)) .
 $$
-. A sequence $\delta$ can then be constructed for values of $k \in \left\{ 1, ..., \bar{K} \right\}$ allowing us to implement our estimator for $J$ (Equation \ref{eq:hatJ}).
+A sequence $\delta$ can then be constructed for values of $k \in \left\{ 1, ..., \bar{K} \right\}$ allowing us to implement our estimator for $J$ (Equation \ref{eq:hatJ}).
 
 To summarize, our cross validation algorithm proceeds as follows:
 

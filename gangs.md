@@ -186,10 +186,10 @@ Figure \ref{fig:blocks} shows a schematic representation of this permutation. In
 
 ![The input covariance matrix $A$ is shown in the left panel. Applying the transformation $P A P$ produces the block diagonal structure shown in the right panel. \label{fig:blocks}](05_figs/cartoons/block_mat.png)
 
-This covariance matrix can be compactly represented as a function of our estimands, $K$ and $\pi$. Let $\Psi = \text{diag}(\psi_1, \dots \psi_N)$ and $Q = A - \Psi$. Let $B_{K + 1 \times K + 1} = (b_{k \ell})_{ \left\{ k, \ell \in \mathcal{K} \right\} }$ store the constant block covariance values defined in Corollary 1 and note that $b_{k0} = 0$ for all $k$. Finally, let $\Theta_{N \times K + 1} = (\theta_{ik})_{\left\{ i \in \mathcal{N}, k \in \mathcal{K} \cup 0 \right\} }$ be a membership matrix with $\theta_{ik} = 1$ if $\pi(i) = k$ and $0$ otherwise. Then, 
+This covariance matrix can be compactly represented as a function of our estimands, $K$ and $\pi$. Let $\Psi = \text{diag}(\psi_1, \dots \psi_N)$ and $Q = A - \Psi$. Let $B_{K + 1 \times K + 1} = (b_{k \ell})_{ \left\{ k, \ell \in \mathcal{K} \right\} }$ store the constant block covariance values defined in Corollary 1 and note that $b_{k0} = b_{0k} = 0$ for all $k$. Finally, let $\Theta_{N \times K + 1} = (\theta_{ik})_{\left\{ i \in \mathcal{N}, k \in \mathcal{K} \cup 0 \right\} }$ be a membership matrix with $\theta_{ik} = 1$ if $\pi(i) = k$ and $0$ otherwise. Then, 
 $$
-Q = \Theta B \Theta^T
-$$.
+Q = \Theta B \Theta^T .
+$$
 
 Readers may recognize this structure as similar in form to a stochastic blockmodel [@Holland1983]. In such models, nodes are partitioned into groups and interact with members of other groups with some latent probability determined by their group membership. These latent probabilities can be expressed in a *connectivity matrix* akin to our $B$. If counts of these interactions are observed, the partition function and connectivity matrix can be estimated using spectral clustering [@Jin2015; @Lei2015].
 
@@ -198,7 +198,7 @@ Here, we do not observe directly these interactions, and our $B$ matrix does not
 # Estimation
 
 
-We will first show how to estimate the territorial partition, described by the matrix $\Theta$, holding the number of groups, $K$, fixed. We will then proceed to estimate $K$ using cross validation, following @Chen2018. Let $J = K + 1$ for convenience.
+We will first show how to estimate the territorial partition, described by the matrix $\Theta$, holding the number of groups, $K$, fixed. We will then proceed to estimate $K$ using cross validation, following @Chen2018. Let $J = K + 1$ for convenience. We will refer to this quantity as the number of clusters.
 
 ## Territorial Partition
 
@@ -219,7 +219,7 @@ Let $\mathbb{R}_{+}^{J \times J}$ be the set of all $J \times J$ symmetric matri
 \end{equation}
 where $\lVert M \rVert_F = \left( \sum_{i} \sum_j M_{ij}^2 \right)^{\frac{1}{2}}$ is the Frobenius norm.
 
-We estimate these quantities using spectral clustering.^[@Luxberg2007 provides an overview of this family of methods.] These methods exploit the eigen-structure of $Q$. If there are $K$ gangs in the city, $Q$ will have $J$ nonzero eigenvalues. Let $\Delta = \text{diag}(\sqrt{n_1}, \dots, \sqrt{n_{J}})$ so that $\Delta B \Delta$ normalizes the connectivity matrix by the number of territories controlled by each group. $Q$ can then be written as
+We estimate these quantities using spectral clustering.^[@Luxberg2007 provides an overview of this family of methods.] These methods exploit the eigen-structure of $Q$. If there are $K$ gangs in the city, $Q$ will have $J$ nonzero eigenvalues.^[All of the rows of $A$ corresponding to districts owned by gang $k$ will be equivalent and thus linearly dependent.] Let $\Delta = \text{diag}(\sqrt{n_1}, \dots, \sqrt{n_{J}})$ so that $\Delta B \Delta$ normalizes the connectivity matrix by the number of territories controlled by each group. $Q$ can then be written as
 \begin{align*}
 Q &= \Theta B \Theta^T \\
 &= \Theta \Delta^{-1} \Delta B \Delta \Delta^{-1} \Theta^T \\
