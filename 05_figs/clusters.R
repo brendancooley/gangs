@@ -46,6 +46,9 @@ clusters_base_map <- tm_shape(clusters_base_geo) +
 
 turf_shares <- read_csv(turf_shares_path)
 turf_binary <- read_csv(turf_binary_path)
+turf_binary_sy <- read_csv(turf_binary_sy_path)
+turf_binary_ey <- read_csv(turf_binary_ey_path)
+
 major_gangs <- read_csv(paste0(gang_territory_path, "major_gangs.csv"), col_names=FALSE) %>% pull(.)
 
 # chi_cluster_correspondence <- read_csv(chi_cluster_correspondence_path)
@@ -137,6 +140,16 @@ turf_binary_col$color <- turf_binary_col$color %>% as.character()
 turf_binary_col$color <- ifelse(is.na(turf_binary_col$color), "#ffffff", turf_binary_col$color)
 turf_binary_geo <- geo_join(tracts, turf_binary_col, "GEOID", "GEOID")
 
+turf_binary_sy_col <- left_join(turf_binary_sy, col_mapping_turf)
+turf_binary_sy_col$color <- turf_binary_sy_col$color %>% as.character()
+turf_binary_sy_col$color <- ifelse(is.na(turf_binary_sy_col$color), "#ffffff", turf_binary_sy_col$color)
+turf_binary_sy_geo <- geo_join(tracts, turf_binary_sy_col, "GEOID", "GEOID")
+
+turf_binary_ey_col <- left_join(turf_binary_ey, col_mapping_turf)
+turf_binary_ey_col$color <- turf_binary_ey_col$color %>% as.character()
+turf_binary_ey_col$color <- ifelse(is.na(turf_binary_ey_col$color), "#ffffff", turf_binary_ey_col$color)
+turf_binary_ey_geo <- geo_join(tracts, turf_binary_ey_col, "GEOID", "GEOID")
+
 ### FIGURE ###
 
 cluster_props_map <- tm_shape(cluster_props_geo) +
@@ -181,6 +194,24 @@ chi_turf_binary_map <- tm_shape(turf_binary_geo) +
   tm_shape(chi_outline) +
   tm_borders(col="black") +
   tm_add_legend(type="fill", labels=stri_trans_totitle(col_mapping_turf$owner), col=as.character(col_mapping_turf$color), title="Gang") +
-  tm_layout("CPD Gang Map", bg.color="white", outer.bg.color="white", legend.position=c("left", "bottom"))
+  tm_layout(paste0("CPD Gang Map, ", bruhn_sy, "-", bruhn_ey), bg.color="white", outer.bg.color="white", legend.position=c("left", "bottom"))
 
 comparison_maps <- tmap_arrange(chi_turf_binary_map, cluster_props_map)
+
+chi_turf_binary_sy_map <- tm_shape(turf_binary_sy_geo) +
+  tm_fill(col="color") +
+  tm_borders(col="white") +
+  tm_shape(chi_outline) +
+  tm_borders(col="black") +
+  tm_add_legend(type="fill", labels=stri_trans_totitle(col_mapping_turf$owner), col=as.character(col_mapping_turf$color), title="Gang") +
+  tm_layout(paste0("CPD Gang Map, ", bruhn_sy), bg.color="white", outer.bg.color="white", legend.position=c("left", "bottom"))
+
+chi_turf_binary_ey_map <- tm_shape(turf_binary_ey_geo) +
+  tm_fill(col="color") +
+  tm_borders(col="white") +
+  tm_shape(chi_outline) +
+  tm_borders(col="black") +
+  tm_add_legend(type="fill", labels=stri_trans_totitle(col_mapping_turf$owner), col=as.character(col_mapping_turf$color), title="Gang") +
+  tm_layout(paste0("CPD Gang Map, ", bruhn_ey), bg.color="white", outer.bg.color="white", legend.position=c("left", "bottom"))
+
+turf_evolution_maps <- tmap_arrange(chi_turf_binary_sy_map, chi_turf_binary_ey_map)

@@ -22,4 +22,5 @@ gang_area_plot <- gang_area_plot_data %>% ggplot(aes(x=factor(gang, gang_area_pl
         axis.title.x=element_blank(),
         axis.text.y=element_blank(),
         axis.ticks.y=element_blank()) +
-  labs(y=paste0("Average territorial extent"), title=paste0("Chicago Gang Turf, ", bruhn_sy, "-", bruhn_ey))
+  labs(y=paste0("Average territorial extent"), title=paste0("Chicago Gang Turf, ", bruhn_sy, "-", bruhn_ey))  +
+  theme(aspect.ratio=1)

@@ -6,14 +6,22 @@ ipak(libs)
 
 ```
 
-```{r, echo=FALSE, warning=FALSE, message=FALSE, fig.cap = " \\label{fig:gang_hist}", fig.height=4, dpi=300, fig.pos="t"}
+```{r, echo=FALSE, warning=FALSE, message=FALSE, fig.cap = "Average CPD-reported relative size of gang territorial footprints. \\label{fig:gang_hist}", fig.height=4, dpi=300, fig.pos="t"}
 
 source("../05_figs/chi_gang_areas.R")
 gang_area_plot
 
 ```
 
-```{r, echo=FALSE, warning=FALSE, message=FALSE, fig.cap = " \\label{fig:cpd_ethnic}", fig.height=4, dpi=300, fig.pos="t"}
+```{r, echo=FALSE, warning=FALSE, message=FALSE, fig.cap = paste0("Changes in CPD-reported gang turf, ", bruhn_sy, "-", bruhn_ey, ". \\label{fig:turf_evolution}"), fig.height=9, dpi=300, fig.pos="t"}
+
+source("../05_figs/clusters.R")
+turf_evolution_maps
+
+```
+
+
+```{r, echo=FALSE, warning=FALSE, message=FALSE, fig.cap = "Average CPD-reported gang turf and black and latino population shares. \\label{fig:cpd_ethnic}", fig.height=9, dpi=300, fig.pos="t"}
 
 source("../05_figs/ethnicity.R")
 source("../05_figs/clusters.R")

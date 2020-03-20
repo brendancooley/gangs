@@ -68,8 +68,14 @@ tadjacency_path <- paste0(output_path, "t_adjacency.csv")
 
 # cpd gang territorial shares by year
 gang_territory_path <- paste0(output_path, "territory/")
+
 turf_shares_path <- paste0(output_path, "turf_shares.csv")
+turf_shares_sy_path <- paste0(output_path, "turf_shares_sy.csv")
+turf_shares_ey_path <- paste0(output_path, "turf_shares_ey.csv")
+
 turf_binary_path <- paste0(output_path, "turf_binary.csv")
+turf_binary_sy_path <- paste0(output_path, "turf_binary_sy.csv")
+turf_binary_ey_path <- paste0(output_path, "turf_binary_ey.csv")
 
 # results
 
