@@ -43,4 +43,4 @@ ethnicity_map <- tm_shape(covariates_geo) +
   tm_shape(chi_outline) +
   tm_borders(col="black") +
   tm_add_legend(type="fill", labels=stri_trans_totitle(col_correspondence$max_race), col=as.character(col_correspondence$color), title="Ethnicity") +
-  tm_layout(paste0("Black and Latino Population Shares ", y), bg.color="white", outer.bg.color="white", legend.position=c("left", "bottom"))
+  tm_layout(paste0("Black and Latino Population Shares, ", y), bg.color="white", outer.bg.color="white", legend.position=c("left", "bottom"))

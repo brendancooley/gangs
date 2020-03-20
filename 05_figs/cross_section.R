@@ -1,6 +1,6 @@
 ### SETUP ###
 
-rm(list = ls())
+# rm(list = ls())
 source("../01_code/00_params.R")
 
 libs <- c("tidyverse", "rgdal", "sf", "tmap", "tigris", "lubridate", "leaflet")
@@ -12,6 +12,8 @@ tna <- read_csv(tna_path)
 
 covar <- read_csv(paste0(covariates_path, covar_y, ".csv"))
 tracts <- readOGR(tracts_path)
+# nrow(tracts)
+chi_outline <- gUnaryUnion(tracts)
 
 crimes_clean <- read_csv(crimes_clean_path)
 minY <- min(crimes_clean$year) %>% year()
@@ -33,13 +35,18 @@ tna_geo <- geo_join(tracts, tna, "GEOID", "GEOID")
 
 ### FIGURES ###
 
+hmColors <- colorRampPalette(c("white", bcOrange))(10)
+
 tsa_map <- tm_shape(tsa_geo) +
-  tm_polygons("rate", title=paste0("Homicides and Non-Fatal Shootings per Capita ", minY, "-", maxY)) +
-  tm_layout(legend.position=c("left", "bottom"))
+  tm_fill(col="rate", title="Rate", palette=hmColors) +
+  tm_borders(col="white") +
+  tm_shape(chi_outline) +
+  tm_borders(col="black") +
+  tm_layout(paste0("Homicides and Non-Fatal Shootings per Capita ", bruhn_sy, "-", bruhn_ey), legend.position=c("left", "bottom"))
 # save_tmap(chi_tsa_map, "figs/chi_tsa_map.png")
 
 tna_map <- tm_shape(tna_geo) +
-  tm_polygons("rate", title=paste0("Narcotics-Related Arrests per Capita ", minY, "-", maxY)) +
+  tm_polygons("rate", title=paste0("Narcotics-Related Arrests per Capita ", bruhn_sy, "-", bruhn_ey)) +
   tm_layout(legend.position=c("left", "bottom"))
 
 # leaflet (interactive) version

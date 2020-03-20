@@ -61,12 +61,32 @@ The paper proceeds as follows. We first briefly review the substantive and metho
 
 
 
+```
+## Error in readOGR(tracts_path, verbose = FALSE): could not find function "readOGR"
+```
 
-![ \label{fig:gang_hist}](figure/unnamed-chunk-11-1.png)
+For reports on violence, we rely on victim-based reports from the CPD's online data portal. Each report of a crime contains an Illinois Uniform Reporting code (IUCR) classifying the crime, a date, and a latitude and longitude for each event. We subset the data to focus solely on homicides and gun crime, including first-degree murder, second-degree murder and aggravated battery involving use of a hand-gun or firearm. In data spanning from 2004 to 2017, there are 32,236, such instances of violence. Violence does not follow a uniform spatial distribution as can be seen in the Figure \ref{fig:hnfs}. As is typical in such administrative data, there is no information available about whether individual crimes were committed by gang-members.^[We choose to use victim-based crime reports because they provide the best coverage. When dealing with victim-based crime-reporting, the primary concern is that crimes go under-reported. While under-reporting is likely to be a concern in any dataset on crime, there are two concerns which aggravate the bias in our data. First, the crimes we are interested in are those committed by one criminal organization against another, thereby reducing the probability of reporting.  Second is the fact that gangs often exist in areas where members of that racial minority comprise the majority [@Bruhn2019]. It is well documented that racial minorities in the US have relatively lower levels of trust in police which is likely to translate to under-reporting of crimes [@Desmond2016]. Though other measures of violence do ot suffer these short-comings (e.g. @Carr2016), they are available only for narrow time windows.]
 
-INSERT MAP 2004 MAP 2016
 
-![ \label{fig:cpd_ethnic}](figure/unnamed-chunk-12-1.png)
+```
+## OGR data source with driver: ESRI Shapefile 
+## Source: "/Users/brendancooley/GitHub/gangs/03_output/chicago/tracts", layer: "tracts"
+## with 861 features
+## It has 16 fields
+```
+
+![Homicides and non-fatal shootings per capita 2004-2017. \label{fig:hnfs}](figure/unnamed-chunk-11-1.png)
+
+To generate our "districts" we use the division of Chicago into tracts by the US American Community Survey. Census tracts are the second smallest statistical unit, containing approximately 4,000 people and 1,600 housing units.^[This definition is taken from the census glossary.] There are 861 census tracts in Chicago. We aggregate our data by month, so that each individual observation is a count of the amount of violence in a given census tract for a given month. Our data covers Chicago in the years 2004 to 2017 in order to mirror @Bruhn2019 against whom we cross-validate our results. Because census tracts have minor changes from year to year, we fix our districts as they were in 2016. In the course of our sample period, 55 gangs operated in Chicago, according to the CPD.^[We aggregate some gang factions into their larger units, such as the Vice Lords, consistent with @Bruhn2019. This quantity refers to the number of gangs remaining after our aggregation procedure.]
+
+![Average CPD-reported relative size of gang territorial footprints. \label{fig:gang_hist}](figure/unnamed-chunk-12-1.png)
+
+The problem with the use of census tracts as an exogenously generated district is that it does not conform with the building blocks used by gangs to construct territories. Anecdotal evidence suggests that gangs fight for and control of blocks [@Levitt2000]. Census tracts aggregate multiple blocks into a single geographic unit. By using census tracts, we reduce the variance of our estimates but introduce the potential for bias in two ways. First, it is possible that a gang’s territory is assigned to a tract that contains peaceful areas, i.e. those uninhabited by gangs. Because peaceful areas are assumed not to produce violence in any systematic way, a census tract which incorporates gang territory and peaceful areas will not have the violence from the peaceful area affect the assignment of the territory to the correct gang cluster. However, our method will mistakenly assign the ``peaceful" areas to the gang. Conversely if the amount of territory owned by a gang in the tract is small, then it is possible that its territory will be designated a ``peaceful" tract. For purposes of cross-validation we consider a tract gang-owned if at least ten percent of its area is owned by a gang according the CPD maps.  
+
+![Changes in CPD-reported gang turf, 2004-2017. \label{fig:turf_evolution}](figure/unnamed-chunk-13-1.png)
+
+
+![Average CPD-reported gang turf and black and latino population shares. \label{fig:cpd_ethnic}](figure/unnamed-chunk-14-1.png)
 
 # Model
 
@@ -326,7 +346,7 @@ The data cleaning procedure discussed above produces a $N \times T$ matrix of ho
 
 \begin{table}
 
-\caption{\label{tab:unnamed-chunk-20}Matched-Gang Counts \label{tab:label_counts}}
+\caption{\label{tab:unnamed-chunk-22}Matched-Gang Counts \label{tab:label_counts}}
 \centering
 \begin{tabular}[t]{lr}
 \toprule
@@ -345,11 +365,11 @@ Two-Six & 0.05\\
 
 We detect the presence of 3-4 gangs in Chicago. Table \ref{tab:label_counts} reports the frequency with which each CPD-tagged gang is included in the analysis. Following @Ahn2013, we plot the intervals around the leading eigenvalues of the bootstrapped covariance matrices in Figure \ref{fig:scree}. The first several eigenvalues tend to stand out from the remainder, indicative of the presence of unique clusters of gang activity in the data.
 
-![Leading eigenvalues of the matrix of covariances in shootings across districs. Dashed line is drawn between the average values of the 4th and 5th eigenvalues, consistent with our estimates for the number of clusters. Eigenvectors associated with first $J$ eigenvalues are used to estimate the territorial partition. \label{fig:scree}](figure/unnamed-chunk-21-1.png)
+![Leading eigenvalues of the matrix of covariances in shootings across districs. Dashed line is drawn between the average values of the 4th and 5th eigenvalues, consistent with our estimates for the number of clusters. Eigenvectors associated with first $J$ eigenvalues are used to estimate the territorial partition. \label{fig:scree}](figure/unnamed-chunk-23-1.png)
 
 These clusters are easily visualized by examining the permuted covariance matrix, the empirical analogue to Figure \ref{fig:blocks}. The right-hand panel of Figure \ref{fig:block_hm} displays the permutation consistent with baseline estimated territorial partition, in which 4 gangs were detected. This matrix is constructed by taking raw covariance matrix (left) and permuting the rows and columns to correspond with the estimated partition. Each square on the right panel highlights the districts controlled with a single gang, with the bottom right block corresponding to districts estimated to have no gang activity. Gang wars generate positive covariance in the off-block diagonal entries. Darker off-block-diagonal entries indicate more intense conflict between the gangs controlling the pairs of districts in question. 
 
-![The left-hand panel shows the values of the unclustered spatial covariance matrix (baseline). Darker values indicate higher tract-to-tract covariance in shootings. The right-hand panel permutes these entries in accordance with the estimated partition function. The black squares highlight covariances within a given gang's territory (produced by intra-gang conflict). The bottom right block corresponds to the districts estimated to have no gang activity. \label{fig:block_hm}](figure/unnamed-chunk-22-1.png)
+![The left-hand panel shows the values of the unclustered spatial covariance matrix (baseline). Darker values indicate higher tract-to-tract covariance in shootings. The right-hand panel permutes these entries in accordance with the estimated partition function. The black squares highlight covariances within a given gang's territory (produced by intra-gang conflict). The bottom right block corresponds to the districts estimated to have no gang activity. \label{fig:block_hm}](figure/unnamed-chunk-24-1.png)
 
 Figure \ref{fig:comparison_map} plots the spatial distribution of estimated gang territory in Chicago (with CPD-reported territories side-by-side for purposes of comparison). Colors indicate which CPD-tagged gang the tract was matched to in the majority of bootstrap iterations. Shading indicates the fraction of iterations for which the tract was matched to a given gang. The estimated peaceful cluster is shown in white to highlight gang turf. We estimate 20-28 percent of the city's census tracts to be gang-occupied. We locate gang activity predominently in the city's West Side and South Side neighborhoods, consistent with CPD assessments. Downtown and North Side neighborhoods are estimated to be free from gang activity in nearly every bootstrap iteration. Like the CPD maps, our estimated gang territories are highly non-convex. 
 
@@ -359,13 +379,13 @@ We detect clusters that match to Latino gang turf less frequently. We detect a c
 
 Overall, our tract labels agree with those of the CPD in 56-60 percent of cases. Randomly permuting the CPD's labels produces agreement in only 35 percent of cases. The agreement ratio is highest among peaceful tracts. For tracts we classify as peaceful, the CPD also reports an absence of gang activity 65-69 percent of the time. Among tracts we assign to some gang, our labels agree with those of the CPD in 24-38 percent of cases. This low rate of agreement in this class of tracts is due to two factors. First, both our estimates and those of the CPD classify the vast majority of districts as peaceful. Any subset of the labels is therefore likely to find a large number of peaceful labels in the comparison set. Second, because our estimates for the number of gangs are substantially smaller than the number of gangs the CPD reports, we can only match our labels to a small subset of CPD-reported gangs. Figure \ref{fig:comparison_map} confirms that we capture the distribution of gang activity qualitatively quite well, despite this disagreement. 
 
-![Left: CPD-reported gang territories, 2004-2017. Right: Estimated clusters matched to CPD labels. Shading indicates fraction of bootstrap iterations for which tract was assigned to given cluster. White indicates the absence of gang-activity (peaceful cluster). \label{fig:comparison_map}](figure/unnamed-chunk-23-1.png)
+![Left: CPD-reported gang territories, 2004-2017. Right: Estimated clusters matched to CPD labels. Shading indicates fraction of bootstrap iterations for which tract was assigned to given cluster. White indicates the absence of gang-activity (peaceful cluster). \label{fig:comparison_map}](figure/unnamed-chunk-25-1.png)
 
 So far, we have focused on our results on the estimated partition function, $\hat{\pi}$. Our estimates for $\hat{B}$ describe the intensity of conflict between gangs in our sample. Figure \ref{fig:Bhat_hm} displays the magnitudes of these conflict intensities and Figure \ref{fig:Bhat_ci} plots uncertainty intervals around these point estimates. Some care is warranted in interpreting these results. These estimates correspond to the theoretical quantities defined in Corollary 1. Diagonal entries of this matrix ($b_{kk}$) correspond to the sum of the scaled variance of internal conflict shocks and all scaled inter-gang shocks, where the scaling reflects the size (in membership) of each gang relative to the size of the territory it occupies. This encompasses a larger set of variation than off-diagonal entries, so diagonal entries tend to be larger than off-diagonal entries. Off diagonal entries ($b_{k \ell}$) reflect the size of the inter-gang conflict shocks, scaled by the relative size of the gangs in conflict. Larger values of $b_{k \ell}$ indicate the gangs experience higher-variance conflict shocks, or that the groups are relatively large. 
 
-![Estimated inter-gang conflict intensities, $\hat{B}$, exempting non-gang occupied areas. Darker colors indicate the corresponding gangs on tend to experience more intense conflict with one another. \label{fig:Bhat_hm}](figure/unnamed-chunk-24-1.png)
+![Estimated inter-gang conflict intensities, $\hat{B}$, exempting non-gang occupied areas. Darker colors indicate the corresponding gangs on tend to experience more intense conflict with one another. \label{fig:Bhat_hm}](figure/unnamed-chunk-26-1.png)
 
-![Estimated inter-gang conflict intensities, confidence intervals. \label{fig:Bhat_ci}](figure/unnamed-chunk-25-1.png)
+![Estimated inter-gang conflict intensities, confidence intervals. \label{fig:Bhat_ci}](figure/unnamed-chunk-27-1.png)
 
 Relative to the Black P Stones and Gangster Disciples, the Vice Lords' diagonal intensity is quite large. Given that the Vice Lords do not appear to experience larger inter-gang conflict intensity than their peers, this may suggest that they experience relatively large internal conflict shocks. This observation is consistent with the gang's reportedly fragmented organizational structure [@Bruhn2019].^[@Papachristos2009 recounts a war between gangs of the Almighty Vice Lord Nation (AVLN), whose members we aggregate into a single unit for purposes of the present analysis.] Unfortunately, as demonstrated in Figure \ref{fig:Bhat_ci}, inter-gang conflict intensity estimates do not come with statistical precision necessary to make claims about patterns of gang alliance and conflict. We are also unable to estimate the relative size of gang membership given the sparse assumptions of our model. While we get estimates for $n_{k}$, the number of tracts gang $k$ owns, from the partition function, the size of $k$'s membership is not separately identified from the variance of internal conflict shocks. This agnosticism preserves miminalism in the set of asssumptions we adopt while retaining the ability to estimate the number of groups in operation and the territorial partition, the objects of primary interest for this study.
 
