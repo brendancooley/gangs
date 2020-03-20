@@ -99,7 +99,7 @@ To summarize, our cross validation algorithm proceeds as follows:
 1. For each $k \in \left\{ 1, ..., \bar{K} \right\}$,
 	- Randomly split districts into folds $\mathcal{N}_1, \dots, \mathcal{N}_V$.
 	- For each fold, estimate $\hat{\Theta}(v)$ and $\hat{B}(v)$.
-	- For each fold, calculate the predictive loss on $\tilde{A}^{(v,v)}$, $L_v(\tilde{A}, \hat{A}(v))$
+	- For each fold, calculate the predictive loss on $\tilde{A}^{(v,v)}$, $L_v(\tilde{A}, \hat{A}(v))$.
 	- Average the predictive loss across folds, $\bar{L}_{k}(\tilde{A})$.
 2. Construct the sequence of changes in predictive loss, $\delta$.
 3. Select $\hat{J}$ using Equation \ref{eq:hatJ}.
