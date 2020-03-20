@@ -101,7 +101,7 @@ Bhat_hm <- ggplot(data=Bhat_melted, aes(x=id_i, y=id_j, fill=b_ij)) +
         axis.title.y=element_blank(),
         axis.text.y=element_text(),
         axis.ticks.y=element_blank()) +
-  labs(x=" ", y=" ", title="Inter- and Intra-Gang Conflict Intensities, Point Estimates")
+  labs(x=" ", y=" ", title="Inter- and Intra-Gang Conflict Intensities")
 # Bhat_hm
 
 Bhat_ci <- Bhat_melted %>% ggplot(aes(x=b_ij, y=factor(gang_i, levels=gang_names))) + 

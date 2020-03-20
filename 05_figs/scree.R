@@ -2,7 +2,6 @@
 
 # rm(list = ls())
 source("../01_code/00_params.R")
-L <- 37
 
 libs <- c("tidyverse", "matrixStats")
 ipak(libs)
