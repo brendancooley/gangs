@@ -11,7 +11,7 @@ author:
 date: \today
 abstract: |
 	| `r paste(readLines('06_sections/abstract.md'), collapse=' ')`
-thanks: Thanks go here.
+thanks: We thank the Empirical Studies of Conflict (ESOC) group at Princeton for comments on an early version of this project. 
 # jelcodes: JEL codes go here
 
 bibliography: /Users/brendancooley/Dropbox (Princeton)/References/library.bib
