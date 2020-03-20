@@ -10,7 +10,7 @@ author:
       affiliation: Ph.D. Candidate, Department of Politics, Princeton University
 date: \today
 abstract: |
-	|   Street gangs are conjectured to engage in violent territorial competition. This competition can be difficult to study empirically as the number of gangs and the division of territory between them are usually unobserved to the analyst. However, traces of gang conflict manifest themselves in police and administrative data on violent crime. In this paper, we show that the frequency and location of shootings are sufficient statistics number of gangs in operation and the territorial partition beween them under mild assumptions about the data generating processes for gang-related and non-gang related shootings. We then show how to estimate this territorial partition from a panel of geolocated shooting data. We apply our method to analyze the structure of gang territorial competition in Chicago using victim-based crime reports from the Chicago Police Department (CPD) and validate our methodology on gang territorial maps produced by the CPD. We detect the presence of 3-4 gangs whose estimated territorial footprints we match to CPD maps. After matching, 55.7-60.2 percent of our partition labels agree with those of the CPD. This performance compares favorably to an agreement rate of 34.6 percent when CPD labels are randomly permuted.
+	|   Street gangs are conjectured to engage in violent territorial competition. This competition can be difficult to study empirically as the number of gangs and the division of territory between them are usually unobserved to the analyst. However, traces of gang conflict manifest themselves in police and administrative data on violent crime. In this paper, we show that the frequency and location of shootings are sufficient statistics number of gangs in operation and the territorial partition beween them under mild assumptions about the data generating processes for gang-related and non-gang related shootings. We then show how to estimate this territorial partition from a panel of geolocated shooting data. We apply our method to analyze the structure of gang territorial competition in Chicago using victim-based crime reports from the Chicago Police Department (CPD) and validate our methodology on gang territorial maps produced by the CPD. We detect the presence of 3-4 gangs whose estimated territorial footprints we match to CPD maps. After matching, 56-60 percent of our partition labels agree with those of the CPD. This performance compares favorably to an agreement rate of 35 percent when CPD labels are randomly permuted.
 thanks: Thanks go here.
 # jelcodes: JEL codes go here
 
@@ -253,7 +253,7 @@ Shootings in districts without gangs will exhibit no covariance in expectation w
 \end{equation}
 where $M^{(k)}$ is the $k$th row of $M$ and $\lVert M^{(k)} \rVert_2$ is the Euclidean vector norm. 
 
-As discussed in the previous section, our model differs slightly from the stochastic block model. Where we observe between district covariance matrix, these models instead work with a binomial matrix of interaction counts between nodes (districts). Efforts to prove the consistency of spectral estimators therefore derive asymptotics as the number of nodes grows large.^[@Lei2015, for example, show that the spectral estimator is approximately consistent for $\Theta$. As the number of groups grows large, the estimator misclassifies a vanishing proportion of nodes with probability approaching one.] Intuitively, the off-diagonal entries of our empirical covariance matrix converge to the off diagonal entries of $Q$ as $T$ grows large. In the limit, then $\tilde{U} \rightarrow \Theta X$ and K-means should not have trouble isolating distinct clusters in $\tilde{U}$. We rely on this heuristic for estimation, as in @Trebbi2019.
+As discussed in the previous section, our model differs slightly from the stochastic block model. Where we observe between district covariance matrix, these models instead work with a binomial matrix of interaction counts between nodes (districts). Efforts to prove the consistency of spectral estimators therefore derive asymptotics as the number of nodes grows large.^[@Lei2015, for example, show that the spectral estimator is approximately consistent for $\Theta$. As the number of groups grows large, the estimator misclassifies a vanishing proportion of nodes with probability approaching one.] Intuitively, the off-diagonal entries of our empirical covariance matrix converge to the off diagonal entries of $Q$ as $T$ grows large. In the limit, then $\tilde{U} \rightarrow \Theta X$ and K-means should not have trouble isolating distinct clusters in $\tilde{U}$. We rely on this heuristic for estimation, like @Trebbi2019.
 
 ## Number of Gangs
 
@@ -271,8 +271,8 @@ $$
 and
 \begin{align*}
 \left( Q^{(-v, v)} \right)^T Q &= \Theta B^T \left( \Theta^{(-v, v)} \right)^T \Theta^{(-v, v)} B \Theta^T \\
-&= \Theta B^T \left( \Delta^{(-v, -v)} \right)^2 B \Theta^T
-\end{align*}.
+&= \Theta B^T \left( \Delta^{(-v, -v)} \right)^2 B \Theta^T .
+\end{align*}
 An eigendecomposition of this matrix (whose eigenvectors are the right singular vectors of $Q^{(-v, v)}$) can be clustered as above to produce estimates for $\Theta$, which we'll call $\hat{\Theta}(v)$. Then, we can construct $\hat{B}(v)$ by averaging over off-diagonal values of the clusters of the rectangular covariance matrix (excluding the rows in $\mathcal{N}_v$) 
 $$
 \hat{B}_{k, \ell} = \begin{cases}
@@ -290,9 +290,9 @@ L_v(\tilde{A}, \hat{A}(v)) = \left\lVert \left( \tilde{A}^{(v,v)} - \text{diag}(
 $$
 The average loss for a trial value $\tilde{K}$ is then
 $$
-\bar{L}_{k}(\tilde{A}) = \frac{1}{V} \sum_{v=1}^V L_v(\tilde{A}, \hat{A}(v))
+\bar{L}_{k}(\tilde{A}) = \frac{1}{V} \sum_{v=1}^V L_v(\tilde{A}, \hat{A}(v)) .
 $$
-. A sequence $\delta$ can then be constructed for values of $k \in \left\{ 1, ..., \bar{K} \right\}$ allowing us to implement our estimator for $J$ (Equation \ref{eq:hatJ}).
+A sequence $\delta$ can then be constructed for values of $k \in \left\{ 1, ..., \bar{K} \right\}$ allowing us to implement our estimator for $J$ (Equation \ref{eq:hatJ}).
 
 To summarize, our cross validation algorithm proceeds as follows:
 

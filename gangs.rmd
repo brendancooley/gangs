@@ -77,6 +77,8 @@ Ctick <- 1
 
 # Conclusion
 
+```{r, child = "06_sections/conclusion.rmd"}
+```
 
 \clearpage
 
