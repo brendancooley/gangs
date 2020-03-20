@@ -11,7 +11,7 @@ tsa <- read_csv(tsa_path)
 tna <- read_csv(tna_path)
 
 covar <- read_csv(paste0(covariates_path, covar_y, ".csv"))
-tracts <- readOGR(tracts_path)
+tracts <- readOGR(tracts_path, verbose=FALSE)
 # nrow(tracts)
 chi_outline <- gUnaryUnion(tracts)
 
@@ -38,11 +38,11 @@ tna_geo <- geo_join(tracts, tna, "GEOID", "GEOID")
 hmColors <- colorRampPalette(c("white", bcOrange))(10)
 
 tsa_map <- tm_shape(tsa_geo) +
-  tm_fill(col="rate", title="Rate", palette=hmColors) +
+  tm_fill(col="rate", title=paste0("Homicides and Non-Fatal Shootings \n per Capita, ", bruhn_sy, "-", bruhn_ey), palette=hmColors) +
   tm_borders(col="white") +
   tm_shape(chi_outline) +
   tm_borders(col="black") +
-  tm_layout(paste0("Homicides and Non-Fatal Shootings per Capita ", bruhn_sy, "-", bruhn_ey), legend.position=c("left", "bottom"))
+  tm_layout(legend.outside=TRUE)
 # save_tmap(chi_tsa_map, "figs/chi_tsa_map.png")
 
 tna_map <- tm_shape(tna_geo) +
