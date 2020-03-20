@@ -57,8 +57,6 @@ Substantively this paper joins a growing literature seeking to measure the terri
 
 The paper proceeds as follows. We first briefly review the substantive and methodological literature upon which our paper builds. We then describe the crime data and CPD gang maps, used for estimation and validation, respectively. Section IV introduces our model and derives the spatial covariance structure used for estimation. We develop our estimators for the number of gangs and the territorial partition in Section V. We present our results and validate them on the CPD gang maps in Section VI before concluding.
 
-# Literature
-
 # Data
 
 # Model
