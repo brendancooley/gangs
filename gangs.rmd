@@ -60,6 +60,9 @@ Ctick <- 1
 
 # Data
 
+```{r, child = "06_sections/data.rmd"}
+```
+
 # Model
 
 ```{r, child = "06_sections/model.rmd"}

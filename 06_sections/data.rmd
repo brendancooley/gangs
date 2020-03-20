@@ -1,0 +1,24 @@
+```{r, echo=FALSE, warning=FALSE, message=FALSE, results='hide'}
+
+source("../01_code/00_params.R")
+libs <- c("tidyverse", "tmap")
+ipak(libs)
+
+```
+
+```{r, echo=FALSE, warning=FALSE, message=FALSE, fig.cap = " \\label{fig:gang_hist}", fig.height=4, dpi=300, fig.pos="t"}
+
+source("../05_figs/chi_gang_areas.R")
+gang_area_plot
+
+```
+
+```{r, echo=FALSE, warning=FALSE, message=FALSE, fig.cap = " \\label{fig:cpd_ethnic}", fig.height=4, dpi=300, fig.pos="t"}
+
+source("../05_figs/ethnicity.R")
+source("../05_figs/clusters.R")
+
+panel <- tmap_arrange(chi_turf_binary_map, ethnicity_map)
+panel
+
+```
