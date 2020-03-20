@@ -4,14 +4,16 @@ rm(list = ls())
 invisible(lapply(paste0('package:', names(sessionInfo()$otherPkgs)), detach, character.only=TRUE, unload=TRUE))
 source("../01_code/00_params.R")
 
-libs <- c("tidyverse", "tigris", "tmap", "rgdal", "GISTools", "scales", "leaflet")
+libs <- c("tidyverse", "tigris", "tmap", "rgdal", "GISTools", "scales", "leaflet", "stringi")
 ipak(libs)
 
 tracts <- readOGR(tracts_path, verbose=FALSE)
 chi_outline <- gUnaryUnion(tracts)
 
-read_csv(paste0(covariates_path, "2016.csv")) 
-covariates <- read_csv(paste0(covariates_path, "2016.csv")) %>% dplyr::select(GEOID, percentage.black, percentage.latino)
+y <- 2016
+
+read_csv(paste0(covariates_path, y, ".csv")) 
+covariates <- read_csv(paste0(covariates_path, y, ".csv")) %>% dplyr::select(GEOID, percentage.black, percentage.latino)
 colnames(covariates) <- c("GEOID", "black", "latino")
 
 col_black <- "#1A81D0"
@@ -40,5 +42,5 @@ ethnicity_map <- tm_shape(covariates_geo) +
   tm_borders(col="white") +
   tm_shape(chi_outline) +
   tm_borders(col="black") +
-  # tm_polygons("cluster", title=paste0("Cluster ID"), palette="Set3") +
-  tm_layout(bg.color="white", outer.bg.color="white", legend.position=c("left", "bottom"))
+  tm_add_legend(type="fill", labels=stri_trans_totitle(col_correspondence$max_race), col=as.character(col_correspondence$color), title="Ethnicity") +
+  tm_layout(paste0("Black and Latino Population Shares ", y), bg.color="white", outer.bg.color="white", legend.position=c("left", "bottom"))
