@@ -35,7 +35,8 @@ ownership_mean$GEOID <- geoids_vec
 ownership_mean <- ownership_mean %>% select(GEOID, everything())
 
 ownership_mean_long <- ownership_mean %>% pivot_longer(-GEOID, names_to="gang", values_to="share")
-# turf_size <- ownership_mean_long %>% group_by(gang) %>% summarise(turf=sum(share)) %>% arrange(desc(turf))
+# ownership_mean_long$gang <- ifelse(ownership_mean_long$gang %in% major_gangs, ownership_mean_long$gang, "other")
+# ownership_mean_long <- ownership_mean_long %>% group_by(gang, GEOID) %>% summarise(share=sum(share)) %>% arrange(GEOID)
 # turf_size %>% print(n=100)
 # gang_order <- turf_size$gang
 

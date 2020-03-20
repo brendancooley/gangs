@@ -6,31 +6,43 @@ source("../01_code/00_params.R")
 libs <- c("tidyverse", "reshape2", "patchwork", "ggnewscale", "scales")
 ipak(libs)
 
-Bhat <- read_csv(Bhat_mean_path) %>% as.matrix()
+Bhat_mean <- read_csv(Bhat_mean_path) %>% as.matrix()
+Bhat_lb <- read_csv(Bhat_lb_path) %>% as.matrix()
+Bhat_ub <- read_csv(Bhat_ub_path) %>% as.matrix()
+
 J <- gangs_V + 1
 
 ### CLEAN ###
 
-rownames(Bhat) <- colnames(Bhat)
+rownames(Bhat_mean) <- colnames(Bhat_mean)
+rownames(Bhat_lb) <- colnames(Bhat_lb)
+rownames(Bhat_ub) <- colnames(Bhat_ub)
 
 # swap peaceful to edge
-gang_names <- setdiff(colnames(Bhat), "peaceful")
+gang_names <- setdiff(colnames(Bhat_mean), "peaceful")
 # Bhat_names_order <- c(gang_names, "peaceful")
 
 # filter out peaceful cluster
-Bhat <- Bhat[gang_names, gang_names]
+Bhat_mean <- Bhat_mean[gang_names, gang_names]
+Bhat_lb <- Bhat_lb[gang_names, gang_names]
+Bhat_ub <- Bhat_ub[gang_names, gang_names]
 
 turf_cols <- c(gd_col, bps_col, lk_col, vl_col, bd_col, ts_col)
 col_mapping_turf <- data.frame(gang_names, turf_cols)
 colnames(col_mapping_turf) <- c("gang", "color")
 
-
 Bhat_melted <- melt(Bhat)
+Bhat_lb_melted <- melt(Bhat_lb)
+Bhat_ub_melted <- melt(Bhat_ub)
+
+Bhat_melted <- left_join(Bhat_melted, Bhat_lb_melted, by=c("Var1", "Var2"))
+Bhat_melted <- left_join(Bhat_melted, Bhat_ub_melted, by=c("Var1", "Var2"))
+
 # nrow(Bhat_melted)
 Bhat_melted$id_i <- rep(seq(1, J-1), J-1)
 Bhat_melted$id_j <- rep(seq(1, J-1), rep(J-1, J-1))
 Bhat_melted <- as_tibble(Bhat_melted)
-colnames(Bhat_melted) <- c("gang_i", "gang_j", "b_ij", "id_i", "id_j") 
+colnames(Bhat_melted) <- c("gang_i", "gang_j", "b_ij", "b_ij_lb", "b_ij_ub", "id_i", "id_j") 
 # Bhat_melted <- Bhat_melted %>% dplyr::select(-Var1, -Var2)
 
 # col_mapping$cluster <- as.integer(col_mapping$cluster) - 1
@@ -72,7 +84,7 @@ hmColors <- colorRampPalette(c("white", bcOrange))(10)
 
 # Bhat_melted_diag <- Bhat_melted_diag %>% arrange(g1)
 
-### FIGURE ###
+### FIGURES ###
 
 Bhat_hm <- ggplot(data=Bhat_melted, aes(x=id_i, y=id_j, fill=b_ij)) + 
   geom_tile(colour="white", width=.9, height=.9) +
@@ -89,5 +101,14 @@ Bhat_hm <- ggplot(data=Bhat_melted, aes(x=id_i, y=id_j, fill=b_ij)) +
         axis.title.y=element_blank(),
         axis.text.y=element_text(),
         axis.ticks.y=element_blank()) +
-  labs(x=" ", y=" ", title="Inter- and Intra-Gang Conflict Intensities")
+  labs(x=" ", y=" ", title="Inter- and Intra-Gang Conflict Intensities, Point Estimates")
 # Bhat_hm
+
+Bhat_ci <- Bhat_melted %>% ggplot(aes(x=b_ij, y=factor(gang_i, levels=gang_names))) + 
+  geom_point(size=.5) +
+  geom_segment(aes(x=b_ij_lb, xend=b_ij_ub, y=factor(gang_i, levels=gang_names), yend=factor(gang_i, levels=gang_names), color=factor(gang_i, levels=gang_names))) +
+  scale_color_manual(values=turf_cols, labels=gang_names) +
+  theme_classic() +
+  theme(legend.position="none") +
+  labs(x="Conflict Intensity", y="Gang", title="Conflict Intensity, Uncertainty") +
+  facet_wrap(~gang_j)

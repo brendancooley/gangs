@@ -56,6 +56,9 @@ clusters_base_df <- clusters_base_df %>% arrange(GEOID)
 clustersM <- matrix(nrow=nrow(clusters_base_df), ncol=L)
 BhatL <- list()
 cpd_agreement_ratio_vec <- c()
+cpd_agreement_ratio_gang_vec <- c()
+cpd_agreement_ratio_peaceful_vec <- c()
+gang_frac_vec <- c()
 J_estimates_vec <- c()
 label_counts <- data.frame(owners_all, 0) %>% as_tibble()
 colnames(label_counts) <- c("owner", "count")
@@ -63,7 +66,7 @@ colnames(label_counts) <- c("owner", "count")
 for (i in 1:L) {
   
   # blank matrix for Bhat vals
-  Bhat_mat <- matrix(nrow=gangs_V+1, ncol=gangs_V+1)
+  Bhat_mat <- matrix(nrow=length(owners_all), ncol=length(owners_all))
   colnames(Bhat_mat) <- rownames(Bhat_mat) <- owners_all
   
   clusters_i <- read_csv(paste0(clusters_bs_path, i, ".csv"), col_names=FALSE, col_types=cols()) %>% pull(.)
@@ -94,7 +97,7 @@ for (i in 1:L) {
   }
   
   clusters_i_df$assignment <- permn_results[[1]]
-  # print(table(clusters_i_df$assignment))
+  print(table(clusters_i_df$assignment))
   
   # pc_out <- permute_clusters(clusters_i_df$cluster, clusters_base_df$cluster)
   # clusters_i_df$cluster <- pc_out["clusters"][[1]]
@@ -102,20 +105,18 @@ for (i in 1:L) {
   labels <- permn_results["labels"][[1]]
   cpd_agreement_ratio_i <- 1 - permn_results[["loss"]] / nrow(clusters_i_df)
   cpd_agreement_ratio_vec <- c(cpd_agreement_ratio_vec, cpd_agreement_ratio_i)
-  # print("loss all:")
-  # print(loss_frac_all)
   
-  clusters_gangs_all_i <- clusters_i_df %>% filter(GEOID %in% cpd_turf_gangs_all$GEOID)
-  loss_frac_gangs_all <- sum(clusters_gangs_all_i$assignment != cpd_turf_gangs_all$owner) / nrow(cpd_turf_gangs_all) 
-  # print("loss gangs:")
-  # print(loss_frac_gangs_all)
+  clusters_i_df_gang <- clusters_i_df %>% filter(assignment != "peaceful") 
+  clusters_i_df_peaceful <- clusters_i_df %>% filter(assignment == "peaceful")
+  cpd_turf_gang_i <- cpd_turf_binary %>% filter(GEOID %in% clusters_i_df_gang$GEOID)
+  cpd_turf_peaceful_i <- cpd_turf_binary %>% filter(GEOID %in% clusters_i_df_peaceful$GEOID)
+  cpd_agreement_ratio_gang_i <- sum(clusters_i_df_gang$assignment == cpd_turf_gang_i$owner) / nrow(clusters_i_df_gang)
+  cpd_agreement_ratio_peaceful_i <- sum(clusters_i_df_peaceful$assignment == cpd_turf_peaceful_i$owner) / nrow(clusters_i_df_peaceful)
+  cpd_agreement_ratio_gang_vec <- c(cpd_agreement_ratio_gang_vec, cpd_agreement_ratio_gang_i)
+  cpd_agreement_ratio_peaceful_vec <- c(cpd_agreement_ratio_peaceful_vec, cpd_agreement_ratio_peaceful_i)
   
-  clusters_gangs_i <- clusters_i_df %>% filter(assignment!="peaceful")
-  gangs_i <- clusters_gangs_i$assignment %>% unique()
-  cpd_gangs_i <- cpd_turf_binary %>% filter(GEOID %in% clusters_gangs_i$GEOID)
-  loss_frac_gangs_i <- sum(clusters_gangs_i$assignment != cpd_gangs_i$owner) / nrow(clusters_gangs_i)
-  # print("loss gangs i:")
-  # print(loss_frac_gangs_i)
+  gang_frac_i <- nrow(clusters_i_df_gang) / nrow(clusters_i_df)
+  gang_frac_vec <- c(gang_frac_vec, gang_frac_i)
   
   clustersM[,i] <- clusters_i_df$assignment
   
@@ -144,9 +145,13 @@ write_csv(J_estimates_vec %>% as.data.frame(), J_all_path, col_names=FALSE)
 # label counts
 write_csv(label_counts, label_counts_path)
 
+# gang frac
+write_csv(gang_frac_vec %>% as.data.frame(), gang_frac_path, col_names=FALSE)
 
 # cpd agreement
 write_csv(cpd_agreement_ratio_vec %>% as.data.frame(), cpd_agreement_ratio_path, col_names=FALSE)
+write_csv(cpd_agreement_ratio_peaceful_vec %>% as.data.frame(), cpd_agreement_ratio_peaceful_path, col_names=FALSE)
+write_csv(cpd_agreement_ratio_gang_vec %>% as.data.frame(), cpd_agreement_ratio_gang_path, col_names=FALSE)
 # cpd_agreement_ratio <- read_csv(cpd_agreement_ratio_path, col_names=FALSE) %>% pull()
 # quantile(cpd_agreement_ratio, c(.025, .975))
 
@@ -158,6 +163,45 @@ cluster_props <- cluster_props %>% select(GEOID, everything())
 # cluster_props %>% print(n=1000)
 
 write_csv(cluster_props, cluster_props_path)
+
+### SUBSET TO ITERATIONS WITH K=4 ###
+
+L4 <- sum(J_estimates_vec==5)
+clustersM4 <- matrix(nrow=nrow(clusters_base_df), ncol=L4)
+ids4 <- which(J_estimates_vec==5)
+
+for (idx in 1:length(ids4)) {
+  
+  i <- ids4[idx]
+  
+  clusters_i <- read_csv(paste0(clusters_bs_path, i, ".csv"), col_names=FALSE, col_types=cols()) %>% pull(.)
+  geoids_keep_i <- read_csv(paste0(geoids_keep_bs_path, i, ".csv"), col_names=FALSE, col_types=cols()) %>% pull(.)
+  geoids_zero_i <- read_csv(paste0(geoids_zero_bs_path, i, ".csv"), col_names=FALSE, col_types=cols()) %>% pull(.)
+  
+  clusters_i_keep_df <- data.frame(clusters_i, geoids_keep_i)
+  colnames(clusters_i_keep_df) <- c("cluster", "GEOID")
+  zero_i_df <- data.frame(nc_i, geoids_zero_i)
+  colnames(zero_i_df) <- c("cluster", "GEOID")
+  
+  clusters_i_df <- bind_rows(clusters_i_keep_df, zero_i_df) %>% as_tibble()
+  clusters_i_df <- clusters_i_df %>% arrange(GEOID)
+  clusters_i_df$cluster <- clusters_i_df$cluster + 1
+  
+  permn_results <- permute_clusters(clusters_i_df$cluster, cpd_turf_binary$owner)
+  
+  clusters_i_df$assignment <- permn_results[[1]]
+  clustersM4[,idx] <- clusters_i_df$assignment
+  
+}
+
+# export
+cluster_props4 <- apply(clustersM4, 1, function(x) table(factor(x, levels=owners_all))/L4)
+cluster_props4 <- t(cluster_props4) %>% as_tibble()
+cluster_props4$GEOID <- clusters_base_df$GEOID
+cluster_props4 <- cluster_props4 %>% select(GEOID, everything())
+# cluster_props %>% print(n=1000)
+
+write_csv(cluster_props4, cluster_props4_path)
 
 ### CONVERT TO BINARY OWNERSHIP MATRIX ###
 
@@ -178,8 +222,12 @@ write_csv(cluster_binary, cluster_binary_path)
 ### B_HAT ###
 
 Bhat_mean <- apply(simplify2array(BhatL), 1:2, mean, na.rm=T)
+Bhat_lb <- apply(simplify2array(BhatL), 1:2, quantile, na.rm=T, probs=.025)
+Bhat_ub <- apply(simplify2array(BhatL), 1:2, quantile, na.rm=T, probs=.975)
 
 write_csv(Bhat_mean %>% as.data.frame(), Bhat_mean_path)
+write_csv(Bhat_lb %>% as.data.frame(), Bhat_lb_path)
+write_csv(Bhat_ub %>% as.data.frame(), Bhat_ub_path)
 
 
 ### LOSS BASELINE ###

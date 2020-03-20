@@ -4,7 +4,7 @@
 # invisible(lapply(paste0('package:', names(sessionInfo()$otherPkgs)), detach, character.only=TRUE, unload=TRUE))
 source("../01_code/00_params.R")
 
-libs <- c("tidyverse", "tigris", "tmap", "rgdal", "GISTools", "scales", "leaflet")
+libs <- c("tidyverse", "tigris", "tmap", "rgdal", "GISTools", "scales", "leaflet", "stringi")
 ipak(libs)
 
 tracts <- readOGR(tracts_path, verbose=FALSE)
@@ -52,6 +52,7 @@ major_gangs <- read_csv(paste0(gang_territory_path, "major_gangs.csv"), col_name
 
 # cluster props
 cluster_props <- read_csv(cluster_props_path)
+cluster_props4 <- read_csv(cluster_props4_path)
 
 # cluster_binary
 cluster_binary <- read_csv(cluster_binary_path)
@@ -64,6 +65,11 @@ table(cluster_props$max_id)
 cluster_props$alpha <- apply(cp_mat, 1, max) 
 # cluster_props$`vice lords` %>% sort()
 # cluster_props %>% dplyr::select(GEOID, max_id, alpha) %>% arrange(desc(alpha)) %>% print(n=400) 
+
+cp_mat <- cluster_props4 %>% dplyr::select(-c("GEOID", "peaceful")) %>% as.matrix()
+cluster_props4$max_id <- colnames(cluster_props4 %>% dplyr::select(-GEOID, -peaceful))[apply(cp_mat, 1, which.max)]
+table(cluster_props4$max_id)
+cluster_props4$alpha <- apply(cp_mat, 1, max) 
 
 # aggregate smaller gangs (cpd)
 # major_gangs <- colnames(turf_shares)[2:7]
@@ -106,6 +112,10 @@ cluster_props_geo <- geo_join(tracts, cluster_props_df_col, "GEOID", "GEOID")
 # show_col(clusters_df_col$color, labels=FALSE)
 # show_col(clusters_df_col$color_a, labels=FALSE)
 
+cluster_props4_df_col <- left_join(cluster_props4, col_mapping_turf, by=c("max_id"="owner"))
+cluster_props4_df_col$color_a <- add.alpha(cluster_props4_df_col$color, cluster_props4_df_col$alpha)
+cluster_props4_geo <- geo_join(tracts, cluster_props4_df_col, "GEOID", "GEOID")
+
 # cluster_binary <- cluster_binary %>% filter(cluster!=nc)
 # cluster_binary$cluster <- ifelse(cluster_binary$cluster > nc, cluster_binary$cluster-1, cluster_binary$cluster)
 
@@ -135,6 +145,16 @@ cluster_props_map <- tm_shape(cluster_props_geo) +
   tm_shape(chi_outline) +
   tm_borders(col="black") +
   # tm_polygons("cluster", title=paste0("Cluster ID"), palette="Set3") +
+  tm_add_legend(type="fill", labels=stri_trans_totitle(col_mapping_turf$owner), col=as.character(col_mapping_turf$color)) +
+  tm_layout(bg.color="white", outer.bg.color="white", legend.position=c("left", "bottom"))
+
+cluster_props4_map <- tm_shape(cluster_props4_geo) +
+  tm_fill(col="color_a") +
+  tm_borders(col="white") +
+  tm_shape(chi_outline) +
+  tm_borders(col="black") +
+  # tm_polygons("cluster", title=paste0("Cluster ID"), palette="Set3") +
+  tm_add_legend(type="fill", labels=stri_trans_totitle(col_mapping_turf$owner), col=as.character(col_mapping_turf$color)) +
   tm_layout(bg.color="white", outer.bg.color="white", legend.position=c("left", "bottom"))
 
 cluster_binary_map <- tm_shape(cluster_binary_geo) +
@@ -143,6 +163,7 @@ cluster_binary_map <- tm_shape(cluster_binary_geo) +
   tm_shape(chi_outline) +
   tm_borders(col="black") +
   # tm_polygons("cluster", title=paste0("Cluster ID"), palette="Set3") +
+  tm_add_legend(type="fill", labels=stri_trans_totitle(col_mapping_turf$owner), col=as.character(col_mapping_turf$color)) +
   tm_layout(bg.color="white", outer.bg.color="white", legend.position=c("left", "bottom"))
 
 chi_turf_map <- tm_shape(turf_shares_geo) +
@@ -150,6 +171,7 @@ chi_turf_map <- tm_shape(turf_shares_geo) +
   tm_borders(col="white") +
   tm_shape(chi_outline) +
   tm_borders(col="black") +
+  tm_add_legend(type="fill", labels=stri_trans_totitle(col_mapping_turf$owner), col=as.character(col_mapping_turf$color)) +
   tm_layout(bg.color="white", outer.bg.color="white", legend.position=c("left", "bottom"))
 
 chi_turf_binary_map <- tm_shape(turf_binary_geo) +
@@ -157,4 +179,7 @@ chi_turf_binary_map <- tm_shape(turf_binary_geo) +
   tm_borders(col="white") +
   tm_shape(chi_outline) +
   tm_borders(col="black") +
+  tm_add_legend(type="fill", labels=stri_trans_totitle(col_mapping_turf$owner), col=as.character(col_mapping_turf$color)) +
   tm_layout(bg.color="white", outer.bg.color="white", legend.position=c("left", "bottom"))
+
+comparison_maps <- tmap_arrange(chi_turf_binary_map, cluster_props_map)

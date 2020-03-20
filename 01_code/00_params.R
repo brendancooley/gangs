@@ -98,11 +98,19 @@ P_path <- paste0(results_city_period_path, "P.csv")
 P_sorted_path <- paste0(results_city_period_path, "P_sorted.csv")
 
 Bhat_mean_path <- paste0(bootstrap_path, "Bhat_mean.csv")
+Bhat_lb_path <- paste0(bootstrap_path, "Bhat_lb.csv")
+Bhat_ub_path <- paste0(bootstrap_path, "Bhat_ub.csv")
+
 cluster_props_path <- paste0(bootstrap_path, "cluster_props.csv")
+cluster_props4_path <- paste0(bootstrap_path, "cluster_props4.csv")  # subset to K=4
 cluster_binary_path <- paste0(bootstrap_path, "cluster_binary.csv")
 
 label_counts_path <- paste0(results_path, "label_counts.csv")
+gang_frac_path <- paste0(results_path, "gang_frac.csv")
+
 cpd_agreement_ratio_path <- paste0(results_path, "cpd_agreement_ratio.csv")
+cpd_agreement_ratio_gang_path <- paste0(results_path, "cpd_agreement_ratio_gang.csv")
+cpd_agreement_ratio_peaceful_path <- paste0(results_path, "cpd_agreement_ratio_peaceful.csv")
 sample_agreement_ratio_path <- paste0(results_path, "sample_agreement_ratio.csv")
 
 # figures
