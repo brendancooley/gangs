@@ -19,7 +19,6 @@ K_upper <- K_all[97]
 
 K_mid <- (K_upper - K_lower) / 2
 
-L <- 11
 eigs_mat <- matrix(nrow=L, ncol=50)
 for (i in 1:L) {
   eigs_i <- read_csv(paste0(eig_bs_path, i, ".csv"), col_names=FALSE) %>% arrange(desc(X1)) %>% pull()
