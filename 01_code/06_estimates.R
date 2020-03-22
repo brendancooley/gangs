@@ -32,6 +32,7 @@ gangs_major <- read_csv(paste0(gang_territory_path, "major_gangs.csv"), col_name
 
 cpd_turf_binary$owner <- as.character(cpd_turf_binary$owner)
 cpd_turf_gangs_all <- cpd_turf_binary %>% filter(owner!="peaceful")
+# cpd_turf_gangs_all$owner %>% unique()
 # cpd_turf_binary$owner <- ifelse(cpd_turf_binary$owner %in% c(gangs_major, "peaceful"), cpd_turf_binary$owner, "other")
 
 owners_all <- cpd_turf_binary %>% pull(owner) %>% unique()

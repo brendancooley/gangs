@@ -51,6 +51,17 @@ ownership_mean <- ownership_mean %>% select(GEOID, everything())
 ownership_sy <- ownership_sy %>% select(GEOID, everything())
 ownership_ey <- ownership_ey %>% select(GEOID, everything())
 
+# calculate number of unique qualifying gangs
+cp_mat <- ownership_mean %>% dplyr::select(-c("GEOID")) %>% as.matrix()
+ownership_mean_test <- ownership_mean
+ownership_mean_test$max_id <- colnames(ownership_mean %>% dplyr::select(-GEOID))[apply(cp_mat, 1, which.max)]
+ownership_mean_test$owner_prop <- apply(cp_mat, 1, max)
+ownership_mean_test %>% select(GEOID, max_id, owner_prop)
+ownership_mean_test <- ownership_mean_test %>% filter(owner_prop > gang_tract_thres)
+cpd_gangs_N <- table(ownership_mean_test$max_id) %>% length()
+
+write_csv(cpd_gangs_N %>% as.data.frame(), cpd_gangs_N_path)
+
 ownership_mean_long <- ownership_mean %>% pivot_longer(-GEOID, names_to="gang", values_to="share")
 ownership_sy_long <- ownership_sy %>% pivot_longer(-GEOID, names_to="gang", values_to="share")
 ownership_ey_long <- ownership_ey %>% pivot_longer(-GEOID, names_to="gang", values_to="share")

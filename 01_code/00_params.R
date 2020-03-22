@@ -77,6 +77,8 @@ turf_binary_path <- paste0(output_path, "turf_binary.csv")
 turf_binary_sy_path <- paste0(output_path, "turf_binary_sy.csv")
 turf_binary_ey_path <- paste0(output_path, "turf_binary_ey.csv")
 
+cpd_gangs_N_path <- paste0(output_path, "cpd_gangs_N.csv")  # number of gangs after filtering by mean and threshold
+
 # results
 
 ts_period_path <- paste0(results_city_period_path, "ts_mat.csv")
