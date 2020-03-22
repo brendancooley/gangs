@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="generator" content="pandoc">
   <meta name="author" content="Brendan Cooley | Noam Reich" />
-  <meta name="dcterms.date" content="2019-12-17" />
+  <meta name="dcterms.date" content="2020-03-24" />
   <title>Gunshots and Turf Wars:</title>
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -483,7 +483,7 @@ document.getElementsByTagName('head')[0].appendChild(style);
 	<div class="cover-top">
 	  	<h1 class="title">Gunshots and Turf Wars:</h1>
 			  	<h2 class="subtitle">Inferring Gang Territories from Administrative Data</h1>
-						<h3 class="date">17 December 2019</h3>
+						<h3 class="date">24 March 2020</h3>
 			</div>
 	<div class="cover-bottom">
 				<h3>Brendan Cooley | Noam Reich</h3>
@@ -494,46 +494,67 @@ document.getElementsByTagName('head')[0].appendChild(style);
 </section>
 
 <section><section id="gunshots-and-turf-wars" class="title-slide slide level1"><h1>Gunshots and Turf Wars</h1><div class="fragment">
-<p><strong>Gunshots and Gang Violence</strong></p>
+<p><strong>Gunshots</strong></p>
 <blockquote>
-<p>“In 2006 nearly 50 percent of the homicides and a large percentage of other violent crimes and property crimes committed in Chicago were attributed to street gangs that are involved in drug trafficking” - <span class="citation" data-cites="NDIC2007">National Drug Intelligence Center (2007)</span></p>
+<p>“In 2006 nearly <strong>50 percent of the homicides</strong> and a large percentage of other violent crimes and property crimes committed in Chicago <strong>were attributed to street gangs</strong> that are involved in drug trafficking”</p>
+<ul>
+<li><span class="citation" data-cites="NDIC2007">National Drug Intelligence Center (2007)</span></li>
+</ul>
 </blockquote>
 <ul>
-<li><span class="citation" data-cites="Sanchez1991">Sanchez-Jankowski (1991)</span>, <span class="citation" data-cites="Levitt2000">Levitt and Venkatesh (2000)</span>, <span class="citation" data-cites="Papachristos2009">Papachristos (2009)</span></li>
+<li>Inter- and intra-gang conflict in gang ethnographies
+<ul>
+<li><span class="citation" data-cites="Sanchez1991">Sanchez-Jankowski (1991)</span>, <span class="citation" data-cites="Decker1996">Decker (1996)</span>, <span class="citation" data-cites="Levitt2000">Levitt and Venkatesh (2000)</span>, <span class="citation" data-cites="Papachristos2009">Papachristos (2009)</span></li>
+</ul></li>
+<li>Not unique to Chicago
+<ul>
+<li><span class="citation" data-cites="Howell2018">Howell and Griffiths (2018)</span></li>
+</ul></li>
 </ul>
 </div>
 <div class="fragment">
-<p><strong>Turf Wars:</strong></p>
+<p><strong>Turf Wars</strong></p>
 <blockquote>
-<p>“Gang violence is often sparked by competitive relations over <strong>turf.</strong> A gang’s turf has economic and symbolic value: the gang regulates who sells what on its street corners, and gang members take pride in controlling the blocks where they grew up. Encroaching on another gang’s turf can trigger violence and a series of retaliations as gang members avenge fallen comrades.” <span class="citation" data-cites="Vargas2016">Vargas (2016)</span>, <em>Wounded City</em></p>
+<p>“Gang violence is often sparked by competitive relations over <strong>turf.</strong> A gang’s turf has <strong>economic and symbolic value</strong>: the gang regulates who sells what on its street corners, and gang members take pride in controlling the blocks where they grew up. <strong>Encroaching on another gang’s turf can trigger violence</strong> and a series of retaliations as gang members avenge fallen comrades.”</p>
+<ul>
+<li><span class="citation" data-cites="Vargas2016">Vargas (2016)</span>, <em>Wounded City</em></li>
+</ul>
 </blockquote>
 <ul>
-<li><span class="citation" data-cites="Papachristos2013">Papachristos, Hureau, and Braga (2013)</span>; <span class="citation" data-cites="Vargas2016">Vargas (2016)</span>, <span class="citation" data-cites="Ebdm2018">Bueno De Mesquita (2018)</span>, <span class="citation" data-cites="Bruhn2019">Bruhn (2019)</span></li>
+<li>Territorial rent-seeking: racketerring, drug-selling monopolies, smuggling
+<ul>
+<li><span class="citation" data-cites="Thrasher1927">Thrasher (1927)</span>, <span class="citation" data-cites="Sanchez1991">Sanchez-Jankowski (1991)</span>, <span class="citation" data-cites="Levitt2000">Levitt and Venkatesh (2000)</span>, <span class="citation" data-cites="Venkatesh2000">Venkatesh and Levitt (2000)</span></li>
+</ul></li>
+<li>Conflict over rent streams and challenges to reputations
+<ul>
+<li><span class="citation" data-cites="Brantingham2012">Brantingham et al. (2012)</span>, <span class="citation" data-cites="Papachristos2013">Papachristos, Hureau, and Braga (2013)</span>, <span class="citation" data-cites="Vargas2016">Vargas (2016)</span>, <span class="citation" data-cites="Ebdm2018">Bueno De Mesquita (2018)</span></li>
+</ul></li>
 </ul>
 </div></section><section id="measurement-problem" class="slide level2">
 <h2>Measurement Problem</h2>
 <ul>
-<li>Studying gang conflict and police-gang relations empirically often requires information on
-<ul>
-<li>Number and identities of groups</li>
-<li>Territorial footprints</li>
-</ul></li>
-<li><em>Usually unobserved to the analyst</em></li>
+<li>Proposition: understanding gunshots requires understanding gangs</li>
+<li>Problem: Gangs are covert organizations <span class="math inline">\(\implies\)</span> knowledge of gangs remains anecdotal and spatially circumscribed</li>
 </ul>
-<p><strong>Question:</strong> How many gangs operate within a given city and how is territory divided amongst them?</p>
 <div class="fragment">
-<p><strong>Inductive Approaches (Gangs and DTOs):</strong></p>
-<ul>
-<li>Police records: <span class="citation" data-cites="Bruhn2019">Bruhn (2019)</span>, <span class="citation" data-cites="Melnikov2019">Melnikov, Schmidt-Padilla, and Sviatschi (2019)</span></li>
-<li>Newspapers, Natural Language Processing: <span class="citation" data-cites="Sobrino2019">Sobrino (2019)</span></li>
-<li>Mixed methods: Alcocer et al, Mapping Criminal Organizations</li>
-</ul>
+<p><strong>First-Order Descriptive Questions</strong></p>
+<ol type="1">
+<li>How many gangs operate within a given municipality?</li>
+<li>How is territory divided amongst them?</li>
+</ol>
 </div>
 <div class="fragment">
-<p><strong>Limitations</strong></p>
+<p><strong>Existing Approaches</strong></p>
 <ul>
-<li>Methods used to construct police data opaque</li>
-<li>Inductive approaches require local subject matter expertise</li>
+<li>Police Records: <span class="citation" data-cites="Bruhn2019">Bruhn (2019)</span> (Chicago), <span class="citation" data-cites="Melnikov2019">Melnikov, Schmidt-Padilla, and Sviatschi (2019)</span> (San Salvador)
+<ul>
+<li>Not broadly available or not shared with public</li>
+<li>Reporting biases and auditability: how are data constructed?</li>
+</ul></li>
+<li>Newspapers, NLP, Mixed Methods <span class="citation" data-cites="Sobrino2019">Sobrino (2019)</span> and <span class="citation" data-cites="Signoret2020">Signoret (2020)</span>
+<ul>
+<li>Require deep subject matter expertise, difficult to generalize beyond target locale</li>
+</ul></li>
 </ul>
 </div>
 </section><section id="approach" class="slide level2">
@@ -885,6 +906,9 @@ Bhat_hm
 <li><span class="citation" data-cites="Bruhn2019">Bruhn (2019)</span>, <a href="#/data">Back</a></li>
 </ul>
 <div id="refs" class="references" role="doc-bibliography">
+<div id="ref-Brantingham2012">
+<p>Brantingham, P. Jeffrey, George E. Tita, Martin B. Short, and Shannon E. Redi. 2012. “The Ecology of Gang Territorial Boundaries.” <em>Criminology</em> 50 (3): 851–85.</p>
+</div>
 <div id="ref-Bruhn2019">
 <p>Bruhn, Jesse. 2019. “The Geography of Gang Violence.”</p>
 </div>
@@ -894,8 +918,14 @@ Bhat_hm
 <div id="ref-Chen2018">
 <p>Chen, Kehui, and Jing Lei. 2018. “Network Cross-Validation for Determining the Number of Communities in Network Data.” <em>Journal of the American Statistical Association</em> 113 (521): 241–51.</p>
 </div>
+<div id="ref-Decker1996">
+<p>Decker, Scott H. 1996. “Collective and normative features of gang violence.” <em>Justice Quarterly</em> 13 (2): 243–64.</p>
+</div>
 <div id="ref-Holland1983">
 <p>Holland, Paul W., Kathryn Blackmond Laskey, and Samuel Leinhardt. 1983. “Stochastic blockmodels: First steps.” <em>Social Networks</em> 5 (2): 109–37.</p>
+</div>
+<div id="ref-Howell2018">
+<p>Howell, James C, and Elizabeth Griffiths. 2018. <em>Gangs in America’s communities</em>. Sage Publications.</p>
 </div>
 <div id="ref-Jin2015">
 <p>Jin, Jiashun. 2015. “Fast Community Detection by SCORE.” <em>The Annals of Statistics</em> 43 (1): 57–89.</p>
@@ -921,14 +951,23 @@ Bhat_hm
 <div id="ref-Sanchez1991">
 <p>Sanchez-Jankowski, Martin. 1991. <em>Islands in the street: Gangs and American urban society</em>.</p>
 </div>
+<div id="ref-Signoret2020">
+<p>Signoret, Patrick. 2020. “Mapping Criminal Organizations to Study Subnational Conflict and Politics.”</p>
+</div>
 <div id="ref-Sobrino2019">
 <p>Sobrino, Fernanda. 2019. “Mexican Cartel Wars: Fighting for the U.S. Opioid Market,” 1–61.</p>
+</div>
+<div id="ref-Thrasher1927">
+<p>Thrasher, Frederic Milton. 1927. <em>The gang: A study of 1,313 gangs in Chicago</em>. Chicago IL: University of Chicago Press.</p>
 </div>
 <div id="ref-Trebbi2019">
 <p>Trebbi, Francesco, and Eric Weese. 2019. “Insurgency and Small Wars: Estimation of Unobserved Coalition Structures.” <em>Econometrica</em> 87 (2): 463–96.</p>
 </div>
 <div id="ref-Vargas2016">
 <p>Vargas, Robert. 2016. <em>Wounded city: Violent turf wars in a Chicago barrio</em>. Oxford University Press.</p>
+</div>
+<div id="ref-Venkatesh2000">
+<p>Venkatesh, Sudhir Alladi, and Steven D. Levitt. 2000. “"Are we a family or a business?" History and disjuncture in the urban American street gang.”</p>
 </div>
 </div></section>
     </div>

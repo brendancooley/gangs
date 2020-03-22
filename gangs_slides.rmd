@@ -51,46 +51,54 @@ source("01_code/00_params.R")
 
 <div class="fragment">
 
-**Gunshots and Gang Violence**
+**Gunshots**
 
-> "In 2006 nearly 50 percent of the homicides and a large percentage of other violent crimes and property crimes committed in Chicago were attributed to street gangs that are involved in drug trafficking" - @NDIC2007
+> "In 2006 nearly **50 percent of the homicides** and a large percentage of other violent crimes and property crimes committed in Chicago **were attributed to street gangs** that are involved in drug trafficking"
+> 
+> - @NDIC2007
 
-- @Sanchez1991, @Levitt2000, @Papachristos2009
+- Inter- and intra-gang conflict in gang ethnographies
+  + @Sanchez1991, @Decker1996, @Levitt2000, @Papachristos2009
+- Not unique to Chicago
+  + @Howell2018
 
 </div>
 <div class="fragment">
 
-**Turf Wars:**
+**Turf Wars**
 
-> "Gang violence is often sparked by competitive relations over **turf.** A gang's turf has economic and symbolic value: the gang regulates who sells what on its street corners, and gang members take pride in controlling the blocks where they grew up. Encroaching on another gang's turf can trigger violence and a series of retaliations as gang members avenge fallen comrades." @Vargas2016, *Wounded City*
+> "Gang violence is often sparked by competitive relations over **turf.** A gang's turf has **economic and symbolic value**: the gang regulates who sells what on its street corners, and gang members take pride in controlling the blocks where they grew up. **Encroaching on another gang's turf can trigger violence** and a series of retaliations as gang members avenge fallen comrades." 
+> 
+> - @Vargas2016, *Wounded City*
 
-- @Papachristos2013; @Vargas2016, @Ebdm2018, @Bruhn2019
+- Territorial rent-seeking: racketerring, drug-selling monopolies, smuggling 
+  + @Thrasher1927, @Sanchez1991, @Levitt2000, @Venkatesh2000
+- Conflict over rent streams and challenges to reputations
+  + @Brantingham2012, @Papachristos2013, @Vargas2016, @Ebdm2018
 
 </div>
 
 ## Measurement Problem
 
-- Studying gang conflict and police-gang relations empirically often requires information on 
-  + Number and identities of groups
-  + Territorial footprints
-- *Usually unobserved to the analyst*
-
-**Question:** How many gangs operate within a given city and how is territory divided amongst them?
+- Proposition: understanding gunshots requires understanding gangs 
+- Problem: Gangs are covert organizations $\implies$ knowledge of gangs remains anecdotal and spatially circumscribed
 
 . . .
 
-**Inductive Approaches (Gangs and DTOs):**
+**First-Order Descriptive Questions** 
 
-- Police records: @Bruhn2019, @Melnikov2019
-- Newspapers, Natural Language Processing: @Sobrino2019 
-- Mixed methods: Alcocer et al, Mapping Criminal Organizations
+1. How many gangs operate within a given municipality?
+2. How is territory divided amongst them?
 
-. . .
+. . . 
 
-**Limitations**
+**Existing Approaches**
 
-- Methods used to construct police data opaque
-- Inductive approaches require local subject matter expertise
+- Police Records: @Bruhn2019 (Chicago), @Melnikov2019 (San Salvador)
+  + Not broadly available or not shared with public
+  + Reporting biases and auditability: how are data constructed?
+- Newspapers, NLP, Mixed Methods @Sobrino2019 and @Signoret2020
+  + Require deep subject matter expertise, difficult to generalize beyond target locale
 
 ## Approach
 
