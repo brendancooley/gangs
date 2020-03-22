@@ -1,7 +1,7 @@
 ---
 title: "Gunshots and Turf Wars:"
 subtitle: Inferring Gang Territories from Administrative Data
-date: "17 December 2019"
+date: "24 March 2020"
 author: Brendan Cooley | Noam Reich
 position: Ph.D. Candidates
 institution: Princeton University
@@ -37,65 +37,23 @@ for (i in helperFiles) {
   source(paste0(helperPath, i))
 }
 
-libs <- c("tidyverse", "tigris", "leaflet", "leaflet.extras", "tmap", "rgdal", "RColorBrewer", "reshape2", "lubridate", "patchwork", "ggnewscale", "sf")
+libs <- c("tidyverse")
 ipak(libs)
 
 if (file.exists('references.RData')) load('references.RData')
 
 source("01_code/00_params.R")
 
-### for descriptives ###
-
-chi_clean <- read_csv(paste0("chicago/", chi_clean_path))
-
-chi_pop <- read_csv(paste0("chicago/", chi_pop_path))
-chi_cov <- read_csv(paste0("chicago/", chi_cov_path_pre, "2016.csv")) %>% select(GEOID, population)
-
-chi_tha <- read_csv(paste0("chicago/", chi_tha_path))
-chi_tsa <- read_csv(paste0("chicago/", chi_tsa_path))
-chi_tna <- read_csv(paste0("chicago/", chi_tna_path))
-  
-chi_dsa <- read_csv(paste0("chicago/", chi_dsa_path))
-chi_districts <- readOGR(paste0("chicago/", chi_districts_path))
-chi_mapping <- read_csv(paste0("chicago/", chi_geoid_cor_path))
-
-chi_mat_h <- read_csv(paste0("chicago/", chi_th_matrix_path), col_names=FALSE)
-chi_mat_s <- read_csv(paste0("chicago/",chi_ts_matrix_path), col_names=FALSE)
-chi_mat_n <- read_csv(paste0("chicago/", chi_tn_matrix_path), col_names=FALSE)
-
-chi_tracts <- readOGR(paste0("chicago/", chi_tracts_path))
-chi_shp <- readOGR(paste0("chicago/", chi_shape_path), "Chicago")
-tracts_n <- chi_tracts$GEOID %>% length()
-
-### for analysis ###
-
-eigs <- read_csv(paste0("chicago/", analysisSub, "/", eig_path), col_names=FALSE)
-J <- read_csv(paste0("chicago/", analysisSub, "/", J_path), col_names=FALSE) %>% pull(.)
-K <- J - 1
-
-clusters <- read_csv(paste0("chicago/", analysisSub, "/", clusters_path), col_names=FALSE) %>% pull(.)
-geoid_keep <- read_csv(paste0("chicago/", analysisSub, "/", geoid_keep_path), col_names=FALSE) %>% pull(.)
-geoid_zero <- read_csv(paste0("chicago/", analysisSub, "/", geoid_zero_path), col_names=FALSE) %>% pull(.)
-nc <- read_csv(paste0("chicago/", analysisSub, "/", nc_path), col_names=FALSE) %>% pull(.) # noise cluster
-
-P <- read_csv(paste0("chicago/", analysisSub, "/", P_path), col_names=FALSE) %>% as.matrix()
-P_sorted <- read_csv(paste0("chicago/", analysisSub, "/", P_sorted_path), col_names=FALSE) %>% as.matrix()
-
-Bhat <- read_csv(paste0("chicago/", analysisSub, "/", Bhat_path), col_names=FALSE) %>% as.matrix()
-
-source("chicago/0x_descriptives.R")
-source("chicago/0x_analysis.R")
 
 ```
 
-
-# Motivation
+# Gunshots and Turf Wars
 
 <div class="fragment">
 
-**Gang Violence**
+**Gunshots and Gang Violence**
 
-> "In 2006 nearly 50 percent of the homicides and a large percentage of other violent crimes and property crimes committed in Chicago were attributed to street gangs that are involved in drug trafficking" - HIDTA 2007
+> "In 2006 nearly 50 percent of the homicides and a large percentage of other violent crimes and property crimes committed in Chicago were attributed to street gangs that are involved in drug trafficking" - @NDIC2007
 
 - @Sanchez1991, @Levitt2000, @Papachristos2009
 
@@ -182,7 +140,7 @@ source("chicago/0x_analysis.R")
 - Victim-based crime reports, 2001-2018
   + Illinois Uniform Crime Reporting code, latitude, longitude, date-time
   + Extract homicides and nonfatal shootings (aggravated battery with firearm)
-  + Project into census tract-months: `r tracts_n` tracts, 4,000 residents each
+  + Project into census tract-months: `#r tracts_n` tracts, 4,000 residents each
 
 </div>
 <div class="fragment">
@@ -209,11 +167,11 @@ source("chicago/0x_analysis.R")
 
 ## Gunshots
 
-```{r gunshots_tracts, echo=FALSE, warning=FALSE, message=FALSE, fig.height=5.5, dpi=300}
+<!-- ```{r gunshots_tracts, echo=FALSE, warning=FALSE, message=FALSE, fig.height=5.5, dpi=300}
 
 chi_shootings_tracts_mfirst_map
 
-```
+``` -->
 
 # Model
 
@@ -437,35 +395,35 @@ $$
 
 - `r K` gangs detected
 
-```{r scree, echo=FALSE, warning=FALSE, message=FALSE, fig.height=4.5, dpi=300}
+<!-- ```{r scree, echo=FALSE, warning=FALSE, message=FALSE, fig.height=4.5, dpi=300}
 
 screePlot
 
-```
+``` -->
 
 ## Empirical Covariances
 
-```{r emp_cov, echo=FALSE, warning=FALSE, message=FALSE, fig.height=5.5, dpi=300}
+<!-- ```{r emp_cov, echo=FALSE, warning=FALSE, message=FALSE, fig.height=5.5, dpi=300}
 
 block_hm
 
-```
+``` -->
 
 ## Territorial Partition
 
-```{r partition, echo=FALSE, warning=FALSE, message=FALSE, fig.height=5.5, dpi=300}
+<!-- ```{r partition, echo=FALSE, warning=FALSE, message=FALSE, fig.height=5.5, dpi=300}
 
 chi_clusters_map
 
-```
+``` -->
 
 ## Conflict Intensities
 
-```{r b_hat, echo=FALSE, warning=FALSE, message=FALSE, fig.height=5.5, dpi=300}
+<!-- ```{r b_hat, echo=FALSE, warning=FALSE, message=FALSE, fig.height=5.5, dpi=300}
 
 Bhat_hm
 
-```
+``` -->
 
 # Next Steps
 

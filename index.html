@@ -479,7 +479,7 @@ document.getElementsByTagName('head')[0].appendChild(style);
   	<ul class="verticator"></ul>
     <div class="slides">
 
-<section data-background="figs/chi_aerial.jpg">
+<section data-background="other/chi_aerial.jpg">
 	<div class="cover-top">
 	  	<h1 class="title">Gunshots and Turf Wars:</h1>
 			  	<h2 class="subtitle">Inferring Gang Territories from Administrative Data</h1>
@@ -493,10 +493,10 @@ document.getElementsByTagName('head')[0].appendChild(style);
 			</div>
 </section>
 
-<section><section id="motivation" class="title-slide slide level1"><h1>Motivation</h1><div class="fragment">
-<p><strong>Gang Violence</strong></p>
+<section><section id="gunshots-and-turf-wars" class="title-slide slide level1"><h1>Gunshots and Turf Wars</h1><div class="fragment">
+<p><strong>Gunshots and Gang Violence</strong></p>
 <blockquote>
-<p>“In 2006 nearly 50 percent of the homicides and a large percentage of other violent crimes and property crimes committed in Chicago were attributed to street gangs that are involved in drug trafficking” - HIDTA 2007</p>
+<p>“In 2006 nearly 50 percent of the homicides and a large percentage of other violent crimes and property crimes committed in Chicago were attributed to street gangs that are involved in drug trafficking” - <span class="citation" data-cites="NDIC2007">National Drug Intelligence Center (2007)</span></p>
 </blockquote>
 <ul>
 <li><span class="citation" data-cites="Sanchez1991">Sanchez-Jankowski (1991)</span>, <span class="citation" data-cites="Levitt2000">Levitt and Venkatesh (2000)</span>, <span class="citation" data-cites="Papachristos2009">Papachristos (2009)</span></li>
@@ -522,7 +522,7 @@ document.getElementsByTagName('head')[0].appendChild(style);
 </ul>
 <p><strong>Question:</strong> How many gangs operate within a given city and how is territory divided amongst them?</p>
 <div class="fragment">
-<p><strong>Existing Approaches:</strong></p>
+<p><strong>Inductive Approaches (Gangs and DTOs):</strong></p>
 <ul>
 <li>Police records: <span class="citation" data-cites="Bruhn2019">Bruhn (2019)</span>, <span class="citation" data-cites="Melnikov2019">Melnikov, Schmidt-Padilla, and Sviatschi (2019)</span></li>
 <li>Newspapers, Natural Language Processing: <span class="citation" data-cites="Sobrino2019">Sobrino (2019)</span></li>
@@ -587,7 +587,7 @@ document.getElementsByTagName('head')[0].appendChild(style);
 <ul>
 <li>Illinois Uniform Crime Reporting code, latitude, longitude, date-time</li>
 <li>Extract homicides and nonfatal shootings (aggravated battery with firearm)</li>
-<li>Project into census tract-months: 861 tracts, 4,000 residents each</li>
+<li>Project into census tract-months: <code>#r tracts_n</code> tracts, 4,000 residents each</li>
 </ul></li>
 </ul>
 </div>
@@ -614,7 +614,11 @@ document.getElementsByTagName('head')[0].appendChild(style);
 </center>
 </section><section id="gunshots-1" class="slide level2">
 <h2>Gunshots</h2>
-<p><img data-src="index_files/figure-revealjs/gunshots_tracts-1.png" /><!-- --></p>
+<!-- ```{r gunshots_tracts, echo=FALSE, warning=FALSE, message=FALSE, fig.height=5.5, dpi=300}
+
+chi_shootings_tracts_mfirst_map
+
+``` -->
 </section></section>
 <section><section id="model" class="title-slide slide level1"><h1>Model</h1><p><strong>Observables</strong></p>
 <ul>
@@ -659,7 +663,7 @@ document.getElementsByTagName('head')[0].appendChild(style);
 <p><strong>Inter-Gang</strong></p>
 <ul>
 <li><span class="math inline">\(\epsilon_{k, \ell}^t\)</span> - the probability a member of gang <span class="math inline">\(k\)</span> shoots a member of gang <span class="math inline">\(\ell\)</span></li>
-<li><strong>Assumption 3 (Symmetry):</strong> <span class="math inline">\(c_{k} \epsilon_{k, \ell}^t = c_{\ell} \epsilon_{\ell, k}^{t}\)</span> with the normalization <span class="math inline">\(c_1 = 1\)</span>. If <span class="math inline">\(k = 0\)</span> or <span class="math inline">\(\ell = 0\)</span> then <span class="math inline">\(\epsilon_{k, \ell}^t = 0\)</span> for all <span class="math inline">\(t\)</span></li>
+<li><strong>Assumption 3 (Quasi-symmetry):</strong> <span class="math inline">\(c_{k} \epsilon_{k, \ell}^t = c_{\ell} \epsilon_{\ell, k}^{t}\)</span> with the normalization <span class="math inline">\(c_1 = 1\)</span>. If <span class="math inline">\(k = 0\)</span> or <span class="math inline">\(\ell = 0\)</span> then <span class="math inline">\(\epsilon_{k, \ell}^t = 0\)</span> for all <span class="math inline">\(t\)</span></li>
 <li><strong>Assumption 4 (Independence):</strong> <span class="math inline">\(\mathbb{E} [ \epsilon_{k, \ell}^t \epsilon_{m, n}^t ] - \mathbb{E} [ \epsilon_{k, \ell}^t ] \mathbb{E} [ \epsilon_{m, n}^t ] = 0\)</span> for <span class="math inline">\(m, n \notin \left\{ k, \ell \right\}\)</span></li>
 </ul>
 </div>
@@ -831,15 +835,31 @@ Q &amp;= \Theta B \Theta^T \\
 <section><section id="results" class="title-slide slide level1"><h1>Results</h1><ul>
 <li>4 gangs detected</li>
 </ul>
-<p><img data-src="index_files/figure-revealjs/scree-1.png" /><!-- --></p></section><section id="empirical-covariances" class="slide level2">
+<!-- ```{r scree, echo=FALSE, warning=FALSE, message=FALSE, fig.height=4.5, dpi=300}
+
+screePlot
+
+``` --></section><section id="empirical-covariances" class="slide level2">
 <h2>Empirical Covariances</h2>
-<p><img data-src="index_files/figure-revealjs/emp_cov-1.png" /><!-- --></p>
+<!-- ```{r emp_cov, echo=FALSE, warning=FALSE, message=FALSE, fig.height=5.5, dpi=300}
+
+block_hm
+
+``` -->
 </section><section id="territorial-partition" class="slide level2">
 <h2>Territorial Partition</h2>
-<p><img data-src="index_files/figure-revealjs/partition-1.png" /><!-- --></p>
+<!-- ```{r partition, echo=FALSE, warning=FALSE, message=FALSE, fig.height=5.5, dpi=300}
+
+chi_clusters_map
+
+``` -->
 </section><section id="conflict-intensities" class="slide level2">
 <h2>Conflict Intensities</h2>
-<p><img data-src="index_files/figure-revealjs/b_hat-1.png" /><!-- --></p>
+<!-- ```{r b_hat, echo=FALSE, warning=FALSE, message=FALSE, fig.height=5.5, dpi=300}
+
+Bhat_hm
+
+``` -->
 </section></section>
 <section id="next-steps" class="title-slide slide level1"><h1>Next Steps</h1><ul>
 <li>Validation
@@ -888,6 +908,9 @@ Q &amp;= \Theta B \Theta^T \\
 </div>
 <div id="ref-Melnikov2019">
 <p>Melnikov, Nikita, Carlos Schmidt-Padilla, and Maria Micaela Sviatschi. 2019. “Gangs, Labor Mobility, and Development.”</p>
+</div>
+<div id="ref-NDIC2007">
+<p>National Drug Intelligence Center. 2007. “Chicago High Intensity Drug Trafficking Area Drug Market Analysis.” U.S. Department of Justice.</p>
 </div>
 <div id="ref-Papachristos2009">
 <p>Papachristos, Andrew V. 2009. “Murder by Structure: Dominance Relations and the Social Structure of Gang Homicide.” <em>American Journal of Sociology</em> 115 (1): 74–128.</p>
