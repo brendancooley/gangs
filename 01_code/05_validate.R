@@ -60,7 +60,7 @@ ownership_mean_test %>% select(GEOID, max_id, owner_prop)
 ownership_mean_test <- ownership_mean_test %>% filter(owner_prop > gang_tract_thres)
 cpd_gangs_N <- table(ownership_mean_test$max_id) %>% length()
 
-write_csv(cpd_gangs_N %>% as.data.frame(), cpd_gangs_N_path)
+write_csv(cpd_gangs_N %>% as.data.frame(), cpd_gangs_N_path, col_names=FALSE)
 
 ownership_mean_long <- ownership_mean %>% pivot_longer(-GEOID, names_to="gang", values_to="share")
 ownership_sy_long <- ownership_sy %>% pivot_longer(-GEOID, names_to="gang", values_to="share")
