@@ -49,6 +49,8 @@ Atick <- 1
 Ptick <- 1
 Ctick <- 1
 
+map_margins <- c(0, 0, 0, 0)
+
 ```
 
 \newpage

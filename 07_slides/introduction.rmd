@@ -2,6 +2,8 @@
 
 source("../01_code/00_params.R")
 
+map_margins <- c(.1, .1, .1, .1)
+
 ```
 
 # Gunshots and Turf Wars
