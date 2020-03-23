@@ -29,115 +29,16 @@ output:
 ---
 
 
-```{r libs, echo=FALSE, warning=FALSE, message=FALSE, results='hide'}
-
-helperPath <- "source/R/"
-helperFiles <- list.files(helperPath)
-for (i in helperFiles) {
-  source(paste0(helperPath, i))
-}
-
-libs <- c("tidyverse")
-ipak(libs)
+```{r references, echo=FALSE, warning=FALSE, message=FALSE, results='hide'}
 
 if (file.exists('references.RData')) load('references.RData')
 
-source("01_code/00_params.R")
-
-
 ```
 
-# Gunshots and Turf Wars
+```{r, child = "07_slides/introduction.rmd"}
+```
 
-<div class="fragment">
 
-**Gunshots**
-
-> "In 2006 nearly **50 percent of the homicides** and a large percentage of other violent crimes and property crimes committed in Chicago **were attributed to street gangs** that are involved in drug trafficking"
-> 
-> - @NDIC2007
-
-- Inter- and intra-gang conflict in gang ethnographies
-  + @Sanchez1991, @Decker1996, @Levitt2000, @Papachristos2009
-- Not unique to Chicago
-  + @Howell2018
-
-</div>
-<div class="fragment">
-
-**Turf Wars**
-
-> "Gang violence is often sparked by competitive relations over **turf.** A gang's turf has **economic and symbolic value**: the gang regulates who sells what on its street corners, and gang members take pride in controlling the blocks where they grew up. **Encroaching on another gang's turf can trigger violence** and a series of retaliations as gang members avenge fallen comrades." 
-> 
-> - @Vargas2016, *Wounded City*
-
-- Territorial rent-seeking: racketerring, drug-selling monopolies, smuggling 
-  + @Thrasher1927, @Sanchez1991, @Levitt2000, @Venkatesh2000
-- Conflict over rent streams and challenges to reputations
-  + @Brantingham2012, @Papachristos2013, @Vargas2016, @Ebdm2018
-
-</div>
-
-## Measurement Problem
-
-- Proposition: understanding gunshots requires understanding gangs 
-- Problem: Gangs are covert organizations $\implies$ knowledge of gangs remains anecdotal and spatially circumscribed
-
-. . .
-
-**First-Order Descriptive Questions** 
-
-1. How many gangs operate within a given municipality?
-2. How is territory divided amongst them?
-
-. . . 
-
-**Existing Approaches**
-
-- Police Records: @Bruhn2019 (Chicago), @Melnikov2019 (San Salvador)
-  + Not broadly available or not shared with public
-  + Reporting biases and auditability: how are data constructed?
-- Newspapers, NLP, Mixed Methods @Sobrino2019 and @Signoret2020
-  + Require deep subject matter expertise, difficult to generalize beyond target locale
-
-## Approach
-
-**Observables:** Time-stamped, geolocated homicides and nonfatal shootings
-
-**Unobservables:**
-
-1. Number of gangs
-2. Territorial partition
-
-. . .
-
-**Inferential Strategy**
-
-1. Model data-generating process for shootings
-    + Non-gang
-    + Intra-gang
-    + Inter-gang
-
-. . .
-
-2. Derive relationship between spatial covariance in shootings and latent variables
-    + Generalization of @Trebbi2019 to inter-group conflict
-
-. . .
-
-3. Estimate model using observed spatial covariances
-
-. . .
-
-4. Validate results using police records (Chicago), *in progress*
-
-## Bottom Line
-
-![](figs/gangmap2012cmag.jpg#left){width=40%}
-
-## Bottom Line
-
-![](figs/gangmap2012cmag.jpg#left){width=40%} ![](figs/all.png#right){width=40%}
 
 # Data {id="data"}
 

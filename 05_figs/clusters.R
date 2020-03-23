@@ -152,6 +152,10 @@ turf_binary_ey_geo <- geo_join(tracts, turf_binary_ey_col, "GEOID", "GEOID")
 
 ### FIGURE ###
 
+chi_outline_map <- tm_shape(chi_outline) +
+  tm_borders(col="black") +
+  tm_layout(bg.color="white", outer.bg.color="white", inner.margins=c(.1, .1, .1, .1))
+
 cluster_props_map <- tm_shape(cluster_props_geo) +
   tm_fill(col="color_a") +
   tm_borders(col="white") +
@@ -160,7 +164,8 @@ cluster_props_map <- tm_shape(cluster_props_geo) +
   # tm_polygons("cluster", title=paste0("Cluster ID"), palette="Set3") +
   tm_add_legend(type="fill", labels=stri_trans_totitle(col_mapping_turf$owner), col=as.character(col_mapping_turf$color),
                 title="Gang") +
-  tm_layout("Estimated Territorial Partition", bg.color="white", outer.bg.color="white", legend.position=c("left", "bottom"))
+  tm_layout("Estimated Territorial Partition", title.position=c("left", "top"), bg.color="white", 
+            outer.bg.color="white", legend.position=c("left", "bottom"), inner.margins=c(.1, .1, .1, .1))
 
 cluster_props4_map <- tm_shape(cluster_props4_geo) +
   tm_fill(col="color_a") +
@@ -194,7 +199,8 @@ chi_turf_binary_map <- tm_shape(turf_binary_geo) +
   tm_shape(chi_outline) +
   tm_borders(col="black") +
   tm_add_legend(type="fill", labels=stri_trans_totitle(col_mapping_turf$owner), col=as.character(col_mapping_turf$color), title="Gang") +
-  tm_layout(paste0("CPD Gang Map, ", bruhn_sy, "-", bruhn_ey), bg.color="white", outer.bg.color="white", legend.position=c("left", "bottom"))
+  tm_layout(paste0("CPD Gang Map, ", bruhn_sy, "-", bruhn_ey), title.position=c("left", "top"), bg.color="white", 
+            outer.bg.color="white", legend.position=c("left", "bottom"), inner.margins=c(.1, .1, .1, .1))
 
 comparison_maps <- tmap_arrange(chi_turf_binary_map, cluster_props_map)
 

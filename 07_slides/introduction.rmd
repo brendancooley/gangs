@@ -1,0 +1,112 @@
+```{r, echo=FALSE, warning=FALSE, message=FALSE, results='hide'}
+
+source("../01_code/00_params.R")
+
+```
+
+# Gunshots and Turf Wars
+
+<div class="fragment">
+
+**Gunshots**
+
+> "In 2006 nearly **50 percent of the homicides** and a large percentage of other violent crimes and property crimes committed in Chicago **were attributed to street gangs** that are involved in drug trafficking"
+> 
+> - @NDIC2007
+
+- Inter- and intra-gang conflict in gang ethnographies
+  + @Sanchez1991, @Decker1996, @Levitt2000, @Papachristos2009
+- Not unique to Chicago
+  + @Howell2018
+
+</div>
+<div class="fragment">
+
+**Turf Wars**
+
+> "Gang violence is often sparked by competitive relations over **turf.** A gang's turf has **economic and symbolic value**: the gang regulates who sells what on its street corners, and gang members take pride in controlling the blocks where they grew up. **Encroaching on another gang's turf can trigger violence** and a series of retaliations as gang members avenge fallen comrades." 
+> 
+> - @Vargas2016, *Wounded City*
+
+- Territorial rent-seeking: racketerring, drug-selling monopolies, smuggling 
+  + @Thrasher1927, @Sanchez1991, @Levitt2000, @Venkatesh2000
+- Conflict over rent streams and challenges to reputations
+  + @Brantingham2012, @Papachristos2013, @Vargas2016, @Ebdm2018
+
+</div>
+
+## Measurement Problem
+
+- **Proposition:** understanding gunshots requires understanding gangs 
+- **Problem:** gangs are covert organizations $\implies$ knowledge of gangs remains anecdotal and spatially circumscribed
+
+. . .
+
+**First-Order Descriptive Questions** 
+
+1. How many gangs operate within a given municipality?
+2. How is territory divided amongst them?
+
+. . . 
+
+**Existing Approaches**
+
+- Police Records: @Bruhn2019 (Chicago), @Melnikov2019 (San Salvador)
+  + Not broadly available or not shared with public
+  + Reporting biases and auditability: how are data constructed?
+- Newspapers, NLP, Mixed Methods [@Blattman2019; @Sobrino2019; @Signoret2020]
+  + Require deep subject matter expertise, difficult to generalize beyond target locale
+
+## Approach
+
+**Observables:** Time-stamped, geolocated homicides and nonfatal shootings
+
+- Widely available in administrative records on crime
+
+**Unobservables:**
+
+1. Number of gangs
+2. Territorial partition
+
+. . .
+
+**Inferential Strategy**
+
+1. Model data-generating process for shootings
+    + Non-gang
+    + Intra-gang
+    + Inter-gang
+
+. . .
+
+2. Derive relationship between spatial covariance in shootings and unobservables
+    + Generalization of @Trebbi2019 to inter-group conflict
+    + Akin to stochastic block model (SBM) [@Holland1983]
+
+. . .
+
+3. Estimate model using observed spatial covariances
+    + Spectral clustering [@Luxberg2007; @Lei2015; @Chen2018]
+
+. . .
+
+4. Validate results using **Chicago** Police Department (CPD) gang maps [@Bruhn2019]
+    + Match partition function labels to those of CPD
+
+## Bottom Line
+
+```{r, echo=FALSE, warning=FALSE, message=FALSE, dpi=400, fig.height=5.5, fig.align="left"}
+
+source("../05_figs/clusters.R")
+tmap_arrange(chi_turf_binary_map, chi_outline_map)
+
+```
+
+## Bottom Line
+
+```{r, echo=FALSE, warning=FALSE, message=FALSE, fig.height=5.5, dpi=400}
+
+source("../05_figs/clusters.R")
+comparison_maps
+
+```

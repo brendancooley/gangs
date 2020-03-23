@@ -533,8 +533,8 @@ document.getElementsByTagName('head')[0].appendChild(style);
 </div></section><section id="measurement-problem" class="slide level2">
 <h2>Measurement Problem</h2>
 <ul>
-<li>Proposition: understanding gunshots requires understanding gangs</li>
-<li>Problem: Gangs are covert organizations <span class="math inline">\(\implies\)</span> knowledge of gangs remains anecdotal and spatially circumscribed</li>
+<li><strong>Proposition:</strong> understanding gunshots requires understanding gangs</li>
+<li><strong>Problem:</strong> gangs are covert organizations <span class="math inline">\(\implies\)</span> knowledge of gangs remains anecdotal and spatially circumscribed</li>
 </ul>
 <div class="fragment">
 <p><strong>First-Order Descriptive Questions</strong></p>
@@ -551,7 +551,7 @@ document.getElementsByTagName('head')[0].appendChild(style);
 <li>Not broadly available or not shared with public</li>
 <li>Reporting biases and auditability: how are data constructed?</li>
 </ul></li>
-<li>Newspapers, NLP, Mixed Methods <span class="citation" data-cites="Sobrino2019">Sobrino (2019)</span> and <span class="citation" data-cites="Signoret2020">Signoret (2020)</span>
+<li>Newspapers, NLP, Mixed Methods <span class="citation" data-cites="Blattman2019 Sobrino2019 Signoret2020">(Blattman et al. 2019; Sobrino 2019; Signoret 2020)</span>
 <ul>
 <li>Require deep subject matter expertise, difficult to generalize beyond target locale</li>
 </ul></li>
@@ -560,6 +560,9 @@ document.getElementsByTagName('head')[0].appendChild(style);
 </section><section id="approach" class="slide level2">
 <h2>Approach</h2>
 <p><strong>Observables:</strong> Time-stamped, geolocated homicides and nonfatal shootings</p>
+<ul>
+<li>Widely available in administrative records on crime</li>
+</ul>
 <p><strong>Unobservables:</strong></p>
 <ol type="1">
 <li>Number of gangs</li>
@@ -578,28 +581,35 @@ document.getElementsByTagName('head')[0].appendChild(style);
 </div>
 <div class="fragment">
 <ol start="2" type="1">
-<li>Derive relationship between spatial covariance in shootings and latent variables
+<li>Derive relationship between spatial covariance in shootings and unobservables
 <ul>
 <li>Generalization of <span class="citation" data-cites="Trebbi2019">Trebbi and Weese (2019)</span> to inter-group conflict</li>
+<li>Akin to stochastic block model (SBM) <span class="citation" data-cites="Holland1983">(Holland, Laskey, and Leinhardt 1983)</span></li>
 </ul></li>
 </ol>
 </div>
 <div class="fragment">
 <ol start="3" type="1">
-<li>Estimate model using observed spatial covariances</li>
+<li>Estimate model using observed spatial covariances
+<ul>
+<li>Spectral clustering <span class="citation" data-cites="Luxberg2007 Lei2015 Chen2018">(Luxburg 2007; Lei and Rinaldo 2015; Chen and Lei 2018)</span></li>
+</ul></li>
 </ol>
 </div>
 <div class="fragment">
 <ol start="4" type="1">
-<li>Validate results using police records (Chicago), <em>in progress</em></li>
+<li>Validate results using <strong>Chicago</strong> Police Department (CPD) gang maps <span class="citation" data-cites="Bruhn2019">(Bruhn 2019)</span>
+<ul>
+<li>Match partition function labels to those of CPD</li>
+</ul></li>
 </ol>
 </div>
 </section><section id="bottom-line" class="slide level2">
 <h2>Bottom Line</h2>
-<p><img data-src="figs/gangmap2012cmag.jpg#left" style="width:40.0%" /></p>
+<p><img src="index_files/figure-revealjs/unnamed-chunk-3-1.png" style="display: block; margin: auto auto auto 0;" /></p>
 </section><section id="bottom-line-1" class="slide level2">
 <h2>Bottom Line</h2>
-<p><img data-src="figs/gangmap2012cmag.jpg#left" style="width:40.0%" /> <img data-src="figs/all.png#right" style="width:40.0%" /></p>
+<p><img data-src="index_files/figure-revealjs/unnamed-chunk-4-1.png" /><!-- --></p>
 </section></section>
 <section><section id="data" class="title-slide slide level1"><h1>Data</h1><div class="fragment">
 <p><strong>Gunshots</strong></p>
@@ -906,6 +916,9 @@ Bhat_hm
 <li><span class="citation" data-cites="Bruhn2019">Bruhn (2019)</span>, <a href="#/data">Back</a></li>
 </ul>
 <div id="refs" class="references" role="doc-bibliography">
+<div id="ref-Blattman2019">
+<p>Blattman, Christopher, Donald P. Green, Daniel Ortega, and Santiago Tobon. 2019. “Hot Spots Interventions at Scale: the Direct and Spillover Effects of Policing and City Services on Crime.”</p>
+</div>
 <div id="ref-Brantingham2012">
 <p>Brantingham, P. Jeffrey, George E. Tita, Martin B. Short, and Shannon E. Redi. 2012. “The Ecology of Gang Territorial Boundaries.” <em>Criminology</em> 50 (3): 851–85.</p>
 </div>
@@ -935,6 +948,9 @@ Bhat_hm
 </div>
 <div id="ref-Levitt2000">
 <p>Levitt, Steven D, and Sudhir Alladi Venkatesh. 2000. “An economic analysis of a drug-selling gang’s finances.” <em>Quarterly Journal of Economics</em>, 755–89.</p>
+</div>
+<div id="ref-Luxberg2007">
+<p>Luxburg, Ulrike von. 2007. “A tutorial on spectral clustering.” <em>Statistics and Computing</em> 17 (4): 395–416.</p>
 </div>
 <div id="ref-Melnikov2019">
 <p>Melnikov, Nikita, Carlos Schmidt-Padilla, and Maria Micaela Sviatschi. 2019. “Gangs, Labor Mobility, and Development.”</p>
