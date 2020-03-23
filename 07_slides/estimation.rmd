@@ -1,4 +1,4 @@
-# Estimation
+# Estimation {id="estimation"}
 
 <div class="fragment">
 
@@ -159,7 +159,7 @@ $$
 
 . . . 
 
-- Alternative approach: @Ahn2013
+- Alternative approach: eigengaps [@Ahn2013]
 
 <a href="#/chen">Details</a>
 
@@ -176,3 +176,4 @@ $$
 $$
 4. Re-estimate $\hat{J}_B$ and $\hat{\Theta}_B$ as above
 	- For validation, match each $\hat{\Theta}_B$ to CPD maps by permuting census tract labels to minimize disagreement
+5. Present 95 percent confidence intervals

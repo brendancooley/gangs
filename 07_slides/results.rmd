@@ -1,0 +1,104 @@
+```{r, echo=FALSE, warning=FALSE, message=FALSE, results='hide'}
+
+libs <- c("tidyverse", "knitr", "patchwork")
+ipak(libs)
+
+J <- read_csv(J_path, col_names=FALSE) %>% pull(.)
+K <- J - 1
+
+J_all <- read_csv(J_all_path, col_names=FALSE) %>% pull(.)
+K_all <- J_all - 1
+K_all <- K_all %>% sort()
+
+K_lower <- K_all[3]
+K_upper <- K_all[97]
+
+label_counts <- read_csv(label_counts_path) %>% filter(owner != "peaceful") %>% arrange(desc(count))
+label_counts$count <- label_counts$count / L
+colnames(label_counts) <- c("Gang", "Proportion")
+label_counts$Gang <- stri_trans_totitle(label_counts$Gang)
+
+LK_freq <- label_counts %>% filter(Gang=="Latin Kings") %>% pull(Proportion)
+TS_freq <- label_counts %>% filter(Gang=="Two-Six") %>% pull(Proportion)
+
+gang_frac_vec <- read_csv(gang_frac_path, col_names=FALSE) %>% pull()
+gang_frac_ci <- quantile(gang_frac_vec, c(.025, .975))
+
+sample_agreement_ratio <- read_csv(sample_agreement_ratio_path, col_names=FALSE) %>% pull()
+cpd_agreement_ratio <- read_csv(cpd_agreement_ratio_path, col_names=FALSE) %>% pull()
+cpd_agreement_ratio_peaceful <- read_csv(cpd_agreement_ratio_peaceful_path, col_names=FALSE) %>% pull()
+cpd_agreement_ratio_gang <- read_csv(cpd_agreement_ratio_gang_path, col_names=FALSE) %>% pull()
+
+cpd_agreement_ratio_ci <- quantile(cpd_agreement_ratio, c(.025, .975))
+cpd_agreement_ratio_peaceful_ci <- quantile(cpd_agreement_ratio_peaceful, c(.025, .975))
+cpd_agreement_ratio_gang_ci <- quantile(cpd_agreement_ratio_gang, c(.025, .975))
+
+```
+
+# Results {id="results"}
+
+<div class="fragment">
+
+**Number of Gangs**
+
+- `r K_lower`-`r K_upper` gangs detected
+- `r cpd_gangs_N` gangs own at least one tract according to CPD, but three largest gangs we detect occupy `r round(gd_vl_bps_area / all_area*100, 1)` of all gang turf
+- <a href="#/eigengaps">Eigengaps</a>
+
+</div>
+<div class="fragment">
+
+**Territorial Partition**
+
+- Paritition labels matched to those of Gangster Disciples, Vice Lords, and Black P Stones with highest frequency
+- `r round(gang_frac_ci[1]*100, 0)`-`r round(gang_frac_ci[2]*100, 0)` percent of census tracts are gang-occupied
+- `r round(cpd_agreement_ratio_ci[1]*100, 0)`-`r round(cpd_agreement_ratio_ci[2]*100, 0)` percent of our labels agree with those of CPD
+	+ **Baseline:** `r round(sample_agreement_ratio*100, 0)` percent of CPD labels agree with random label permutations
+- <a href="#/cpd_match_table">Match Frequencies</a>
+
+</div>
+
+## Empirical Covariances
+
+```{r, echo=FALSE, warning=FALSE, message=FALSE, fig.height=5.5, dpi=300}
+
+source("../05_figs/P.R")
+P_hm + plot_spacer()
+
+```
+
+## Empirical Covariances
+
+```{r, echo=FALSE, warning=FALSE, message=FALSE, fig.height=5.5, dpi=300}
+
+source("../05_figs/P.R")
+block_hm
+
+```
+
+## Territorial Partition
+
+```{r, echo=FALSE, warning=FALSE, message=FALSE, fig.height=5.5, dpi=300}
+
+source("../05_figs/clusters.R")
+comparison_maps
+
+```
+
+## Conflict Intensities
+
+```{r, echo=FALSE, warning=FALSE, message=FALSE, fig.height=5.5, dpi=300}
+
+source("../05_figs/Bhat.R")
+Bhat_hm
+
+```
+
+## Conflict Intensities
+
+```{r, echo=FALSE, warning=FALSE, message=FALSE, fig.height=5.5, dpi=300}
+
+Bhat_ci
+
+```
+

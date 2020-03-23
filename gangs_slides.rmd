@@ -47,60 +47,57 @@ if (file.exists('references.RData')) load('references.RData')
 ```{r, child = "07_slides/estimation.rmd"}
 ```
 
+```{r, child = "07_slides/results.rmd"}
+```
+
+# Conclusion
+
+<div class="fragment">
+
+**Limitations**
+
+- Collapse dynamic process of border adjustment into static representation [@Bruhn2019]
+- Detects largest gangs in Chicago but is unable to capture richness of gang network
+
+</div>
+<div class="fragment">
+
+**Extensions**
+
+- Extend to other cities
+  + Data is available for all large municipalities
+- Build cross section of gang maps across United States and elsewhere(?)
+  + Characterize measurement error explicitly
+- Building block for substantive research on gangs, violence, poverty, and policing
+
+</div>
+
 # Thank You  {.aligncenter}
 
 # Table of Contents {id="toc"}
 
-fill this in
+<div id="left">
+
+**Sections**
+
+1. <a href="#/introduction">Introduction</a>
+2. <a href="#/data">Data</a>
+3. <a href="#/model">Model</a>
+4. <a href="#/estimation">Estimation</a>
+5. <a href="#/results">Results</a>
+</div>
+
+<div id="right">
+
+**Appendix**
+
+1. <a href="#/chen">Number of Groups</a>
+2. <a href="#/chen">Eigengaps</a>
+3. <a href="#/cpd_match_table">Match Frequencies</a>
+</div>
 
 ```{r, child = "07_slides/appendix.rmd"}
 ```
 
-
-
-
-
-# Results
-
-- `r K` gangs detected
-
-<!-- ```{r scree, echo=FALSE, warning=FALSE, message=FALSE, fig.height=4.5, dpi=300}
-
-screePlot
-
-``` -->
-
-## Empirical Covariances
-
-<!-- ```{r emp_cov, echo=FALSE, warning=FALSE, message=FALSE, fig.height=5.5, dpi=300}
-
-block_hm
-
-``` -->
-
-## Territorial Partition
-
-<!-- ```{r partition, echo=FALSE, warning=FALSE, message=FALSE, fig.height=5.5, dpi=300}
-
-chi_clusters_map
-
-``` -->
-
-## Conflict Intensities
-
-<!-- ```{r b_hat, echo=FALSE, warning=FALSE, message=FALSE, fig.height=5.5, dpi=300}
-
-Bhat_hm
-
-``` -->
-
-# Next Steps
-
-- Validation
-  + Calculate empirical loss relative to Chicago gang map
-- Uncertainty
-  + Bootstrap tract-months, calculate confidence metrics for partition function, intervals for number of groups
-- Robustness
-  + Different levels of resolution, block groups? 
-- Extend to other cities
-
+<!-- hide references -->
+<hr style="height:30em; visibility:hidden;" />
