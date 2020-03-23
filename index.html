@@ -606,39 +606,80 @@ document.getElementsByTagName('head')[0].appendChild(style);
 </div>
 </section><section id="bottom-line" class="slide level2">
 <h2>Bottom Line</h2>
-<p><img src="index_files/figure-revealjs/unnamed-chunk-3-1.png" style="display: block; margin: auto auto auto 0;" /></p>
+<p><img src="index_files/figure-revealjs/unnamed-chunk-4-1.png" style="display: block; margin: auto auto auto 0;" /></p>
 </section><section id="bottom-line-1" class="slide level2">
 <h2>Bottom Line</h2>
-<p><img data-src="index_files/figure-revealjs/unnamed-chunk-4-1.png" /><!-- --></p>
+<p><img data-src="index_files/figure-revealjs/unnamed-chunk-5-1.png" /><!-- --></p>
 </section></section>
 <section><section id="data" class="title-slide slide level1"><h1>Data</h1><div class="fragment">
-<p><strong>Gunshots</strong></p>
-<ul>
-<li>Victim-based crime reports, 2001-2018
+<p><strong>Gunshots (Data):</strong> Victim-based crime reports, 2004-2017 (CLEAR)</p>
 <ul>
 <li>Illinois Uniform Crime Reporting code, latitude, longitude, date-time</li>
-<li>Extract homicides and nonfatal shootings (aggravated battery with firearm)</li>
-<li>Project into census tract-months: <code>#r tracts_n</code> tracts, 4,000 residents each</li>
-</ul></li>
+<li>Extract homicides and nonfatal shootings (aggravated battery with firearm), <strong>32,236 events</strong></li>
+<li>Project into census <strong>tract-months</strong>: 861 tracts, ~4,000 residents each</li>
 </ul>
 </div>
 <div class="fragment">
-<p><strong>Turf</strong></p>
+<p><strong>Turf (Validation):</strong> CPD internal reports, annual <span class="citation" data-cites="Bruhn2019">(Bruhn 2019)</span></p>
 <ul>
-<li>Chicago Police Department internal reports, annual <span class="citation" data-cites="Bruhn2019">(Bruhn 2019)</span>
+<li>Report number of gangs and territorial partition</li>
+<li>Collapse panel
 <ul>
-<li>Number of gangs</li>
-<li>Territorial partition</li>
+<li>Take average territorial footprint over sample period</li>
 </ul></li>
-<li>Findings
+<li>Preprocessing
 <ul>
-<li>57 gangs</li>
-<li>Collective territory covers 1/3 of city</li>
-<li>67 percent of Chicago residents live in gang-controlled territory</li>
+<li>55 gangs total, focus on <strong>6 largest by territorial extent</strong> for validation</li>
+<li>These control 77% of all gang turf</li>
 </ul></li>
+<li>Assign a tract to a gang if
+<ol type="1">
+<li>it owns plurality of tract area and</li>
+<li>it owns at least 10 percent of tract</li>
+</ol></li>
 </ul>
-<p><a href="#/bruhn_maps">Bruhn Maps</a></p>
-</div></section><section id="gunshots" class="slide level2">
+</div></section><section id="gunshots-spatial-distribution" class="slide level2">
+<h2>Gunshots, Spatial Distribution</h2>
+<p><img data-src="index_files/figure-revealjs/unnamed-chunk-7-1.png" /><!-- --></p>
+</section><section id="gunshots-panel-construction" class="slide level2">
+<h2>Gunshots, Panel Construction</h2>
+<center>
+<img data-src="05_figs/chicago/shootings_animated.gif" style="width:65.0%" />
+</center>
+</section><section id="gunshots-panel-construction-1" class="slide level2">
+<h2>Gunshots, Panel Construction</h2>
+<p><img data-src="index_files/figure-revealjs/unnamed-chunk-8-1.png" /><!-- --></p>
+</section><section id="gunshots-panel-construction-2" class="slide level2">
+<h2>Gunshots, Panel Construction</h2>
+<ul>
+<li><span class="math inline">\(N\)</span> tracts</li>
+<li><span class="math inline">\(T\)</span> months</li>
+</ul>
+<p><span class="math display">\[
+\bm{v} = \begin{pmatrix}
+v_1^1 &amp; \cdots &amp; \cdots &amp; \cdots &amp; v_1^T \\
+\vdots &amp;  &amp;  &amp; &amp; \vdots \\
+\vdots &amp;  &amp;  &amp; &amp; \vdots \\
+\vdots &amp;  &amp; v_i^t &amp; &amp; \vdots \\
+\vdots &amp;  &amp;  &amp; &amp; \vdots \\
+\vdots &amp;  &amp;  &amp; &amp; \vdots \\
+v_N^1 &amp; \cdots &amp; \cdots &amp; \cdots &amp; v_N^T
+\end{pmatrix}
+\]</span></p>
+</section><section id="turf-territorial-distribution" class="slide level2">
+<h2>Turf, Territorial Distribution</h2>
+<p><img data-src="index_files/figure-revealjs/unnamed-chunk-9-1.png" /><!-- --></p>
+</section><section id="turf-change-over-time" class="slide level2">
+<h2>Turf, Change over Time</h2>
+<p><img data-src="index_files/figure-revealjs/unnamed-chunk-10-1.png" /><!-- --></p>
+</section><section id="turf-panel-collapsed" class="slide level2">
+<h2>Turf, Panel Collapsed</h2>
+<p><img data-src="index_files/figure-revealjs/unnamed-chunk-11-1.png" /><!-- --></p>
+</section><section id="turf-panel-collapsed-1" class="slide level2">
+<h2>Turf, Panel Collapsed</h2>
+<p><img data-src="index_files/figure-revealjs/unnamed-chunk-12-1.png" /><!-- --></p>
+</section></section>
+<section><section id="old" class="title-slide slide level1"><h1>Old</h1></section><section id="gunshots" class="slide level2">
 <h2>Gunshots</h2>
 <center>
 <img data-src="figs/shootings_animated.gif#center" style="width:70.0%" />

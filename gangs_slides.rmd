@@ -38,7 +38,10 @@ if (file.exists('references.RData')) load('references.RData')
 ```{r, child = "07_slides/introduction.rmd"}
 ```
 
+```{r, child = "07_slides/data.rmd"}
+```
 
+# Old
 
 ## Gunshots
 

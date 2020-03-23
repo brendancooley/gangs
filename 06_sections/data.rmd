@@ -8,7 +8,6 @@ tracts <- readOGR(tracts_path, verbose=FALSE)
 gang_area_means <- read_csv(paste0(gang_territory_path, "gang_area_means.csv"))
 
 all_s <- read_csv(tsa_path)
-
 cpd_gangs_N <- read_csv(cpd_gangs_N_path, col_names=FALSE) %>% pull()
 
 ```
@@ -35,8 +34,7 @@ Two important features of gangs are captured by the model but are not explicitly
 source("../05_figs/ethnicity.R")
 source("../05_figs/clusters.R")
 
-panel <- tmap_arrange(chi_turf_binary_map, ethnicity_map)
-panel
+tmap_arrange(chi_turf_binary_map, ethnicity_map)
 
 ```
 
@@ -52,7 +50,6 @@ Unfortunately the model is unable to account for the dynamic nature of gang’s 
 
 ```{r, echo=FALSE, warning=FALSE, message=FALSE, fig.cap = paste0("Changes in CPD-reported gang turf, ", bruhn_sy, "-", bruhn_ey, ". Source: @Bruhn2019. \\label{fig:turf_evolution}"), fig.height=7, dpi=300, fig.pos="t"}
 
-source("../05_figs/clusters.R")
 turf_evolution_maps
 
 ```

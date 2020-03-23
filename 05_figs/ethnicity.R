@@ -22,6 +22,8 @@ col_latino <- "#C3734A"
 col_correspondence <- data.frame(c(col_black, col_latino), c("black", "latino"))
 colnames(col_correspondence) <- c("color", "max_race")
 
+# map_margins <- c(0, 0, 0, 0)
+
 ### CLEAN ###
 
 covariates$black[is.na(covariates$black)] <- 0
@@ -43,4 +45,5 @@ ethnicity_map <- tm_shape(covariates_geo) +
   tm_shape(chi_outline) +
   tm_borders(col="black") +
   tm_add_legend(type="fill", labels=stri_trans_totitle(col_correspondence$max_race), col=as.character(col_correspondence$color), title="Ethnicity") +
-  tm_layout(paste0("Black and Latino Population Shares, ", y), bg.color="white", outer.bg.color="white", legend.position=c("left", "bottom"))
+  tm_layout(paste0("Black and Latino Population Shares, ", y), bg.color="white", outer.bg.color="white", 
+            legend.position=c("left", "bottom"), inner.margins=map_margins)
