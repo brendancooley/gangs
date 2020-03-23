@@ -606,10 +606,10 @@ document.getElementsByTagName('head')[0].appendChild(style);
 </div>
 </section><section id="bottom-line" class="slide level2">
 <h2>Bottom Line</h2>
-<p><img src="index_files/figure-revealjs/unnamed-chunk-4-1.png" style="display: block; margin: auto auto auto 0;" /></p>
+<p><img src="index_files/figure-revealjs/unnamed-chunk-5-1.png" style="display: block; margin: auto auto auto 0;" /></p>
 </section><section id="bottom-line-1" class="slide level2">
 <h2>Bottom Line</h2>
-<p><img data-src="index_files/figure-revealjs/unnamed-chunk-5-1.png" /><!-- --></p>
+<p><img data-src="index_files/figure-revealjs/unnamed-chunk-6-1.png" /><!-- --></p>
 </section></section>
 <section><section id="data" class="title-slide slide level1"><h1>Data</h1><div class="fragment">
 <p><strong>Gunshots (Data):</strong> Victim-based crime reports, 2004-2017 (CLEAR)</p>
@@ -640,7 +640,7 @@ document.getElementsByTagName('head')[0].appendChild(style);
 </ul>
 </div></section><section id="gunshots-spatial-distribution" class="slide level2">
 <h2>Gunshots, Spatial Distribution</h2>
-<p><img data-src="index_files/figure-revealjs/unnamed-chunk-7-1.png" /><!-- --></p>
+<p><img data-src="index_files/figure-revealjs/unnamed-chunk-8-1.png" /><!-- --></p>
 </section><section id="gunshots-panel-construction" class="slide level2">
 <h2>Gunshots, Panel Construction</h2>
 <center>
@@ -648,7 +648,7 @@ document.getElementsByTagName('head')[0].appendChild(style);
 </center>
 </section><section id="gunshots-panel-construction-1" class="slide level2">
 <h2>Gunshots, Panel Construction</h2>
-<p><img data-src="index_files/figure-revealjs/unnamed-chunk-8-1.png" /><!-- --></p>
+<p><img data-src="index_files/figure-revealjs/unnamed-chunk-9-1.png" /><!-- --></p>
 </section><section id="gunshots-panel-construction-2" class="slide level2">
 <h2>Gunshots, Panel Construction</h2>
 <ul>
@@ -668,57 +668,44 @@ v_N^1 &amp; \cdots &amp; \cdots &amp; \cdots &amp; v_N^T
 \]</span></p>
 </section><section id="turf-territorial-distribution" class="slide level2">
 <h2>Turf, Territorial Distribution</h2>
-<p><img data-src="index_files/figure-revealjs/unnamed-chunk-9-1.png" /><!-- --></p>
+<p><img data-src="index_files/figure-revealjs/unnamed-chunk-10-1.png" /><!-- --></p>
 </section><section id="turf-change-over-time" class="slide level2">
 <h2>Turf, Change over Time</h2>
-<p><img data-src="index_files/figure-revealjs/unnamed-chunk-10-1.png" /><!-- --></p>
+<p><img data-src="index_files/figure-revealjs/unnamed-chunk-11-1.png" /><!-- --></p>
 </section><section id="turf-panel-collapsed" class="slide level2">
 <h2>Turf, Panel Collapsed</h2>
-<p><img data-src="index_files/figure-revealjs/unnamed-chunk-11-1.png" /><!-- --></p>
+<p><img data-src="index_files/figure-revealjs/unnamed-chunk-12-1.png" /><!-- --></p>
 </section><section id="turf-panel-collapsed-1" class="slide level2">
 <h2>Turf, Panel Collapsed</h2>
-<p><img data-src="index_files/figure-revealjs/unnamed-chunk-12-1.png" /><!-- --></p>
-</section></section>
-<section><section id="old" class="title-slide slide level1"><h1>Old</h1></section><section id="gunshots" class="slide level2">
-<h2>Gunshots</h2>
-<center>
-<img data-src="figs/shootings_animated.gif#center" style="width:70.0%" />
-</center>
-</section><section id="gunshots-1" class="slide level2">
-<h2>Gunshots</h2>
-<!-- ```{r gunshots_tracts, echo=FALSE, warning=FALSE, message=FALSE, fig.height=5.5, dpi=300}
-
-chi_shootings_tracts_mfirst_map
-
-``` -->
+<p><img data-src="index_files/figure-revealjs/unnamed-chunk-13-1.png" /><!-- --></p>
 </section></section>
 <section><section id="model" class="title-slide slide level1"><h1>Model</h1><p><strong>Observables</strong></p>
 <ul>
-<li><span class="math inline">\(\mathcal{N} = \left\{1, ..., N \right\}\)</span> - districts</li>
-<li><span class="math inline">\(1, ..., T\)</span> - periods (months)</li>
-<li><span class="math inline">\(r_i\)</span> - the number of residents in territory <span class="math inline">\(i\)</span></li>
+<li><span class="math inline">\(\mathcal{N} = \left\{1, ..., N \right\}\)</span> – districts</li>
+<li><span class="math inline">\(1, ..., T\)</span> – periods (months)</li>
+<li><span class="math inline">\(r_i\)</span> – the number of residents in territory <span class="math inline">\(i\)</span></li>
 <li><span class="math inline">\(v_i^t = x_i^t + y_i^t\)</span>
 <ul>
-<li><span class="math inline">\(y_i^t\)</span> - non-gang related shootings</li>
-<li><span class="math inline">\(x_i^t\)</span> - gang-related shootings</li>
+<li><span class="math inline">\(y_i^t\)</span> – non-gang related shootings</li>
+<li><span class="math inline">\(x_i^t\)</span> – gang-related shootings</li>
 </ul></li>
 </ul>
 <p><strong>Unobservables</strong></p>
 <ul>
-<li><span class="math inline">\(\mathcal{K} = \left\{1, ..., K \right\}\)</span> - gangs</li>
+<li><span class="math inline">\(\mathcal{K} = \left\{1, ..., K \right\}\)</span> – gangs</li>
 <li><span class="math inline">\(\pi : \mathcal{N} \rightarrow \left\{ 0, \mathcal{K} \right\}\)</span> - partition function
 <ul>
 <li><span class="math inline">\(\pi(i) = 0\)</span> indicates the absence of any gang activity.</li>
-<li><span class="math inline">\(\mathcal{N}_k\)</span> - the set of territories controlled by gang <span class="math inline">\(k\)</span></li>
-<li><span class="math inline">\(n_k = | \mathcal{K}_k |\)</span> - the number of territories controlled by gang <span class="math inline">\(k\)</span></li>
-<li><span class="math inline">\(\mathcal{K}_0\)</span> - the set of unoccupied territories.</li>
-<li><span class="math inline">\(m_k\)</span> - the number of members of gang <span class="math inline">\(k\)</span></li>
+<li><span class="math inline">\(\mathcal{N}_k\)</span> – the set of territories controlled by gang <span class="math inline">\(k\)</span></li>
+<li><span class="math inline">\(n_k = | \mathcal{K}_k |\)</span> – the number of territories controlled by gang <span class="math inline">\(k\)</span></li>
+<li><span class="math inline">\(\mathcal{K}_0\)</span> – the set of unoccupied territories.</li>
+<li><span class="math inline">\(m_k\)</span> – the number of members of gang <span class="math inline">\(k\)</span></li>
 </ul></li>
 </ul></section><section id="varieties-of-violence" class="slide level2">
 <h2>Varieties of Violence</h2>
 <p><strong>Non-Gang</strong></p>
 <ul>
-<li><span class="math inline">\(\eta_i\)</span> - the probability a resident commits a shooting
+<li><span class="math inline">\(\eta_i\)</span> – the probability a resident commits a shooting
 <ul>
 <li>independent across districts</li>
 </ul></li>
@@ -726,15 +713,15 @@ chi_shootings_tracts_mfirst_map
 <div class="fragment">
 <p><strong>Intra-Gang</strong></p>
 <ul>
-<li><span class="math inline">\(\xi_k^t\)</span> - probability a member of gang <span class="math inline">\(k\)</span> shoots a member of his own gang</li>
-<li><strong>Assumption 1 (Non-negativity):</strong> <span class="math inline">\(\mathbb{E} [ \xi_k^t ] &gt; 0\)</span> for all <span class="math inline">\(k \neq 0\)</span> and <span class="math inline">\(\xi_0^t = 0\)</span> for all <span class="math inline">\(t\)</span></li>
+<li><span class="math inline">\(\xi_k^t\)</span> – probability a member of gang <span class="math inline">\(k\)</span> shoots a member of his own gang</li>
+<li><strong>Assumption 1 (Positivity):</strong> <span class="math inline">\(\mathbb{E} [ \xi_k^t ] &gt; 0\)</span> for all <span class="math inline">\(k \neq 0\)</span> and <span class="math inline">\(\xi_0^t = 0\)</span> for all <span class="math inline">\(t\)</span></li>
 <li><strong>Assumption 2 (Independence):</strong> <span class="math inline">\(\mathbb{E} [ \xi_k^t \xi_{\ell}^t ] - \mathbb{E} [ \xi_k^t ] \mathbb{E}[ \xi_{\ell}^t ] = 0\)</span> for all <span class="math inline">\(k \neq \ell\)</span></li>
 </ul>
 </div>
 <div class="fragment">
 <p><strong>Inter-Gang</strong></p>
 <ul>
-<li><span class="math inline">\(\epsilon_{k, \ell}^t\)</span> - the probability a member of gang <span class="math inline">\(k\)</span> shoots a member of gang <span class="math inline">\(\ell\)</span></li>
+<li><span class="math inline">\(\epsilon_{k, \ell}^t\)</span> – the probability a member of gang <span class="math inline">\(k\)</span> shoots a member of gang <span class="math inline">\(\ell\)</span></li>
 <li><strong>Assumption 3 (Quasi-symmetry):</strong> <span class="math inline">\(c_{k} \epsilon_{k, \ell}^t = c_{\ell} \epsilon_{\ell, k}^{t}\)</span> with the normalization <span class="math inline">\(c_1 = 1\)</span>. If <span class="math inline">\(k = 0\)</span> or <span class="math inline">\(\ell = 0\)</span> then <span class="math inline">\(\epsilon_{k, \ell}^t = 0\)</span> for all <span class="math inline">\(t\)</span></li>
 <li><strong>Assumption 4 (Independence):</strong> <span class="math inline">\(\mathbb{E} [ \epsilon_{k, \ell}^t \epsilon_{m, n}^t ] - \mathbb{E} [ \epsilon_{k, \ell}^t ] \mathbb{E} [ \epsilon_{m, n}^t ] = 0\)</span> for <span class="math inline">\(m, n \notin \left\{ k, \ell \right\}\)</span></li>
 </ul>
@@ -755,9 +742,9 @@ chi_shootings_tracts_mfirst_map
 <h2>Covariance Structure</h2>
 <p><strong>Proposition 1:</strong> The covariance in shootings between districts <span class="math inline">\(i\)</span> and <span class="math inline">\(j\)</span> is <span class="math display">\[
 a_{ij} = \begin{cases} \sum_{k \neq \pi(i)} \left( 
-\left( \frac{m_k}{n_{\pi(i)}} \right)^2 \text{Var} [  \epsilon_{\pi(i), k}^t ] \right) +  \left( \frac{m_{\pi(i)}}{n_{\pi(i)}} \right)^2 \text{Var}[ \xi_{\pi(i)}^t ] + \psi_i &amp; \text{if } i = j \\
+\left( \frac{m_k}{n_{\pi(i)}} \right)^2 \text{Var} [  \epsilon_{k, \pi(i)}^t ] \right) +  \left( \frac{m_{\pi(i)}}{n_{\pi(i)}} \right)^2 \text{Var}[ \xi_{\pi(i)}^t ] + \psi_i &amp; \text{if } i = j \\
 \color{bcOrange} \sum_{k \neq \pi(i)} \left( 
-\left( \frac{m_k}{n_{\pi(i)}} \right)^2 \text{Var} [ \epsilon_{\pi(i), k}^t ] \right) +  \left( \frac{m_{\pi(i)}}{n_{\pi(i)}} \right)^2 \text{Var} [ \xi_{\pi(i)}^t ] &amp; \text{if } \pi(i) = \pi(j) \\
+\left( \frac{m_k}{n_{\pi(i)}} \right)^2 \text{Var} [ \epsilon_{k, \pi(i)}^t ] \right) +  \left( \frac{m_{\pi(i)}}{n_{\pi(i)}} \right)^2 \text{Var} [ \xi_{\pi(i)}^t ] &amp; \text{if } \pi(i) = \pi(j) \\
 \color{bcOrange} \frac{m_{\pi(i)}}{n_{\pi(j)}} \frac{m_{\pi(j)}}{n_{\pi(i)}} \frac{c_{\pi(j)}}{c_{\pi(i)}} \text{Var} [\epsilon_{\pi(i), \pi(j)}^t] &amp; \text{if } \pi(i) \neq \pi(j) \\
 0 &amp; \text{otherwise}
 \end{cases}
@@ -769,33 +756,205 @@ a_{ij} = \begin{cases} \sum_{k \neq \pi(i)} \left(
 </ol>
 </section><section id="covariance-structure-1" class="slide level2">
 <h2>Covariance Structure</h2>
-<p><img data-src="figs/block_mat.png" /></p>
-<div class="fragment">
 <p><span class="math display">\[
 A_{N \times N} = (a_{ij})_{ \left\{ i,j \in \mathcal{N} \right\} }
+\]</span></p>
+<div class="fragment">
+<p><img data-src="05_figs/cartoons/block_mat.png" /></p>
+<p><span class="math display">\[
+\bar{A} = P A P
 \]</span></p>
 </div>
 </section><section id="covariance-structure-and-latent-variables" class="slide level2">
 <h2>Covariance Structure and Latent Variables</h2>
 <ul>
-<li><span class="math inline">\(\Psi = \text{diag}(\psi_1, \dots \psi_N)\)</span> (variance of non-gang shootings)</li>
-<li><span class="math inline">\(Q = A - \Psi\)</span> (gang-related spatial covariance matrix)</li>
+<li>Variance of non-gang shootings <span class="math display">\[
+\Psi = \text{diag}(\psi_1, \dots \psi_N)
+\]</span></li>
+<li>Gang-related spatial covariance matrix <span class="math display">\[
+Q = A - \Psi
+\]</span></li>
 </ul>
 <div class="fragment">
 <ul>
-<li><span class="math inline">\(B_{K + 1 \times K + 1} = (b_{k \ell})_{ \left\{ k, \ell \in \mathcal{K} \right\} }\)</span> (within-gang variance and cross-gang covariances)</li>
-<li><span class="math inline">\(\Theta_{N \times K + 1} = (\theta_{ik})_{\left\{ i \in \mathcal{N}, k \in \mathcal{K} \cup 0 \right\} }\)</span> (binary membership matrix, <span class="math inline">\(\theta_{ik} = 1\)</span> if <span class="math inline">\(\pi(i) = k\)</span> and <span class="math inline">\(0\)</span> otherwise)</li>
+<li>Within-gang variance and cross-gang covariances <span class="math display">\[
+B_{K + 1 \times K + 1} = (b_{k \ell})_{ \left\{ k, \ell \in \mathcal{K} \right\} }
+\]</span></li>
+<li>Binary membership matrix, <span class="math inline">\(\theta_{ik} = 1\)</span> if <span class="math inline">\(\pi(i) = k\)</span> and <span class="math inline">\(0\)</span> otherwise <span class="math display">\[
+\Theta_{N \times K + 1} = (\theta_{ik})_{\left\{ i \in \mathcal{N}, k \in \mathcal{K} \cup 0 \right\} }
+\]</span></li>
 </ul>
 </div>
+<div class="fragment">
+<ul>
+<li>Stochastic blockmodel <span class="citation" data-cites="Holland1983 Jin2015 Lei2015">(Holland, Laskey, and Leinhardt 1983; Jin 2015; Lei and Rinaldo 2015)</span> <span class="math display">\[
+Q = \Theta B \Theta^T
+\]</span></li>
+</ul>
+</div>
+</section><section id="example" class="slide level2">
+<h2>Example</h2>
+<p><span class="math display">\[
+\Theta = \begin{pmatrix}
+1 &amp; 0 \\
+1 &amp; 0 \\
+0 &amp; 1 \\
+0 &amp; 1 \\
+0 &amp; 1
+\end{pmatrix}
+\qquad
+B = \begin{pmatrix}
+b_{11} &amp; b_{12} \\
+b_{21} &amp; b_{22}
+\end{pmatrix}
+\]</span></p>
 <div class="fragment">
 <p><span class="math display">\[
-Q = \Theta B \Theta^T
+\color{bcOrange} \Theta B \Theta^T
 \]</span></p>
-<ul>
-<li>Stochastic blockmodel <span class="citation" data-cites="Holland1983 Jin2015 Lei2015">(Holland, Laskey, and Leinhardt 1983; Jin 2015; Lei and Rinaldo 2015)</span></li>
-</ul>
+<p><span class="math display">\[
+\begin{array}{ccc}
+~ &amp; 
+\begin{pmatrix}
+b_{11} &amp; b_{12} \\
+b_{21} &amp; b_{22}
+\end{pmatrix} &amp; 
+\begin{pmatrix}
+1_{\color{white} 11} &amp; 1_{\color{white} 11} &amp; 0_{\color{white} 11} &amp; 0_{\color{white} 11} &amp; 0_{\color{white} 11} \\
+0_{\color{white} 11} &amp; 0_{\color{white} 11} &amp; 1_{\color{white} 11} &amp; 1_{\color{white} 11} &amp; 1_{\color{white} 11} 
+\end{pmatrix} \\
+\begin{pmatrix}
+1 &amp; 0 \\
+1 &amp; 0 \\
+0 &amp; 1 \\
+0 &amp; 1 \\
+0 &amp; 1
+\end{pmatrix} &amp;
+\begin{pmatrix}
+\color{white} b_{11} &amp; \color{white} b_{12} \\
+\color{white} b_{11} &amp; \color{white} b_{12} \\
+\color{white} b_{21} &amp; \color{white} b_{22} \\
+\color{white} b_{21} &amp; \color{white} b_{22} \\
+\color{white} b_{21} &amp; \color{white} b_{22}
+\end{pmatrix} &amp;
+\begin{pmatrix}
+\color{white} b_{11} &amp; \color{white} b_{11} &amp; \color{white} b_{12} &amp; \color{white} b_{12} &amp; \color{white} b_{12} \\
+\color{white} b_{11} &amp; \color{white} b_{11} &amp; \color{white} b_{12} &amp; \color{white} b_{12} &amp; \color{white} b_{12} \\
+\color{white} b_{21} &amp; \color{white} b_{21} &amp; \color{white} b_{22} &amp; \color{white} b_{22} &amp; \color{white} b_{22} \\
+\color{white} b_{21} &amp; \color{white} b_{21} &amp; \color{white} b_{22} &amp; \color{white} b_{22} &amp; \color{white} b_{22} \\
+\color{white} b_{21} &amp; \color{white} b_{21} &amp; \color{white} b_{22} &amp; \color{white} b_{22} &amp; \color{white} b_{22}
+\end{pmatrix}
+\end{array}
+\]</span></p>
 </div>
+</section><section id="example-1" class="slide level2">
+<h2>Example</h2>
+<p><span class="math display">\[
+\Theta = \begin{pmatrix}
+1 &amp; 0 \\
+1 &amp; 0 \\
+0 &amp; 1 \\
+0 &amp; 1 \\
+0 &amp; 1
+\end{pmatrix}
+\qquad
+B = \begin{pmatrix}
+b_{11} &amp; b_{12} \\
+b_{21} &amp; b_{22}
+\end{pmatrix}
+\]</span></p>
+<p><span class="math display">\[
+\color{bcOrange} \Theta B \Theta^T
+\]</span></p>
+<p><span class="math display">\[
+\begin{array}{ccc}
+~ &amp; 
+\begin{pmatrix}
+b_{11} &amp; b_{12} \\
+b_{21} &amp; b_{22}
+\end{pmatrix} &amp; 
+\begin{pmatrix}
+1_{\color{white} 11} &amp; 1_{\color{white} 11} &amp; 0_{\color{white} 11} &amp; 0_{\color{white} 11} &amp; 0_{\color{white} 11} \\
+0_{\color{white} 11} &amp; 0_{\color{white} 11} &amp; 1_{\color{white} 11} &amp; 1_{\color{white} 11} &amp; 1_{\color{white} 11} 
+\end{pmatrix} \\
+\begin{pmatrix}
+1 &amp; 0 \\
+1 &amp; 0 \\
+0 &amp; 1 \\
+0 &amp; 1 \\
+0 &amp; 1
+\end{pmatrix} &amp;
+\begin{pmatrix}
+\color{bcOrange} b_{11} &amp; \color{black} b_{12} \\
+\color{bcOrange} b_{11} &amp; \color{black} b_{12} \\
+\color{black} b_{21} &amp; \color{bcOrange} b_{22} \\
+\color{black} b_{21} &amp; \color{bcOrange} b_{22} \\
+\color{black} b_{21} &amp; \color{bcOrange} b_{22}
+\end{pmatrix} &amp;
+\begin{pmatrix}
+\color{white} b_{11} &amp; \color{white} b_{11} &amp; \color{white} b_{12} &amp; \color{white} b_{12} &amp; \color{white} b_{12} \\
+\color{white} b_{11} &amp; \color{white} b_{11} &amp; \color{white} b_{12} &amp; \color{white} b_{12} &amp; \color{white} b_{12} \\
+\color{white} b_{21} &amp; \color{white} b_{21} &amp; \color{white} b_{22} &amp; \color{white} b_{22} &amp; \color{white} b_{22} \\
+\color{white} b_{21} &amp; \color{white} b_{21} &amp; \color{white} b_{22} &amp; \color{white} b_{22} &amp; \color{white} b_{22} \\
+\color{white} b_{21} &amp; \color{white} b_{21} &amp; \color{white} b_{22} &amp; \color{white} b_{22} &amp; \color{white} b_{22}
+\end{pmatrix}
+\end{array}
+\]</span></p>
+</section><section id="example-2" class="slide level2">
+<h2>Example</h2>
+<p><span class="math display">\[
+\Theta = \begin{pmatrix}
+1 &amp; 0 \\
+1 &amp; 0 \\
+0 &amp; 1 \\
+0 &amp; 1 \\
+0 &amp; 1
+\end{pmatrix}
+\qquad
+B = \begin{pmatrix}
+b_{11} &amp; b_{12} \\
+b_{21} &amp; b_{22}
+\end{pmatrix}
+\]</span></p>
+<p><span class="math display">\[
+\color{bcOrange} \Theta B \Theta^T
+\]</span></p>
+<p><span class="math display">\[
+\begin{array}{ccc}
+~ &amp; 
+\begin{pmatrix}
+b_{11} &amp; b_{12} \\
+b_{21} &amp; b_{22}
+\end{pmatrix} &amp; 
+\begin{pmatrix}
+1_{\color{white} 11} &amp; 1_{\color{white} 11} &amp; 0_{\color{white} 11} &amp; 0_{\color{white} 11} &amp; 0_{\color{white} 11} \\
+0_{\color{white} 11} &amp; 0_{\color{white} 11} &amp; 1_{\color{white} 11} &amp; 1_{\color{white} 11} &amp; 1_{\color{white} 11} 
+\end{pmatrix} \\
+\begin{pmatrix}
+1 &amp; 0 \\
+1 &amp; 0 \\
+0 &amp; 1 \\
+0 &amp; 1 \\
+0 &amp; 1
+\end{pmatrix} &amp;
+\begin{pmatrix}
+\color{bcOrange} b_{11} &amp; \color{black} b_{12} \\
+\color{bcOrange} b_{11} &amp; \color{black} b_{12} \\
+\color{black} b_{21} &amp; \color{bcOrange} b_{22} \\
+\color{black} b_{21} &amp; \color{bcOrange} b_{22} \\
+\color{black} b_{21} &amp; \color{bcOrange} b_{22}
+\end{pmatrix} &amp;
+\begin{pmatrix}
+\color{bcOrange} b_{11} &amp; \color{bcOrange} b_{11} &amp; \color{black} b_{12} &amp; \color{black} b_{12} &amp; \color{black} b_{12} \\
+\color{bcOrange} b_{11} &amp; \color{bcOrange} b_{11} &amp; \color{black} b_{12} &amp; \color{black} b_{12} &amp; \color{black} b_{12} \\
+\color{black} b_{21} &amp; \color{black} b_{21} &amp; \color{bcOrange} b_{22} &amp; \color{bcOrange} b_{22} &amp; \color{bcOrange} b_{22} \\
+\color{black} b_{21} &amp; \color{black} b_{21} &amp; \color{bcOrange} b_{22} &amp; \color{bcOrange} b_{22} &amp; \color{bcOrange} b_{22} \\
+\color{black} b_{21} &amp; \color{black} b_{21} &amp; \color{bcOrange} b_{22} &amp; \color{bcOrange} b_{22} &amp; \color{bcOrange} b_{22}
+\end{pmatrix}
+\end{array}
+\]</span></p>
 </section></section>
+<section id="old" class="title-slide slide level1"><h1>Old</h1></section>
 <section><section id="estimation" class="title-slide slide level1"><h1>Estimation</h1><p><strong>Targets</strong></p>
 <ul>
 <li>Partition function, <span class="math inline">\(\pi\)</span> (membership matrix: <span class="math inline">\(\Theta\)</span>)</li>
