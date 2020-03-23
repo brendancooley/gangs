@@ -606,10 +606,10 @@ document.getElementsByTagName('head')[0].appendChild(style);
 </div>
 </section><section id="bottom-line" class="slide level2">
 <h2>Bottom Line</h2>
-<p><img src="index_files/figure-revealjs/unnamed-chunk-5-1.png" style="display: block; margin: auto auto auto 0;" /></p>
+<p><img src="index_files/figure-revealjs/unnamed-chunk-7-1.png" style="display: block; margin: auto auto auto 0;" /></p>
 </section><section id="bottom-line-1" class="slide level2">
 <h2>Bottom Line</h2>
-<p><img data-src="index_files/figure-revealjs/unnamed-chunk-6-1.png" /><!-- --></p>
+<p><img data-src="index_files/figure-revealjs/unnamed-chunk-8-1.png" /><!-- --></p>
 </section></section>
 <section><section id="data" class="title-slide slide level1"><h1>Data</h1><div class="fragment">
 <p><strong>Gunshots (Data):</strong> Victim-based crime reports, 2004-2017 (CLEAR)</p>
@@ -640,7 +640,7 @@ document.getElementsByTagName('head')[0].appendChild(style);
 </ul>
 </div></section><section id="gunshots-spatial-distribution" class="slide level2">
 <h2>Gunshots, Spatial Distribution</h2>
-<p><img data-src="index_files/figure-revealjs/unnamed-chunk-8-1.png" /><!-- --></p>
+<p><img data-src="index_files/figure-revealjs/unnamed-chunk-10-1.png" /><!-- --></p>
 </section><section id="gunshots-panel-construction" class="slide level2">
 <h2>Gunshots, Panel Construction</h2>
 <center>
@@ -648,7 +648,7 @@ document.getElementsByTagName('head')[0].appendChild(style);
 </center>
 </section><section id="gunshots-panel-construction-1" class="slide level2">
 <h2>Gunshots, Panel Construction</h2>
-<p><img data-src="index_files/figure-revealjs/unnamed-chunk-9-1.png" /><!-- --></p>
+<p><img data-src="index_files/figure-revealjs/unnamed-chunk-11-1.png" /><!-- --></p>
 </section><section id="gunshots-panel-construction-2" class="slide level2">
 <h2>Gunshots, Panel Construction</h2>
 <ul>
@@ -668,18 +668,19 @@ v_N^1 &amp; \cdots &amp; \cdots &amp; \cdots &amp; v_N^T
 \]</span></p>
 </section><section id="turf-territorial-distribution" class="slide level2">
 <h2>Turf, Territorial Distribution</h2>
-<p><img data-src="index_files/figure-revealjs/unnamed-chunk-10-1.png" /><!-- --></p>
+<p><img data-src="index_files/figure-revealjs/unnamed-chunk-12-1.png" /><!-- --></p>
 </section><section id="turf-change-over-time" class="slide level2">
 <h2>Turf, Change over Time</h2>
-<p><img data-src="index_files/figure-revealjs/unnamed-chunk-11-1.png" /><!-- --></p>
+<p><img data-src="index_files/figure-revealjs/unnamed-chunk-13-1.png" /><!-- --></p>
 </section><section id="turf-panel-collapsed" class="slide level2">
 <h2>Turf, Panel Collapsed</h2>
-<p><img data-src="index_files/figure-revealjs/unnamed-chunk-12-1.png" /><!-- --></p>
+<p><img data-src="index_files/figure-revealjs/unnamed-chunk-14-1.png" /><!-- --></p>
 </section><section id="turf-panel-collapsed-1" class="slide level2">
 <h2>Turf, Panel Collapsed</h2>
-<p><img data-src="index_files/figure-revealjs/unnamed-chunk-13-1.png" /><!-- --></p>
+<p><img data-src="index_files/figure-revealjs/unnamed-chunk-15-1.png" /><!-- --></p>
 </section></section>
-<section><section id="model" class="title-slide slide level1"><h1>Model</h1><p><strong>Observables</strong></p>
+<section><section id="model" class="title-slide slide level1"><h1>Model</h1><div class="fragment">
+<p><strong>Observables</strong></p>
 <ul>
 <li><span class="math inline">\(\mathcal{N} = \left\{1, ..., N \right\}\)</span> – districts</li>
 <li><span class="math inline">\(1, ..., T\)</span> – periods (months)</li>
@@ -690,6 +691,8 @@ v_N^1 &amp; \cdots &amp; \cdots &amp; \cdots &amp; v_N^T
 <li><span class="math inline">\(x_i^t\)</span> – gang-related shootings</li>
 </ul></li>
 </ul>
+</div>
+<div class="fragment">
 <p><strong>Unobservables</strong></p>
 <ul>
 <li><span class="math inline">\(\mathcal{K} = \left\{1, ..., K \right\}\)</span> – gangs</li>
@@ -701,7 +704,8 @@ v_N^1 &amp; \cdots &amp; \cdots &amp; \cdots &amp; v_N^T
 <li><span class="math inline">\(\mathcal{K}_0\)</span> – the set of unoccupied territories.</li>
 <li><span class="math inline">\(m_k\)</span> – the number of members of gang <span class="math inline">\(k\)</span></li>
 </ul></li>
-</ul></section><section id="varieties-of-violence" class="slide level2">
+</ul>
+</div></section><section id="varieties-of-violence" class="slide level2">
 <h2>Varieties of Violence</h2>
 <p><strong>Non-Gang</strong></p>
 <ul>
@@ -954,18 +958,49 @@ b_{21} &amp; b_{22}
 \end{array}
 \]</span></p>
 </section></section>
-<section id="old" class="title-slide slide level1"><h1>Old</h1></section>
-<section><section id="estimation" class="title-slide slide level1"><h1>Estimation</h1><p><strong>Targets</strong></p>
+<section><section id="estimation" class="title-slide slide level1"><h1>Estimation</h1><div class="fragment">
+<p><strong>Targets</strong></p>
 <ul>
 <li>Partition function, <span class="math inline">\(\pi\)</span> (membership matrix: <span class="math inline">\(\Theta\)</span>)</li>
 <li>Number of groups <span class="math inline">\(K\)</span></li>
 <li>Non-gang territory, <span class="math inline">\(\mathcal{N}_0\)</span></li>
 </ul>
+</div>
+<div class="fragment">
 <p><strong>Method</strong></p>
 <ol type="1">
-<li>Hold <span class="math inline">\(K\)</span> fixed, estimate partition (<span class="math inline">\(J = K + 1\)</span>)</li>
+<li>Hold <span class="math inline">\(K\)</span> fixed, estimate partition (<span class="math inline">\(\color{bcOrange} J = K + 1\)</span>)</li>
 <li>Cross validate over many trial <span class="math inline">\(K\)</span> to estimate number of groups</li>
-</ol></section><section id="estimation-problem" class="slide level2">
+</ol>
+</div></section><section id="sample-covariance-matrix-construction" class="slide level2">
+<h2>Sample Covariance Matrix Construction</h2>
+<p><span class="math display">\[
+\tilde{a}_{ij} = \frac{1}{N} \sum_{t=1}^T (v_i^t - \bar{v}_i) (v_j^t - \bar{v}_j)
+\]</span></p>
+<div class="fragment">
+<p><span class="math display">\[
+\bm{v} =
+\begin{pmatrix}
+v_1^1 &amp; \cdots &amp; \cdots &amp; \cdots &amp; v_1^T \\
+\vdots &amp;  &amp;  &amp; &amp; \vdots \\
+\vdots &amp;  &amp;  &amp; &amp; \vdots \\
+\vdots &amp;  &amp; v_i^t &amp; &amp; \vdots \\
+\vdots &amp;  &amp;  &amp; &amp; \vdots \\
+\vdots &amp;  &amp;  &amp; &amp; \vdots \\
+v_N^1 &amp; \cdots &amp; \cdots &amp; \cdots &amp; v_N^T
+\end{pmatrix}
+\rightarrow
+\begin{pmatrix}
+\tilde{a}_{11} &amp; \cdots &amp; \cdots &amp; \cdots &amp; \tilde{a}_{1N} \\
+\vdots &amp;  &amp;  &amp; &amp; \vdots \\
+\vdots &amp;  &amp; \tilde{a}_{ij} &amp; &amp; \vdots \\
+\vdots &amp;  &amp;  &amp; &amp; \vdots \\
+\tilde{a}_{N1} &amp; \cdots &amp; \cdots &amp; \cdots &amp; \tilde{a}_{NN}
+\end{pmatrix}
+= \tilde{A}
+\]</span></p>
+</div>
+</section><section id="estimation-problem" class="slide level2">
 <h2>Estimation Problem</h2>
 <p><strong>Finite Sample Noise</strong></p>
 <p><span class="math display">\[
@@ -984,8 +1019,8 @@ Q - \text{diag}(Q) &amp;= \mathbb{E}[A] - \text{diag}(\mathbb{E}[A]) \\
 </div>
 <div class="fragment">
 <p><strong>Moment Estimator</strong></p>
-<p><span class="math display">\[\begin{equation} \label{eq:estimator}
-(\hat{\Theta}, \hat{B}) = \argmin_{B \in \mathbb{R}^{J \times J}, \Theta \in \mathbb{M}^{N \times J}} \lVert \Phi - \text{diag}(\Phi) \rVert_F
+<p><span class="math display">\[\begin{equation}
+\left( \hat{\Theta}, \hat{B} \right) = \argmin_{B \in \mathbb{R}^{J \times J}, \Theta \in \mathbb{M}^{N \times J}} \lVert \Phi - \text{diag}(\Phi) \rVert_F
 \end{equation}\]</span></p>
 </div>
 </section><section id="eigenstructure-of-q-lei2015" class="slide level2">
@@ -998,14 +1033,21 @@ Q &amp;= \Theta B \Theta^T \\
 &amp;= \Theta \Delta^{-1} \Delta B \Delta \Delta^{-1} \Theta^T \\
 &amp;= \Theta \Delta^{-1} Z \Lambda Z^T \Delta^{-1} \Theta^T \\
 &amp;= \Theta X \Lambda X^T \Theta^T
+U D U^T &amp;= \Theta X \Lambda X^T \Theta^T
 \end{align*}\]</span></p>
+<div class="fragment">
 <ul>
-<li><span class="math inline">\(\Lambda = \text{diag}(\lambda_1, ..., \lambda_{J})\)</span> nonzero eigenvalues of <span class="math inline">\(\Delta B \Delta\)</span>
+<li><span class="math inline">\(\Lambda = \text{diag}(\lambda_1, ..., \lambda_{J})\)</span> eigenvalues of <span class="math inline">\(\Delta B \Delta\)</span>
 <ul>
 <li><span class="math inline">\(Z_{N \times J}\)</span> associated eigenvectors</li>
 </ul></li>
 <li><span class="math inline">\(X = \Delta^{-1} Z\)</span></li>
+<li><span class="math inline">\(U = \Theta X\)</span> orthonormal <span class="math inline">\(\implies U D U^T\)</span> is eigendecomposition of <span class="math inline">\(Q\)</span>
+<ul>
+<li><strong><span class="math inline">\(J\)</span> independent rows <span class="math inline">\(\implies J\)</span> non-zero eigenvalues</strong></li>
+</ul></li>
 </ul>
+</div>
 <div class="fragment">
 <p><strong>Spectral Clustering:</strong> Relate eigenvectors of empirical covariance matrix <span class="math inline">\(\tilde{A}\)</span> to those of <span class="math inline">\(Q\)</span></p>
 <p><span class="math display">\[
@@ -1032,7 +1074,7 @@ Q &amp;= \Theta B \Theta^T \\
 </ul>
 </div>
 <div class="fragment">
-<p><strong>Inter-Gang Conflict Estimates</strong></p>
+<p><strong>Inter- and Intra-Gang Conflict Estimates</strong></p>
 <p><span class="math display">\[\begin{equation} \label{eq:B}
 \hat{B} = \hat{X} \hat{\Lambda} \hat{X}^T
 \end{equation}\]</span></p>
@@ -1049,20 +1091,69 @@ Q &amp;= \Theta B \Theta^T \\
 <p><span class="math display">\[\begin{equation} \label{eq:nc}
 \min_{ k \in \left\{ 1, ..., J \right\} } \lVert ( \hat{B} - \text{diag}(\hat{B}) )^{(k)} \rVert_2
 \end{equation}\]</span></p>
-</section><section id="number-of-groups-chen2018" class="slide level2">
+</section><section id="J_estimation" class="slide level2">
 <h2>Number of Groups <span class="citation" data-cites="Chen2018">(Chen and Lei 2018)</span></h2>
 <ol type="1">
-<li>For each <span class="math inline">\(k \in \left\{ 1, ..., \bar{K} \right\}\)</span>,
+<li>For each <span class="math inline">\(k \in \left\{ 1, ..., \bar{K} \right\}\)</span>…
 <ul>
 <li>Randomly split districts into folds <span class="math inline">\(\mathcal{N}_1, \dots, \mathcal{N}_V\)</span>.</li>
 <li>For each fold, estimate <span class="math inline">\(\hat{\Theta}(v)\)</span> and <span class="math inline">\(\hat{B}(v)\)</span>.</li>
 <li>For each fold, calculate the predictive loss on <span class="math inline">\(\tilde{A}^{(v,v)}\)</span>, <span class="math inline">\(L_v(\tilde{A}, \hat{A}(v))\)</span></li>
 <li>Average the predictive loss across folds, <span class="math inline">\(\bar{L}_{k}(\tilde{A})\)</span>.</li>
 </ul></li>
-<li>Construct the sequence of changes in predictive loss, <span class="math inline">\(\delta\)</span>.</li>
-<li>Select <span class="math inline">\(\hat{J}\)</span> at first point in sequence where predictive loss does not decrease</li>
+<li>Construct the sequence of changes in predictive loss, <span class="math inline">\(\delta\)</span>. <span class="math display">\[
+\delta_k = \bar{L}_{k}(\tilde{A}) - \bar{L}_{k+1}(\tilde{A})
+\]</span></li>
+<li>Select <span class="math inline">\(\hat{J}\)</span> at first point in sequence where predictive loss does not decrease <span class="math display">\[\begin{equation}
+\hat{J} = \argmin_{k} \left\{ k \mid \delta_k &lt; 0 \right\}_{k \in \left\{ 1, \dots, \bar{K} \right\} }
+\end{equation}\]</span></li>
+</ol>
+<p><a href="#/chen">Details</a></p>
+</section><section id="uncertainty-nonparametric-bootstrap" class="slide level2">
+<h2>Uncertainty (Nonparametric Bootstrap)</h2>
+<ol type="1">
+<li>Sample homicides and non-fatal shootings with replacement</li>
+<li>Construct sequence of bootstrapped violence matrices <span class="math display">\[
+\left\{ \bm{v}_1, \dots, \bm{v}_{B} \right\}
+\]</span></li>
+<li>Construct accompanying sequence of covariance matrices <span class="math display">\[
+\left\{ \tilde{A}_1, \dots, \tilde{A}_{B} \right\}
+\]</span></li>
+<li>Re-estimate <span class="math inline">\(\hat{J}_B\)</span> and <span class="math inline">\(\hat{\Theta}_B\)</span> as above
+<ul>
+<li>For validation, match each <span class="math inline">\(\hat{\Theta}_B\)</span> to CPD maps by permuting census tract labels to minimize disagreement</li>
+</ul></li>
 </ol>
 </section></section>
+<section id="thank-you" class="title-slide slide level1 aligncenter"><h1>Thank You</h1></section>
+<section id="toc" class="title-slide slide level1"><h1>Table of Contents</h1><p>fill this in</p></section>
+<section id="chen" class="title-slide slide level1"><h1>Number of Groups (I)</h1><ul>
+<li>Rectangular subset of <span class="math inline">\(\tilde{A}\)</span>, <span class="math inline">\(\tilde{A}^{(-v, v)} = \tilde{A}^{(\mathcal{N}_{-v}, \mathcal{N})}\)</span></li>
+<li>Theoretical analogue <span class="math display">\[
+Q^{(-v, v)} = \Theta^{(-v, v)} B \Theta
+\]</span></li>
+<li>Eigenstructure of <span class="math inline">\(\left( Q^{(-v, v)} \right)^T Q\)</span> <span class="math display">\[\begin{align*}
+\left( Q^{(-v, v)} \right)^T Q &amp;= \Theta B^T \left( \Theta^{(-v, v)} \right)^T \Theta^{(-v, v)} B \Theta^T \\
+&amp;= \Theta B^T \left( \Delta^{(-v, -v)} \right)^2 B \Theta^T .
+\end{align*}\]</span></li>
+<li>Eigendecompose using right singular values of <span class="math inline">\(Q^{(-v, v)}\)</span> and k-means cluster to produce membership estimates <span class="math inline">\(\hat{\Theta}(v)\)</span></li>
+</ul></section>
+<section id="number-of-groups-ii" class="title-slide slide level1"><h1>Number of Groups (II)</h1><ul>
+<li>Estimate connectivity matrix <span class="math display">\[
+\hat{B}_{k, \ell} = \begin{cases}
+\frac{ \sum_{i \in \hat{\mathcal{N}}_{-v, k}, j \in \hat{\mathcal{N}}_{\ell} } \tilde{A}_{ij} }{ \hat{n}_{v, k} \hat{n}_{\ell}} &amp; \text{if } k \neq \ell \\
+\frac{ \sum_{i, j \in \hat{\mathcal{N}}_{-v, k}, i \neq j} A_{ij} + \sum_{i \in \hat{\mathcal{N}}_{-v, k}, j \in \hat{\mathcal{N}}_{v, k} } A_{ij} }{ (\hat{n}_{-v, k} - 1) \hat{n}_{-v, k} + \hat{n}_{-v, k} \hat{n}_{v, k} } &amp; \text{if } k = \ell
+\end{cases}
+\]</span></li>
+<li>Construct implied covariance matrix <span class="math display">\[
+\hat{A}(v) = \hat{\Theta}(v) \hat{B}(v) \left( \hat{\Theta}(v) \right)^T
+\]</span></li>
+<li>Calculate loss <span class="math display">\[
+L_v(\tilde{A}, \hat{A}(v)) = \left\lVert \left( \tilde{A}^{(v,v)} - \text{diag}(\tilde{A}^{(v,v)}) \right) - \left( \hat{A}(v)^{(v,v)} - \text{diag}(\hat{A}(v)^{(v,v)}) \right) \right\rVert_F
+\]</span></li>
+</ul>
+<p><a href="#/J_estimation">Back (Estimation)</a></p>
+<p><a href="#/toc">Back (TOC)</a></p></section>
 <section><section id="results" class="title-slide slide level1"><h1>Results</h1><ul>
 <li>4 gangs detected</li>
 </ul>
@@ -1106,14 +1197,6 @@ Bhat_hm
 <li>Different levels of resolution, block groups?</li>
 </ul></li>
 <li>Extend to other cities</li>
-</ul></section>
-<section id="thank-you" class="title-slide slide level1 aligncenter"><h1>Thank You</h1></section>
-<section id="bruhn_maps" class="title-slide slide level1"><h1>Changes in Territory over Time</h1><center>
-<img data-src="figs/Bruhn_maps.png" style="width:65.0%" />
-</center>
-<hr style="height:30em; visibility:hidden;" />
-<ul>
-<li><span class="citation" data-cites="Bruhn2019">Bruhn (2019)</span>, <a href="#/data">Back</a></li>
 </ul>
 <div id="refs" class="references" role="doc-bibliography">
 <div id="ref-Blattman2019">

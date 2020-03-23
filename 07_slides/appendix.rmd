@@ -1,0 +1,36 @@
+# Number of Groups (I) {id="chen"}
+
+- Rectangular subset of $\tilde{A}$, $\tilde{A}^{(-v, v)} = \tilde{A}^{(\mathcal{N}_{-v}, \mathcal{N})}$
+- Theoretical analogue
+$$
+Q^{(-v, v)} = \Theta^{(-v, v)} B \Theta
+$$
+- Eigenstructure of $\left( Q^{(-v, v)} \right)^T Q$
+\begin{align*}
+\left( Q^{(-v, v)} \right)^T Q &= \Theta B^T \left( \Theta^{(-v, v)} \right)^T \Theta^{(-v, v)} B \Theta^T \\
+&= \Theta B^T \left( \Delta^{(-v, -v)} \right)^2 B \Theta^T .
+\end{align*}
+- Eigendecompose using right singular values of $Q^{(-v, v)}$ and k-means cluster to produce membership estimates $\hat{\Theta}(v)$
+
+# Number of Groups (II)
+
+- Estimate connectivity matrix
+$$
+\hat{B}_{k, \ell} = \begin{cases}
+\frac{ \sum_{i \in \hat{\mathcal{N}}_{-v, k}, j \in \hat{\mathcal{N}}_{\ell} } \tilde{A}_{ij} }{ \hat{n}_{v, k} \hat{n}_{\ell}} & \text{if } k \neq \ell \\
+\frac{ \sum_{i, j \in \hat{\mathcal{N}}_{-v, k}, i \neq j} A_{ij} + \sum_{i \in \hat{\mathcal{N}}_{-v, k}, j \in \hat{\mathcal{N}}_{v, k} } A_{ij} }{ (\hat{n}_{-v, k} - 1) \hat{n}_{-v, k} + \hat{n}_{-v, k} \hat{n}_{v, k} } & \text{if } k = \ell
+\end{cases}
+$$
+- Construct implied covariance matrix 
+$$
+\hat{A}(v) = \hat{\Theta}(v) \hat{B}(v) \left( \hat{\Theta}(v) \right)^T
+$$
+- Calculate loss
+$$
+L_v(\tilde{A}, \hat{A}(v)) = \left\lVert \left( \tilde{A}^{(v,v)} - \text{diag}(\tilde{A}^{(v,v)}) \right) - \left( \hat{A}(v)^{(v,v)} - \text{diag}(\hat{A}(v)^{(v,v)}) \right) \right\rVert_F
+$$
+
+<a href="#/J_estimation">Back (Estimation)</a>
+
+<a href="#/toc">Back (TOC)</a>
+

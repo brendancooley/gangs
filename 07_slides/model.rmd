@@ -1,5 +1,7 @@
 # Model
 
+<div class="fragment">
+
 **Observables**
 
 - $\mathcal{N} = \left\{1, ..., N \right\}$ -- districts
@@ -8,6 +10,9 @@
 - $v_i^t = x_i^t + y_i^t$
   - $y_i^t$ -- non-gang related shootings
   - $x_i^t$ -- gang-related shootings 
+
+</div>
+<div class="fragment">
 
 **Unobservables**
 
@@ -18,6 +23,8 @@
   + $n_k = | \mathcal{K}_k |$ -- the number of territories controlled by gang $k$
   + $\mathcal{K}_0$ -- the set of unoccupied territories. 
   + $m_k$ -- the number of members of gang $k$
+
+</div>
 
 ## Varieties of Violence
 
