@@ -40,34 +40,6 @@ if (file.exists('references.RData')) load('references.RData')
 
 
 
-# Data {id="data"}
-
-<div class="fragment">
-
-**Gunshots**
-
-- Victim-based crime reports, 2001-2018
-  + Illinois Uniform Crime Reporting code, latitude, longitude, date-time
-  + Extract homicides and nonfatal shootings (aggravated battery with firearm)
-  + Project into census tract-months: `#r tracts_n` tracts, 4,000 residents each
-
-</div>
-<div class="fragment">
-
-**Turf**
-
-- Chicago Police Department internal reports, annual [@Bruhn2019]
-  + Number of gangs
-  + Territorial partition
-- Findings
-  + 57 gangs
-  + Collective territory covers 1/3 of city 
-  + 67 percent of Chicago residents live in gang-controlled territory
-
-<a href="#/bruhn_maps">Bruhn Maps</a>
-
-</div>
-
 ## Gunshots
 
 <center>

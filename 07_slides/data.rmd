@@ -1,0 +1,28 @@
+```{r, echo=FALSE, warning=FALSE, message=FALSE, results='hide'}
+
+source("../01_code/00_params.R")
+
+tracts <- readOGR(tracts_path, verbose=FALSE)
+all_s <- read_csv(tsa_path)
+
+```
+
+# Data {id="data"}
+
+**Gunshots:** Victim-based crime reports, `r bruhn_sy`-`r bruhn_ey` (CLEAR)
+
+- Illinois Uniform Crime Reporting code, latitude, longitude, date-time
+- Extract homicides and nonfatal shootings (aggravated battery with firearm), **`r prettyNum(sum(all_s$count), big.mark=",", scientific=FALSE)` events**
+- Project into census **tract-months**: `r nrow(tracts)` tracts, ~4,000 residents each
+
+. . .
+
+**Turf**
+
+- Chicago Police Department internal reports, annual [@Bruhn2019]
+  + Number of gangs
+  + Territorial partition
+- Findings
+  + 57 gangs
+  + Collective territory covers 1/3 of city 
+  + 67 percent of Chicago residents live in gang-controlled territory
