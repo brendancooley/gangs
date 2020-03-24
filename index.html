@@ -746,18 +746,20 @@ v_N^1 &amp; \cdots &amp; \cdots &amp; \cdots &amp; v_N^T
 <h2>Covariance Structure</h2>
 <p><strong>Proposition 1:</strong> The covariance in shootings between districts <span class="math inline">\(i\)</span> and <span class="math inline">\(j\)</span> is <span class="math display">\[
 a_{ij} = \begin{cases} \sum_{k \neq \pi(i)} \left( 
-\left( \frac{m_k}{n_{\pi(i)}} \right)^2 \text{Var} [  \epsilon_{k, \pi(i)}^t ] \right) +  \left( \frac{m_{\pi(i)}}{n_{\pi(i)}} \right)^2 \text{Var}[ \xi_{\pi(i)}^t ] + \psi_i &amp; \text{if } i = j \\
+\left( \frac{m_{\pi(i)}}{n_{\pi(i)}} \right)^2 \text{Var} [  \epsilon_{k, \pi(i)}^t ] \right) +  \left( \frac{m_{\pi(i)}}{n_{\pi(i)}} \right)^2 \text{Var}[ \xi_{\pi(i)}^t ] + \psi_i &amp; \text{if } i = j \\
 \color{bcOrange} \sum_{k \neq \pi(i)} \left( 
-\left( \frac{m_k}{n_{\pi(i)}} \right)^2 \text{Var} [ \epsilon_{k, \pi(i)}^t ] \right) +  \left( \frac{m_{\pi(i)}}{n_{\pi(i)}} \right)^2 \text{Var} [ \xi_{\pi(i)}^t ] &amp; \text{if } \pi(i) = \pi(j) \\
+\left( \frac{m_{\pi(i)}}{n_{\pi(i)}} \right)^2 \text{Var} [ \epsilon_{k, \pi(i)}^t ] \right) +  \left( \frac{m_{\pi(i)}}{n_{\pi(i)}} \right)^2 \text{Var} [ \xi_{\pi(i)}^t ] &amp; \text{if } \pi(i) = \pi(j) \\
 \color{bcOrange} \frac{m_{\pi(i)}}{n_{\pi(j)}} \frac{m_{\pi(j)}}{n_{\pi(i)}} \frac{c_{\pi(j)}}{c_{\pi(i)}} \text{Var} [\epsilon_{\pi(i), \pi(j)}^t] &amp; \text{if } \pi(i) \neq \pi(j) \\
 0 &amp; \text{otherwise}
 \end{cases}
 \]</span></p>
+<div class="fragment">
 <p><strong>Corollary 1 (Block Structure):</strong></p>
 <ol type="1">
 <li>If <span class="math inline">\(\pi(i) = \pi(j) = k\)</span> and <span class="math inline">\(i \neq j\)</span> then <span class="math inline">\(a_{ij} = b_{kk}\)</span> constant for all <span class="math inline">\(i, j\)</span>.</li>
 <li>If <span class="math inline">\(\pi(i) = k\)</span> and <span class="math inline">\(\pi(j) = \ell\)</span> with <span class="math inline">\(\ell \neq k\)</span> then <span class="math inline">\(a_{ij} = b_{k \ell}\)</span> constant for all <span class="math inline">\(i, j\)</span>.</li>
 </ol>
+</div>
 </section><section id="covariance-structure-1" class="slide level2">
 <h2>Covariance Structure</h2>
 <p><span class="math display">\[
@@ -1139,7 +1141,7 @@ U D U^T &amp;= \Theta X \Lambda X^T \Theta^T
 <p><strong>Number of Gangs</strong></p>
 <ul>
 <li>3-4 gangs detected</li>
-<li>39 gangs own at least one tract according to CPD, but three largest gangs we detect occupy 57.3 of all gang turf</li>
+<li>39 gangs own at least one tract according to CPD, but three largest gangs we detect occupy 57 percent of all gang turf</li>
 <li><a href="#/eigengaps">Eigengaps</a></li>
 </ul>
 </div>
