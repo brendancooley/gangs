@@ -32,7 +32,7 @@ output:
 
 ```{r references, echo=FALSE, warning=FALSE, message=FALSE, results='hide'}
 
-# NOTE: loading knitr or kableExtra later in the slides seems to mess with revealjs
+# NOTE: correct compilation seems sensitive to which terminal window is open
 if (file.exists('references.RData')) load('references.RData')
 
 ```

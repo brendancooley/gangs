@@ -39,6 +39,10 @@ cpd_gangs_N <- read_csv(cpd_gangs_N_path, col_names=FALSE) %>% pull()
 - Assign a tract to a gang if 1) it owns plurality of tract area and 2) it owns at least 10 percent of tract
 	+ `r cpd_gangs_N` satisfy criteria for inclusion
 
+<a href="#/turf_distribution">Territorial Distribution</a> 
+
+<a href="#/ethnicity">Ethnicity</a>
+
 </div>
 
 ## Gunshots, Spatial Distribution
@@ -82,12 +86,6 @@ v_N^1 & \cdots & \cdots & \cdots & v_N^T
 \end{pmatrix}
 $$
 
-. . . 
-
-<center>
-*Treat territorial partition as static over time*
-</center>
-
 ## Turf, Change over Time {id="turf_evolution"}
 
 ```{r, echo=FALSE, warning=FALSE, message=FALSE, fig.height=5, dpi=300}
@@ -96,5 +94,3 @@ source("../05_figs/clusters.R")
 turf_evolution_maps
 
 ``` 
-
-<a href="#/turf_distribution">Territorial Distribution</a> &nbsp <a href="#/ethnicity">Ethnicity</a>

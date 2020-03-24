@@ -147,7 +147,7 @@ $$
 . . . 
 
 $$
-\color{bcOrange} \Theta B \Theta^T
+\color{bcOrange} Q = \Theta B \Theta^T
 $$
 
 $$
@@ -203,7 +203,7 @@ b_{21} & b_{22}
 $$
 
 $$
-\color{bcOrange} \Theta B \Theta^T
+\color{bcOrange} Q = \Theta B \Theta^T
 $$
 
 $$
@@ -259,7 +259,7 @@ b_{21} & b_{22}
 $$
 
 $$
-\color{bcOrange} \Theta B \Theta^T
+\color{bcOrange} Q = \Theta B \Theta^T
 $$
 
 $$
