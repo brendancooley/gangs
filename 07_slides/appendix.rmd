@@ -1,6 +1,6 @@
 ```{r, echo=FALSE, warning=FALSE, message=FALSE, results='hide'}
 
-libs <- c("knitr", "kableExtra", "stringi", "patchwork")
+libs <- c("stringi", "patchwork")
 ipak(libs)
 
 label_counts <- read_csv(label_counts_path) %>% filter(owner != "peaceful") %>% arrange(desc(count))

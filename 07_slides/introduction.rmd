@@ -109,6 +109,7 @@ tmap_arrange(chi_turf_binary_map, chi_outline_map)
 ```{r, echo=FALSE, warning=FALSE, message=FALSE, fig.height=5.5, dpi=400}
 
 source("../05_figs/clusters.R")
-comparison_maps
+tmap_arrange(chi_turf_binary_map, cluster_binary_map)
+
 
 ```
