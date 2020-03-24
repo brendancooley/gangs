@@ -31,7 +31,7 @@ turf_cols <- c(gd_col, bps_col, lk_col, vl_col, bd_col, ts_col)
 col_mapping_turf <- data.frame(gang_names, turf_cols)
 colnames(col_mapping_turf) <- c("gang", "color")
 
-Bhat_melted <- melt(Bhat)
+Bhat_melted <- melt(Bhat_mean)
 Bhat_lb_melted <- melt(Bhat_lb)
 Bhat_ub_melted <- melt(Bhat_ub)
 

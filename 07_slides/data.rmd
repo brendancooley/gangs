@@ -28,7 +28,7 @@ gang_area_meansV <- gang_area_means %>% filter(gang %in% major_gangs)
 
 **Turf (Validation):** CPD internal reports, annual [@Bruhn2019]
 
-- Report number of gangs and territorial partition
+- Report number of gangs and territorial partition, `r bruhn_sy`-`r bruhn_ey`
 - Collapse panel
 	+ Take average territorial footprint over sample period
 - Preprocessing

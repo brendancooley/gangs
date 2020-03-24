@@ -1,7 +1,6 @@
 ```{r, echo=FALSE, warning=FALSE, message=FALSE, results='hide'}
 
 source("../01_code/00_params.R")
-
 map_margins <- c(.1, .1, .1, .1)
 
 ```
@@ -39,7 +38,7 @@ map_margins <- c(.1, .1, .1, .1)
 
 ## Measurement Problem
 
-- **Proposition:** understanding gunshots requires understanding gangs 
+- Gangs are responsible for much of the violence in American cities
 - **Problem:** gangs are covert organizations $\implies$ knowledge of gangs remains anecdotal and spatially circumscribed
 
 . . .
@@ -110,5 +109,6 @@ tmap_arrange(chi_turf_binary_map, chi_outline_map)
 
 source("../05_figs/clusters.R")
 comparison_maps
+# tmap_arrange(chi_turf_binary_map, cluster_binary_map)
 
 ```

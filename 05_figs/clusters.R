@@ -185,7 +185,7 @@ cluster_binary_map <- tm_shape(cluster_binary_geo) +
   tm_borders(col="black") +
   # tm_polygons("cluster", title=paste0("Cluster ID"), palette="Set3") +
   tm_add_legend(type="fill", labels=stri_trans_totitle(col_mapping_turf$owner), col=as.character(col_mapping_turf$color)) +
-  tm_layout(bg.color="white", outer.bg.color="white", legend.position=c("left", "bottom"))
+  tm_layout("Estimated Territorial Partition", bg.color="white", outer.bg.color="white", legend.position=c("left", "bottom"), inner.margins=map_margins)
 
 chi_turf_map <- tm_shape(turf_shares_geo) +
   tm_fill(col="color_a") +

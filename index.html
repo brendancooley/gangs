@@ -494,47 +494,10 @@ document.getElementsByTagName('head')[0].appendChild(style);
 			</div>
 </section>
 
-<section><section id="introduction" class="title-slide slide level1"><h1>Gunshots and Turf Wars</h1><div class="fragment">
-<p><strong>Gunshots</strong></p>
-<blockquote>
-<p>“In 2006 nearly <strong>50 percent of the homicides</strong> and a large percentage of other violent crimes and property crimes committed in Chicago <strong>were attributed to street gangs</strong> that are involved in drug trafficking”</p>
-<ul>
-<li><span class="citation" data-cites="NDIC2007">National Drug Intelligence Center (2007)</span></li>
-</ul>
-</blockquote>
-<ul>
-<li>Inter- and intra-gang conflict in gang ethnographies
-<ul>
-<li><span class="citation" data-cites="Sanchez1991">Sanchez-Jankowski (1991)</span>, <span class="citation" data-cites="Decker1996">Decker (1996)</span>, <span class="citation" data-cites="Levitt2000">Levitt and Venkatesh (2000)</span>, <span class="citation" data-cites="Papachristos2009">Papachristos (2009)</span></li>
-</ul></li>
-<li>Not unique to Chicago
-<ul>
-<li><span class="citation" data-cites="Howell2018">Howell and Griffiths (2018)</span></li>
-</ul></li>
-</ul>
-</div>
-<div class="fragment">
-<p><strong>Turf Wars</strong></p>
-<blockquote>
-<p>“Gang violence is often sparked by competitive relations over <strong>turf.</strong> A gang’s turf has <strong>economic and symbolic value</strong>: the gang regulates who sells what on its street corners, and gang members take pride in controlling the blocks where they grew up. <strong>Encroaching on another gang’s turf can trigger violence</strong> and a series of retaliations as gang members avenge fallen comrades.”</p>
-<ul>
-<li><span class="citation" data-cites="Vargas2016">Vargas (2016)</span>, <em>Wounded City</em></li>
-</ul>
-</blockquote>
-<ul>
-<li>Territorial rent-seeking: racketerring, drug-selling monopolies, smuggling
-<ul>
-<li><span class="citation" data-cites="Thrasher1927">Thrasher (1927)</span>, <span class="citation" data-cites="Sanchez1991">Sanchez-Jankowski (1991)</span>, <span class="citation" data-cites="Levitt2000">Levitt and Venkatesh (2000)</span>, <span class="citation" data-cites="Venkatesh2000">Venkatesh and Levitt (2000)</span></li>
-</ul></li>
-<li>Conflict over rent streams and challenges to reputations
-<ul>
-<li><span class="citation" data-cites="Brantingham2012">Brantingham et al. (2012)</span>, <span class="citation" data-cites="Papachristos2013">Papachristos, Hureau, and Braga (2013)</span>, <span class="citation" data-cites="Vargas2016">Vargas (2016)</span>, <span class="citation" data-cites="Ebdm2018">Bueno De Mesquita (2018)</span></li>
-</ul></li>
-</ul>
-</div></section><section id="measurement-problem" class="slide level2">
+<section><section id="introduction" class="title-slide slide level1"><h1>Gunshots and Turf Wars</h1></section><section id="measurement-problem" class="slide level2">
 <h2>Measurement Problem</h2>
 <ul>
-<li><strong>Proposition:</strong> understanding gunshots requires understanding gangs</li>
+<li>Gangs are responsible for much of the violence in American cities</li>
 <li><strong>Problem:</strong> gangs are covert organizations <span class="math inline">\(\implies\)</span> knowledge of gangs remains anecdotal and spatially circumscribed</li>
 </ul>
 <div class="fragment">
@@ -612,34 +575,7 @@ document.getElementsByTagName('head')[0].appendChild(style);
 <h2>Bottom Line</h2>
 <p><img data-src="index_files/figure-revealjs/unnamed-chunk-9-1.png" /><!-- --></p>
 </section></section>
-<section><section id="data" class="title-slide slide level1"><h1>Data</h1><div class="fragment">
-<p><strong>Gunshots (Data):</strong> Victim-based crime reports, 2004-2017 (CLEAR)</p>
-<ul>
-<li>Illinois Uniform Crime Reporting code, latitude, longitude, date-time</li>
-<li>Extract homicides and nonfatal shootings (aggravated battery with firearm), <strong>32,236 events</strong></li>
-<li>Project into census <strong>tract-months</strong>: 861 tracts, ~4,000 residents each</li>
-</ul>
-</div>
-<div class="fragment">
-<p><strong>Turf (Validation):</strong> CPD internal reports, annual <span class="citation" data-cites="Bruhn2019">(Bruhn 2019)</span></p>
-<ul>
-<li>Report number of gangs and territorial partition</li>
-<li>Collapse panel
-<ul>
-<li>Take average territorial footprint over sample period</li>
-</ul></li>
-<li>Preprocessing
-<ul>
-<li>55 gangs total, focus on <strong>6 largest by territorial extent</strong> for validation</li>
-<li>These control 77% of all gang turf</li>
-</ul></li>
-<li>Assign a tract to a gang if
-<ol type="1">
-<li>it owns plurality of tract area and</li>
-<li>it owns at least 10 percent of tract</li>
-</ol></li>
-</ul>
-</div></section><section id="gunshots-spatial-distribution" class="slide level2">
+<section><section id="data" class="title-slide slide level1"><h1>Data</h1></section><section id="gunshots-spatial-distribution" class="slide level2">
 <h2>Gunshots, Spatial Distribution</h2>
 <p><img data-src="index_files/figure-revealjs/unnamed-chunk-11-1.png" /><!-- --></p>
 </section><section id="gunshots-panel-construction" class="slide level2">
@@ -680,33 +616,7 @@ v_N^1 &amp; \cdots &amp; \cdots &amp; \cdots &amp; v_N^T
 <h2>Turf, Panel Collapsed</h2>
 <p><img data-src="index_files/figure-revealjs/unnamed-chunk-16-1.png" /><!-- --></p>
 </section></section>
-<section><section id="model" class="title-slide slide level1"><h1>Model</h1><div class="fragment">
-<p><strong>Observables</strong></p>
-<ul>
-<li><span class="math inline">\(\mathcal{N} = \left\{1, ..., N \right\}\)</span> – districts</li>
-<li><span class="math inline">\(1, ..., T\)</span> – periods (months)</li>
-<li><span class="math inline">\(r_i\)</span> – the number of residents in territory <span class="math inline">\(i\)</span></li>
-<li><span class="math inline">\(v_i^t = x_i^t + y_i^t\)</span>
-<ul>
-<li><span class="math inline">\(y_i^t\)</span> – non-gang related shootings</li>
-<li><span class="math inline">\(x_i^t\)</span> – gang-related shootings</li>
-</ul></li>
-</ul>
-</div>
-<div class="fragment">
-<p><strong>Unobservables</strong></p>
-<ul>
-<li><span class="math inline">\(\mathcal{K} = \left\{1, ..., K \right\}\)</span> – gangs</li>
-<li><span class="math inline">\(\pi : \mathcal{N} \rightarrow \left\{ 0, \mathcal{K} \right\}\)</span> - partition function
-<ul>
-<li><span class="math inline">\(\pi(i) = 0\)</span> indicates the absence of any gang activity.</li>
-<li><span class="math inline">\(\mathcal{N}_k\)</span> – the set of territories controlled by gang <span class="math inline">\(k\)</span></li>
-<li><span class="math inline">\(n_k = | \mathcal{K}_k |\)</span> – the number of territories controlled by gang <span class="math inline">\(k\)</span></li>
-<li><span class="math inline">\(\mathcal{K}_0\)</span> – the set of unoccupied territories.</li>
-<li><span class="math inline">\(m_k\)</span> – the number of members of gang <span class="math inline">\(k\)</span></li>
-</ul></li>
-</ul>
-</div></section><section id="varieties-of-violence" class="slide level2">
+<section><section id="model" class="title-slide slide level1"><h1>Model</h1></section><section id="varieties-of-violence" class="slide level2">
 <h2>Varieties of Violence</h2>
 <p><strong>Non-Gang</strong></p>
 <ul>
@@ -735,7 +645,7 @@ v_N^1 &amp; \cdots &amp; \cdots &amp; \cdots &amp; v_N^T
 <h2>Varieties of Violence</h2>
 <p><strong>Gang-Related Shootings</strong></p>
 <p><span class="math display">\[
-\mathbb{E} [ x_i^t ] = \underbrace{ \frac{m_{\pi(i)}}{n_{\pi(i)}} \mathbb{E} [ \xi_{\pi(i)}^t ]}_{ \text{intra-gang} } + \underbrace{\sum_{k \neq \pi(i)} \frac{m_k}{n_{\pi(i)}}  \mathbb{E} [ \epsilon_{k, \pi(i)}^t ]}_{ \text{inter-gang} }
+\mathbb{E} [ x_i^t ] = \underbrace{ \frac{m_{\pi(i)}}{n_{\pi(i)}} \mathbb{E} [ \xi_{\pi(i)}^t ]}_{ \text{intra-gang} } + \underbrace{\sum_{k \neq \pi(i)} \frac{m_{\pi(i)}}{n_{\pi(i)}}  \mathbb{E} [ \epsilon_{k, \pi(i)}^t ]}_{ \text{inter-gang} }
 \]</span></p>
 <p><strong>Non-Gang Related Shootings</strong></p>
 <p><span class="math display">\[
@@ -815,7 +725,7 @@ b_{21} &amp; b_{22}
 \]</span></p>
 <div class="fragment">
 <p><span class="math display">\[
-\color{bcOrange} \Theta B \Theta^T
+Q = \color{bcOrange} \Theta B \Theta^T
 \]</span></p>
 <p><span class="math display">\[
 \begin{array}{ccc}
@@ -959,21 +869,7 @@ b_{21} &amp; b_{22}
 \end{array}
 \]</span></p>
 </section></section>
-<section><section id="estimation" class="title-slide slide level1"><h1>Estimation</h1><div class="fragment">
-<p><strong>Targets</strong></p>
-<ul>
-<li>Partition function, <span class="math inline">\(\pi\)</span> (membership matrix: <span class="math inline">\(\Theta\)</span>)</li>
-<li>Number of groups <span class="math inline">\(K\)</span></li>
-<li>Non-gang territory, <span class="math inline">\(\mathcal{N}_0\)</span></li>
-</ul>
-</div>
-<div class="fragment">
-<p><strong>Method</strong></p>
-<ol type="1">
-<li>Hold <span class="math inline">\(K\)</span> fixed, estimate partition (<span class="math inline">\(\color{bcOrange} J = K + 1\)</span>)</li>
-<li>Cross validate over many trial <span class="math inline">\(K\)</span> to estimate number of groups</li>
-</ol>
-</div></section><section id="sample-covariance-matrix-construction" class="slide level2">
+<section><section id="estimation" class="title-slide slide level1"><h1>Estimation</h1></section><section id="sample-covariance-matrix-construction" class="slide level2">
 <h2>Sample Covariance Matrix Construction</h2>
 <p><span class="math display">\[
 \tilde{a}_{ij} = \frac{1}{N} \sum_{t=1}^T (v_i^t - \bar{v}_i) (v_j^t - \bar{v}_j)
@@ -1033,7 +929,7 @@ Q - \text{diag}(Q) &amp;= \mathbb{E}[A] - \text{diag}(\mathbb{E}[A]) \\
 Q &amp;= \Theta B \Theta^T \\
 &amp;= \Theta \Delta^{-1} \Delta B \Delta \Delta^{-1} \Theta^T \\
 &amp;= \Theta \Delta^{-1} Z \Lambda Z^T \Delta^{-1} \Theta^T \\
-&amp;= \Theta X \Lambda X^T \Theta^T
+&amp;= \Theta X \Lambda X^T \Theta^T \\
 U D U^T &amp;= \Theta X \Lambda X^T \Theta^T
 \end{align*}\]</span></p>
 <div class="fragment">
@@ -1110,9 +1006,7 @@ U D U^T &amp;= \Theta X \Lambda X^T \Theta^T
 \end{equation}\]</span></li>
 </ol>
 <div class="fragment">
-<ul>
-<li>Alternative approach: eigengaps <span class="citation" data-cites="Ahn2013">(Ahn and Horenstein 2013)</span></li>
-</ul>
+<p>Alternative approach: eigengaps <span class="citation" data-cites="Ahn2013">(Ahn and Horenstein 2013)</span></p>
 <p><a href="#/chen">Details</a></p>
 </div>
 </section><section id="uncertainty-nonparametric-bootstrap" class="slide level2">
@@ -1132,26 +1026,7 @@ U D U^T &amp;= \Theta X \Lambda X^T \Theta^T
 <li>Present 95 percent confidence intervals</li>
 </ol>
 </section></section>
-<section><section id="results" class="title-slide slide level1"><h1>Results</h1><div class="fragment">
-<p><strong>Number of Gangs</strong></p>
-<ul>
-<li>3-4 gangs detected</li>
-<li>39 gangs own at least one tract according to CPD, but three largest gangs we detect occupy 57.3 of all gang turf</li>
-<li><a href="#/eigengaps">Eigengaps</a></li>
-</ul>
-</div>
-<div class="fragment">
-<p><strong>Territorial Partition</strong></p>
-<ul>
-<li>Paritition labels matched to those of Gangster Disciples, Vice Lords, and Black P Stones with highest frequency</li>
-<li>20-28 percent of census tracts are gang-occupied</li>
-<li>56-60 percent of our labels agree with those of CPD
-<ul>
-<li><strong>Baseline:</strong> 35 percent of CPD labels agree with random label permutations</li>
-</ul></li>
-<li><a href="#/cpd_match_table">Match Frequencies</a></li>
-</ul>
-</div></section><section id="empirical-covariances" class="slide level2">
+<section><section id="results" class="title-slide slide level1"><h1>Results</h1></section><section id="empirical-covariances" class="slide level2">
 <h2>Empirical Covariances</h2>
 <p><img data-src="index_files/figure-revealjs/unnamed-chunk-18-1.png" /><!-- --></p>
 </section><section id="empirical-covariances-1" class="slide level2">
@@ -1167,57 +1042,10 @@ U D U^T &amp;= \Theta X \Lambda X^T \Theta^T
 <h2>Conflict Intensities</h2>
 <p><img data-src="index_files/figure-revealjs/unnamed-chunk-22-1.png" /><!-- --></p>
 </section></section>
-<section id="conclusion" class="title-slide slide level1"><h1>Conclusion</h1><div class="fragment">
-<p><strong>Limitations</strong></p>
-<ul>
-<li>Collapse dynamic process of border adjustment into static representation <span class="citation" data-cites="Bruhn2019">(Bruhn 2019)</span></li>
-<li>Detects largest gangs in Chicago but is unable to capture richness of gang network</li>
-</ul>
-</div>
-<div class="fragment">
-<p><strong>Extensions</strong></p>
-<ul>
-<li>Extend to other cities
-<ul>
-<li>Data is available for all large municipalities</li>
-</ul></li>
-<li>Build cross section of gang maps across United States and elsewhere(?)
-<ul>
-<li>Characterize measurement error explicitly</li>
-</ul></li>
-<li>Building block for substantive research on gangs, violence, poverty, and policing</li>
-</ul>
-</div></section>
-<section id="thank-you" class="title-slide slide level1 aligncenter"><h1>Thank You</h1></section>
-<section id="toc" class="title-slide slide level1"><h1>Table of Contents</h1><div id="left">
-<p><strong>Sections</strong></p>
-<ol type="1">
-<li><a href="#/introduction">Introduction</a></li>
-<li><a href="#/data">Data</a></li>
-<li><a href="#/model">Model</a></li>
-<li><a href="#/estimation">Estimation</a></li>
-<li><a href="#/results">Results</a></li>
-</ol>
-</div>
-<div id="right">
-<p><strong>Appendix</strong></p>
-<ol type="1">
-<li><a href="#/chen">Number of Groups</a></li>
-<li><a href="#/chen">Eigengaps</a></li>
-<li><a href="#/cpd_match_table">Match Frequencies</a></li>
-</ol>
-</div></section>
-<section><section id="chen" class="title-slide slide level1"><h1>Number of Groups (I)</h1><ul>
-<li>Rectangular subset of <span class="math inline">\(\tilde{A}\)</span>, <span class="math inline">\(\tilde{A}^{(-v, v)} = \tilde{A}^{(\mathcal{N}_{-v}, \mathcal{N})}\)</span></li>
-<li>Theoretical analogue <span class="math display">\[
-Q^{(-v, v)} = \Theta^{(-v, v)} B \Theta
-\]</span></li>
-<li>Eigenstructure of <span class="math inline">\(\left( Q^{(-v, v)} \right)^T Q\)</span> <span class="math display">\[\begin{align*}
-\left( Q^{(-v, v)} \right)^T Q &amp;= \Theta B^T \left( \Theta^{(-v, v)} \right)^T \Theta^{(-v, v)} B \Theta^T \\
-&amp;= \Theta B^T \left( \Delta^{(-v, -v)} \right)^2 B \Theta^T .
-\end{align*}\]</span></li>
-<li>Eigendecompose using right singular values of <span class="math inline">\(Q^{(-v, v)}\)</span> and k-means cluster to produce membership estimates <span class="math inline">\(\hat{\Theta}(v)\)</span></li>
-</ul></section><section id="number-of-groups-ii" class="slide level2">
+<section><section id="conclusion" class="title-slide slide level1"><h1>Conclusion</h1></section></section>
+<section><section id="thank-you" class="title-slide slide level1 aligncenter"><h1>Thank You</h1></section></section>
+<section><section id="toc" class="title-slide slide level1"><h1>Table of Contents</h1></section></section>
+<section><section id="chen" class="title-slide slide level1"><h1>Number of Groups (I)</h1></section><section id="number-of-groups-ii" class="slide level2">
 <h2>Number of Groups (II)</h2>
 <ul>
 <li>Estimate connectivity matrix <span class="math display">\[
@@ -1247,7 +1075,7 @@ L_v(\tilde{A}, \hat{A}(v)) = \left\lVert \left( \tilde{A}^{(v,v)} - \text{diag}(
 <p><a href="#/toc">Back (TOC)</a></p>
 <!-- hide references -->
 <hr style="height:30em; visibility:hidden;" />
-<div id="refs" class="references" role="doc-bibliography">
+<div id="refs" class="references">
 <div id="ref-Ahn2013">
 <p>Ahn, Seung C., and Alex R. Horenstein. 2013. “Eigenvalue Ratio Test for the Number of Factors.” <em>Econometrica</em> 81 (3): 1203–27.</p>
 </div>
@@ -1282,7 +1110,7 @@ L_v(\tilde{A}, \hat{A}(v)) = \left\lVert \left( \tilde{A}^{(v,v)} - \text{diag}(
 <p>Lei, Jing, and Alessandro Rinaldo. 2015. “Consistency of Spectral Clustering in Stochastic Block Models.” <em>The Annals of Statistics</em> 43 (1): 215–37.</p>
 </div>
 <div id="ref-Levitt2000">
-<p>Levitt, Steven D, and Sudhir Alladi Venkatesh. 2000. “An economic analysis of a drug-selling gang’s finances.” <em>Quarterly Journal of Economics</em>, 755–89.</p>
+<p>Levitt, Steven D, and Sudhir Alladi Venkatesh. 2000. “An economic analysis of a drug-selling gang’s finances.” <em>Quarterly Journal of Economics</em>. JSTOR, 755–89.</p>
 </div>
 <div id="ref-Luxberg2007">
 <p>Luxburg, Ulrike von. 2007. “A tutorial on spectral clustering.” <em>Statistics and Computing</em> 17 (4): 395–416.</p>
@@ -1318,7 +1146,7 @@ L_v(\tilde{A}, \hat{A}(v)) = \left\lVert \left( \tilde{A}^{(v,v)} - \text{diag}(
 <p>Vargas, Robert. 2016. <em>Wounded city: Violent turf wars in a Chicago barrio</em>. Oxford University Press.</p>
 </div>
 <div id="ref-Venkatesh2000">
-<p>Venkatesh, Sudhir Alladi, and Steven D. Levitt. 2000. “"Are we a family or a business?" History and disjuncture in the urban American street gang.”</p>
+<p>Venkatesh, Sudhir Alladi, and Steven D. Levitt. 2000. “&quot;Are we a family or a business?&quot; History and disjuncture in the urban American street gang.”</p>
 </div>
 </div>
 </section></section>

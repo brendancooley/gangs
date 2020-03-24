@@ -83,7 +83,7 @@ Q - \text{diag}(Q) &= \mathbb{E}[A] - \text{diag}(\mathbb{E}[A]) \\
 Q &= \Theta B \Theta^T \\
 &= \Theta \Delta^{-1} \Delta B \Delta \Delta^{-1} \Theta^T \\
 &= \Theta \Delta^{-1} Z \Lambda Z^T \Delta^{-1} \Theta^T \\
-&= \Theta X \Lambda X^T \Theta^T
+&= \Theta X \Lambda X^T \Theta^T \\
 U D U^T &= \Theta X \Lambda X^T \Theta^T
 \end{align*}
 
@@ -159,7 +159,7 @@ $$
 
 . . . 
 
-- Alternative approach: eigengaps [@Ahn2013]
+Alternative approach: eigengaps [@Ahn2013]
 
 <a href="#/chen">Details</a>
 
