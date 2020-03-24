@@ -30,7 +30,7 @@ cpd_gangs_N <- read_csv(cpd_gangs_N_path, col_names=FALSE) %>% pull()
 
 **Turf (Validation):** CPD internal reports, annual [@Bruhn2019]
 
-- Report number of gangs and territorial partition
+- Report number of gangs and territorial partition, `r bruhn_sy`-`r bruhn_ey`
 - Collapse panel
 	+ Take average territorial footprint over sample period
 - Preprocessing

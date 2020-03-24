@@ -49,6 +49,13 @@
 - **Assumption `r Aintergang_symmetry` (Quasi-symmetry):** $c_{k} \epsilon_{k, \ell}^t = c_{\ell} \epsilon_{\ell, k}^{t}$ with the normalization $c_1 = 1$. If $k = 0$ or $\ell = 0$ then $\epsilon_{k, \ell}^t = 0$ for all $t$
 - **Assumption `r Aintergang_iid` (Independence):** $\mathbb{E} [ \epsilon_{k, \ell}^t \epsilon_{m, n}^t ] - \mathbb{E} [ \epsilon_{k, \ell}^t ] \mathbb{E} [ \epsilon_{m, n}^t ] = 0$ for $m, n \notin \left\{ k, \ell \right\}$
 
+. . . 
+
+- Probability member of gang $\pi(i)$ is operating on territory $i$
+$$
+\frac{m_{\pi(i)}}{n_{\pi(i)}}
+$$
+
 ## Varieties of Violence
 
 **Gang-Related Shootings**
