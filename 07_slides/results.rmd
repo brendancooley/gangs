@@ -42,7 +42,7 @@ cpd_agreement_ratio_gang_ci <- quantile(cpd_agreement_ratio_gang, c(.025, .975))
 **Number of Gangs**
 
 - `r K_lower`-`r K_upper` gangs detected
-- `r cpd_gangs_N` gangs own at least one tract according to CPD, but three largest gangs we detect occupy `r round(gd_vl_bps_area / all_area*100, 1)` of all gang turf
+- `r cpd_gangs_N` gangs own at least one tract according to CPD, but three largest gangs we detect occupy `r round(gd_vl_bps_area / all_area*100, 0)` percent of all gang turf
 - <a href="#/eigengaps">Eigengaps</a>
 
 </div>

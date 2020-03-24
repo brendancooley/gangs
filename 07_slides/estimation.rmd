@@ -83,7 +83,7 @@ Q - \text{diag}(Q) &= \mathbb{E}[A] - \text{diag}(\mathbb{E}[A]) \\
 Q &= \Theta B \Theta^T \\
 &= \Theta \Delta^{-1} \Delta B \Delta \Delta^{-1} \Theta^T \\
 &= \Theta \Delta^{-1} Z \Lambda Z^T \Delta^{-1} \Theta^T \\
-&= \Theta X \Lambda X^T \Theta^T
+&= \Theta X \Lambda X^T \Theta^T \\
 U D U^T &= \Theta X \Lambda X^T \Theta^T
 \end{align*}
 
@@ -102,6 +102,9 @@ U D U^T &= \Theta X \Lambda X^T \Theta^T
 $$
 \tilde{A} - \text{diag}(\tilde{A}) = \tilde{U} \tilde{\Lambda} \tilde{U}^T
 $$
+
+- $\tilde{\Lambda}_{J \times J}$ -- $J$ leading eigenvalues
+- $\tilde{U}_{N \times J}$ -- associated eigenvectors
 
 ## Modified Estimation Problem
 

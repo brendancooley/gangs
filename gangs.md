@@ -122,7 +122,7 @@ Second, we assume inter-gang shocks are independent across gang dyads.^[Of cours
 
 The expected number of gang-related shootings in district $i$ during period $t$ can then be calculated as 
 $$
-\E [ x_i^t ] = \underbrace{ \frac{m_{\pi(i)}}{n_{\pi(i)}} \E [ \xi_{\pi(i)}^t ]}_{ \text{intra-gang} } + \underbrace{\sum_{k \neq \pi(i)} \frac{m_k}{n_{\pi(i)}}  \E [ \epsilon_{k, \pi(i)}^t ]}_{ \text{inter-gang} }
+\E [ x_i^t ] = \underbrace{ \frac{m_{\pi(i)}}{n_{\pi(i)}} \E [ \xi_{\pi(i)}^t ]}_{ \text{intra-gang} } + \underbrace{\sum_{k \neq \pi(i)} \frac{m_{\pi(i)}}{n_{\pi(i)}}  \E [ \epsilon_{k, \pi(i)}^t ]}_{ \text{inter-gang} }
 $$
 The total number of shootings in district $i$ during period $t$ is
 $$
@@ -138,9 +138,9 @@ In the proceeding section we will show that the covariance in shootings across d
 **Proposition 1:** The covariance in shootings between districts $i$ and $j$ is
 $$
 a_{ij} = \begin{cases} \sum_{k \neq \pi(i)} \left( 
-\left( \frac{m_k}{n_{\pi(i)}} \right)^2 \Var [  \epsilon_{\pi(i), k}^t ] \right) +  \left( \frac{m_{\pi(i)}}{n_{\pi(i)}} \right)^2 \Var[ \xi_{\pi(i)}^t ] + \psi_i & \text{if } i = j \\
+\left( \frac{m_{\pi(i)}}{n_{\pi(i)}} \right)^2 \Var [  \epsilon_{k, \pi(i)}^t ] \right) +  \left( \frac{m_{\pi(i)}}{n_{\pi(i)}} \right)^2 \Var[ \xi_{\pi(i)}^t ] + \psi_i & \text{if } i = j \\
 \sum_{k \neq \pi(i)} \left( 
-\left( \frac{m_k}{n_{\pi(i)}} \right)^2 \Var [ \epsilon_{\pi(i), k}^t ] \right) +  \left( \frac{m_{\pi(i)}}{n_{\pi(i)}} \right)^2 \Var[ \xi_{\pi(i)}^t ] & \text{if } \pi(i) = \pi(j) \\
+\left( \frac{m_{\pi(i)}}{n_{\pi(i)}} \right)^2 \Var [ \epsilon_{k, \pi(i)}^t ] \right) +  \left( \frac{m_{\pi(i)}}{n_{\pi(i)}} \right)^2 \Var[ \xi_{\pi(i)}^t ] & \text{if } \pi(i) = \pi(j) \\
 \frac{m_{\pi(i)}}{n_{\pi(j)}} \frac{m_{\pi(j)}}{n_{\pi(i)}} \frac{c_{\pi(j)}}{c_{\pi(i)}} \Var [\epsilon_{\pi(i), \pi(j)}^t] & \text{if } \pi(i) \neq \pi(j) \\
 0 & \text{otherwise}
 \end{cases}
@@ -409,11 +409,11 @@ Recognizing these measurement limitations, we view this paper as the first step 
 =& \left( \E [ x_{it} x_{jt} ] + \E [ x_{it} y_{jt} ] + \E [ x_{jt} y_{it} ] + \E [ y_{it} y_{jt} ] \right) - \\
  & \left( \E [ x_{it} ] \E [ x_{jt} ] + \E [ x_{it} ] \E [ y_{jt} ] + \E [ x_{jt} ] \E [ y_{it} ] + \E [ y_{it} ] \E [ y_{jt} ] \right) \\
 =& \left( \E [ x_{it} x_{jt} ] -  \E [ x_{it} ] \E [ x_{jt} ] \right) + \left( \E [ y_{it} y_{jt} ] - \E [ y_{it} ] \E [ y_{jt} ] \right) \\
-=& \E \left[ \left( \frac{m_{\pi(i)}}{n_{\pi(i)}} \xi_{\pi(i)}^t + \sum_{k \neq \pi(i)} \frac{m_k}{n_{\pi(i)}} \epsilon_{k, \pi(i)}^t \right) \left( \frac{m_{\pi(j)}}{n_{\pi(j)}} \xi_{\pi(j)}^t + \sum_{\ell \neq \pi(j)} \frac{m_\ell}{n_{\pi(j)}} \epsilon_{\ell, \pi(j)}^t \right) \right] - \\
-& \E \left[ \frac{m_{\pi(i)}}{n_{\pi(i)}} \xi_{\pi(i)}^t + \sum_{k \neq \pi(i)} \frac{m_k}{n_{\pi(i)}} \epsilon_{k, \pi(i)}^t \right] \E \left[ \frac{m_{\pi(j)}}{n_{\pi(j)}} \xi_{\pi(j)}^t + \sum_{\ell \neq \pi(j)} \frac{m_\ell}{n_{\pi(j)}} \epsilon_{\ell, \pi(j)}^t \right] + \\
+=& \E \left[ \left( \frac{m_{\pi(i)}}{n_{\pi(i)}} \xi_{\pi(i)}^t + \sum_{k \neq \pi(i)} \frac{m_{\pi(i)}}{n_{\pi(i)}} \epsilon_{k, \pi(i)}^t \right) \left( \frac{m_{\pi(j)}}{n_{\pi(j)}} \xi_{\pi(j)}^t + \sum_{\ell \neq \pi(j)} \frac{m_\ell}{n_{\pi(j)}} \epsilon_{\ell, \pi(j)}^t \right) \right] - \\
+& \E \left[ \frac{m_{\pi(i)}}{n_{\pi(i)}} \xi_{\pi(i)}^t + \sum_{k \neq \pi(i)} \frac{m_{\pi(i)}}{n_{\pi(i)}} \epsilon_{k, \pi(i)}^t \right] \E \left[ \frac{m_{\pi(j)}}{n_{\pi(j)}} \xi_{\pi(j)}^t + \sum_{\ell \neq \pi(j)} \frac{m_{\pi(j)}}{n_{\pi(j)}} \epsilon_{\ell, \pi(j)}^t \right] + \\
 & \left( \E [ y_{it} y_{jt} ] - \E [ y_{it} ] \E [ y_{jt} ] \right) \\
 =& \frac{m_{\pi(i)}}{n_{\pi(i)}} \frac{m_{\pi(j)}}{n_{\pi(j)}} \underbrace{\left( \E \left[ \xi_{\pi(i)}^t \xi_{\pi(j)}^t \right] - \E [ \xi_{\pi(i)}^t ] \E [ \xi_{\pi(j)}^t ] \right)}_{ \text{I: intra-gang} } + \\
-& \sum_{k \neq \pi(i)} \sum_{\ell \neq \pi(j)} \frac{m_k}{n_{\pi(i)}} \frac{m_\ell}{n_{\pi(j)}} \underbrace{\left( \E \left[ \epsilon_{k, \pi(i)}^t \epsilon_{\ell, \pi(j)}^t \right] - \E [ \epsilon_{k, \pi(i)}^t ] \E [ \epsilon_{\ell, \pi(j)}^t ] \right)}_{ \text{II: inter-gang} } + \\
+& \sum_{k \neq \pi(i)} \sum_{\ell \neq \pi(j)} \frac{m_k}{n_{\pi(i)}} \frac{m_{\pi(j)}}{n_{\pi(j)}} \underbrace{\left( \E \left[ \epsilon_{k, \pi(i)}^t \epsilon_{\ell, \pi(j)}^t \right] - \E [ \epsilon_{k, \pi(i)}^t ] \E [ \epsilon_{\ell, \pi(j)}^t ] \right)}_{ \text{II: inter-gang} } + \\
 & \underbrace{\left( \E [ y_{it} y_{jt} ] - \E [ y_{it} ] \E [ y_{jt} ] \right)}_{ \text{III: resident violence} }
 \end{align*}
 
@@ -423,7 +423,7 @@ Now consider $i \neq j$ and $\pi(i) \neq \pi(j)$ and $\pi(i), \pi(j) \neq 0$. $\
 
 Next, let $i \neq j$ and $\pi(i) = \pi(j)$. Here, $\E \left[ \xi_{\pi(i)}^t \xi_{\pi(j)}^t \right] - \E [ \xi_{\pi(i)}^t ] \E [ \xi_{\pi(j)}^t ] = \Var [ \xi_{\pi(i)}^t ]$. By Assumption 4, $\E \left[ \epsilon_{k, \pi(i)}^t \epsilon_{\ell, \pi(j)}^t \right] - \E [ \epsilon_{k, \pi(i)}^t ] \E [ \epsilon_{\ell, \pi(j)}^t ] = 0$ whenever $k \neq \ell$. Therefore, the intergang sum condenses to
 $$
-\left( \frac{m_k}{n_{\pi(i)}} \right)^2 \Var [ \epsilon_{\pi(i), k}^t ]
+\left( \frac{m_{\pi(i)}}{n_{\pi(i)}} \right)^2 \Var [ \epsilon_{\pi(i), k}^t ]
 $$.
 
 Finally, if $i = j$ then $\pi(i) = \pi(j)$. The within district variance is $\psi_i$. Otherwise, these districts inherit the covariance structure derived in the preceding paragraph. This yields the first component of the piecewise function.
