@@ -3,7 +3,7 @@
 # rm(list = ls())
 source("../01_code/00_params.R")
 
-libs <- c("tidyverse", "rgdal", "sf", "tmap", "rgeos")
+libs <- c("tidyverse", "lubridate", "rgdal", "sf", "tmap", "rgeos")
 ipak(libs)
 
 crimes_clean <- read_csv(crimes_clean_path)
@@ -12,7 +12,10 @@ chi_outline <- gUnaryUnion(tracts)
 
 ### CLEAN ###
 
-crimes_clean_hnfs <- crimes_clean %>% filter(hnfs==1)
+minY <- bruhn_sy %>% ymd(truncated = 2L)
+maxY <- bruhn_ey %>% ymd(truncated = 2L)
+
+crimes_clean_hnfs <- crimes_clean %>% filter(hnfs==1) %>% filter(year>=minY, year<=maxY)
 
 crimes_clean_geo <- crimes_clean_hnfs %>%
   st_as_sf(coords = c('lng', 'lat'), crs=proj4string(tracts))

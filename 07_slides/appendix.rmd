@@ -10,7 +10,33 @@ label_counts$Gang <- stri_trans_totitle(label_counts$Gang)
 
 ```
 
-# Number of Groups (I) {id="chen"}
+# Territorial Distribution {id="turf_distribution"}
+
+```{r, echo=FALSE, warning=FALSE, message=FALSE, fig.height=5, dpi=300}
+
+source("../05_figs/chi_gang_areas.R")
+gang_area_plot
+
+``` 
+
+<a href="#/turf_evolution">Back (Data)</a>
+
+<a href="#/toc">Back (TOC)</a>
+
+## Gang Boundaries and Neighborhood Ethnicity {id="ethnicity"}
+
+```{r, echo=FALSE, warning=FALSE, message=FALSE, fig.height=5, dpi=300}
+
+source("../05_figs/ethnicity.R")
+tmap_arrange(chi_turf_binary_map, ethnicity_map)
+
+``` 
+
+<a href="#/turf_evolution">Back (Data)</a>
+
+<a href="#/toc">Back (TOC)</a>
+
+## Number of Groups (I) {id="chen"}
 
 - Rectangular subset of $\tilde{A}$, $\tilde{A}^{(-v, v)} = \tilde{A}^{(\mathcal{N}_{-v}, \mathcal{N})}$
 - Theoretical analogue

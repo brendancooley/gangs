@@ -534,7 +534,7 @@ document.getElementsByTagName('head')[0].appendChild(style);
 </div></section><section id="measurement-problem" class="slide level2">
 <h2>Measurement Problem</h2>
 <ul>
-<li><strong>Proposition:</strong> understanding gunshots requires understanding gangs</li>
+<li>Gangs are responsible for much of the violence in American cities</li>
 <li><strong>Problem:</strong> gangs are covert organizations <span class="math inline">\(\implies\)</span> knowledge of gangs remains anecdotal and spatially circumscribed</li>
 </ul>
 <div class="fragment">
@@ -633,11 +633,10 @@ document.getElementsByTagName('head')[0].appendChild(style);
 <li>55 gangs total, focus on <strong>6 largest by territorial extent</strong> for validation</li>
 <li>These control 77% of all gang turf</li>
 </ul></li>
-<li>Assign a tract to a gang if
-<ol type="1">
-<li>it owns plurality of tract area and</li>
-<li>it owns at least 10 percent of tract</li>
-</ol></li>
+<li>Assign a tract to a gang if 1) it owns plurality of tract area and 2) it owns at least 10 percent of tract
+<ul>
+<li>39 satisfy criteria for inclusion</li>
+</ul></li>
 </ul>
 </div></section><section id="gunshots-spatial-distribution" class="slide level2">
 <h2>Gunshots, Spatial Distribution</h2>
@@ -667,18 +666,15 @@ v_1^1 &amp; \cdots &amp; \cdots &amp; \cdots &amp; v_1^T \\
 v_N^1 &amp; \cdots &amp; \cdots &amp; \cdots &amp; v_N^T
 \end{pmatrix}
 \]</span></p>
-</section><section id="turf-territorial-distribution" class="slide level2">
-<h2>Turf, Territorial Distribution</h2>
-<p><img data-src="index_files/figure-revealjs/unnamed-chunk-13-1.png" /><!-- --></p>
-</section><section id="turf-change-over-time" class="slide level2">
+<div class="fragment">
+<center>
+<em>Treat territorial partition as static over time</em>
+</center>
+</div>
+</section><section id="turf_evolution" class="slide level2">
 <h2>Turf, Change over Time</h2>
-<p><img data-src="index_files/figure-revealjs/unnamed-chunk-14-1.png" /><!-- --></p>
-</section><section id="turf-panel-collapsed" class="slide level2">
-<h2>Turf, Panel Collapsed</h2>
-<p><img data-src="index_files/figure-revealjs/unnamed-chunk-15-1.png" /><!-- --></p>
-</section><section id="turf-panel-collapsed-1" class="slide level2">
-<h2>Turf, Panel Collapsed</h2>
-<p><img data-src="index_files/figure-revealjs/unnamed-chunk-16-1.png" /><!-- --></p>
+<p><img data-src="index_files/figure-revealjs/unnamed-chunk-13-1.png" /><!-- --></p>
+<p><a href="#/turf_distribution">Territorial Distribution</a> &amp;nbsp <a href="#/ethnicity">Ethnicity</a></p>
 </section></section>
 <section><section id="model" class="title-slide slide level1"><h1>Model</h1><div class="fragment">
 <p><strong>Observables</strong></p>
@@ -1153,19 +1149,19 @@ U D U^T &amp;= \Theta X \Lambda X^T \Theta^T
 </ul>
 </div></section><section id="empirical-covariances" class="slide level2">
 <h2>Empirical Covariances</h2>
-<p><img data-src="index_files/figure-revealjs/unnamed-chunk-18-1.png" /><!-- --></p>
+<p><img data-src="index_files/figure-revealjs/unnamed-chunk-15-1.png" /><!-- --></p>
 </section><section id="empirical-covariances-1" class="slide level2">
 <h2>Empirical Covariances</h2>
-<p><img data-src="index_files/figure-revealjs/unnamed-chunk-19-1.png" /><!-- --></p>
+<p><img data-src="index_files/figure-revealjs/unnamed-chunk-16-1.png" /><!-- --></p>
 </section><section id="territorial-partition" class="slide level2">
 <h2>Territorial Partition</h2>
-<p><img data-src="index_files/figure-revealjs/unnamed-chunk-20-1.png" /><!-- --></p>
+<p><img data-src="index_files/figure-revealjs/unnamed-chunk-17-1.png" /><!-- --></p>
 </section><section id="conflict-intensities" class="slide level2">
 <h2>Conflict Intensities</h2>
-<p><img data-src="index_files/figure-revealjs/unnamed-chunk-21-1.png" /><!-- --></p>
+<p><img data-src="index_files/figure-revealjs/unnamed-chunk-18-1.png" /><!-- --></p>
 </section><section id="conflict-intensities-1" class="slide level2">
 <h2>Conflict Intensities</h2>
-<p><img data-src="index_files/figure-revealjs/unnamed-chunk-22-1.png" /><!-- --></p>
+<p><img data-src="index_files/figure-revealjs/unnamed-chunk-19-1.png" /><!-- --></p>
 </section></section>
 <section id="conclusion" class="title-slide slide level1"><h1>Conclusion</h1><div class="fragment">
 <p><strong>Limitations</strong></p>
@@ -1202,12 +1198,23 @@ U D U^T &amp;= \Theta X \Lambda X^T \Theta^T
 <div id="right">
 <p><strong>Appendix</strong></p>
 <ol type="1">
+<li><a href="#/turf_distribution">Territorial Distribution</a></li>
+<li><a href="#/ethnicity">Gang Boundaries and Neighborhood Ethnicity</a></li>
 <li><a href="#/chen">Number of Groups</a></li>
-<li><a href="#/chen">Eigengaps</a></li>
+<li><a href="#/eigengaps">Eigengaps</a></li>
 <li><a href="#/cpd_match_table">Match Frequencies</a></li>
 </ol>
 </div></section>
-<section><section id="chen" class="title-slide slide level1"><h1>Number of Groups (I)</h1><ul>
+<section><section id="turf_distribution" class="title-slide slide level1"><h1>Territorial Distribution</h1><p><img data-src="index_files/figure-revealjs/unnamed-chunk-21-1.png" /><!-- --></p>
+<p><a href="#/turf_evolution">Back (Data)</a></p>
+<p><a href="#/toc">Back (TOC)</a></p></section><section id="ethnicity" class="slide level2">
+<h2>Gang Boundaries and Neighborhood Ethnicity</h2>
+<p><img data-src="index_files/figure-revealjs/unnamed-chunk-22-1.png" /><!-- --></p>
+<p><a href="#/turf_evolution">Back (Data)</a></p>
+<p><a href="#/toc">Back (TOC)</a></p>
+</section><section id="chen" class="slide level2">
+<h2>Number of Groups (I)</h2>
+<ul>
 <li>Rectangular subset of <span class="math inline">\(\tilde{A}\)</span>, <span class="math inline">\(\tilde{A}^{(-v, v)} = \tilde{A}^{(\mathcal{N}_{-v}, \mathcal{N})}\)</span></li>
 <li>Theoretical analogue <span class="math display">\[
 Q^{(-v, v)} = \Theta^{(-v, v)} B \Theta
@@ -1217,7 +1224,8 @@ Q^{(-v, v)} = \Theta^{(-v, v)} B \Theta
 &amp;= \Theta B^T \left( \Delta^{(-v, -v)} \right)^2 B \Theta^T .
 \end{align*}\]</span></li>
 <li>Eigendecompose using right singular values of <span class="math inline">\(Q^{(-v, v)}\)</span> and k-means cluster to produce membership estimates <span class="math inline">\(\hat{\Theta}(v)\)</span></li>
-</ul></section><section id="number-of-groups-ii" class="slide level2">
+</ul>
+</section><section id="number-of-groups-ii" class="slide level2">
 <h2>Number of Groups (II)</h2>
 <ul>
 <li>Estimate connectivity matrix <span class="math display">\[
@@ -1237,7 +1245,7 @@ L_v(\tilde{A}, \hat{A}(v)) = \left\lVert \left( \tilde{A}^{(v,v)} - \text{diag}(
 <p><a href="#/toc">Back (TOC)</a></p>
 </section><section id="eigengaps" class="slide level2">
 <h2>Eigengaps</h2>
-<p><img data-src="index_files/figure-revealjs/unnamed-chunk-24-1.png" /><!-- --></p>
+<p><img data-src="index_files/figure-revealjs/unnamed-chunk-23-1.png" /><!-- --></p>
 <p><a href="#/results">Back (Results)</a></p>
 <p><a href="#/toc">Back (TOC)</a></p>
 </section><section id="cpd_match_table" class="slide level2">

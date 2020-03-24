@@ -93,9 +93,11 @@ if (file.exists('references.RData')) load('references.RData')
 
 **Appendix**
 
-1. <a href="#/chen">Number of Groups</a>
-2. <a href="#/chen">Eigengaps</a>
-3. <a href="#/cpd_match_table">Match Frequencies</a>
+1. <a href="#/turf_distribution">Territorial Distribution</a>
+2. <a href="#/ethnicity">Gang Boundaries and Neighborhood Ethnicity</a>
+3. <a href="#/chen">Number of Groups</a>
+4. <a href="#/eigengaps">Eigengaps</a>
+5. <a href="#/cpd_match_table">Match Frequencies</a>
 </div>
 
 ```{r, child = "07_slides/appendix.rmd"}

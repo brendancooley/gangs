@@ -11,6 +11,8 @@ gang_area_means <- read_csv(paste0(gang_territory_path, "gang_area_means.csv"))
 major_gangs <- read_csv(paste0(gang_territory_path, "major_gangs.csv"), col_names=FALSE) %>% pull()
 gang_area_meansV <- gang_area_means %>% filter(gang %in% major_gangs)
 
+cpd_gangs_N <- read_csv(cpd_gangs_N_path, col_names=FALSE) %>% pull()
+
 ```
 
 # Data {id="data"}
@@ -34,9 +36,8 @@ gang_area_meansV <- gang_area_means %>% filter(gang %in% major_gangs)
 - Preprocessing
 	+ `r nrow(gang_area_means)` gangs total, focus on **`r gangs_V` largest by territorial extent** for validation
 	+ These control `r round(sum(gang_area_meansV$area_mean) / sum(gang_area_means$area_mean) * 100, 0)`% of all gang turf
-- Assign a tract to a gang if
-	1. it owns plurality of tract area and 
-	2. it owns at least 10 percent of tract
+- Assign a tract to a gang if 1) it owns plurality of tract area and 2) it owns at least 10 percent of tract
+	+ `r cpd_gangs_N` satisfy criteria for inclusion
 
 </div>
 
@@ -81,17 +82,13 @@ v_N^1 & \cdots & \cdots & \cdots & v_N^T
 \end{pmatrix}
 $$
 
+. . . 
 
-## Turf, Territorial Distribution
+<center>
+*Treat territorial partition as static over time*
+</center>
 
-```{r, echo=FALSE, warning=FALSE, message=FALSE, fig.height=5, dpi=300}
-
-source("../05_figs/chi_gang_areas.R")
-gang_area_plot
-
-``` 
-
-## Turf, Change over Time
+## Turf, Change over Time {id="turf_evolution"}
 
 ```{r, echo=FALSE, warning=FALSE, message=FALSE, fig.height=5, dpi=300}
 
@@ -100,19 +97,4 @@ turf_evolution_maps
 
 ``` 
 
-## Turf, Panel Collapsed
-
-```{r, echo=FALSE, warning=FALSE, message=FALSE, fig.height=5, dpi=300}
-
-tmap_arrange(chi_turf_binary_map, chi_outline_map)
-
-``` 
-
-## Turf, Panel Collapsed
-
-```{r, echo=FALSE, warning=FALSE, message=FALSE, fig.height=5, dpi=300}
-
-source("../05_figs/ethnicity.R")
-tmap_arrange(chi_turf_binary_map, ethnicity_map)
-
-``` 
+<a href="#/turf_distribution">Territorial Distribution</a> &nbsp <a href="#/ethnicity">Ethnicity</a>
