@@ -1,5 +1,6 @@
 ```{r, echo=FALSE, warning=FALSE, message=FALSE, results='hide'}
 
+source("../01_code/00_params.R")
 libs <- c("knitr", "kableExtra", "stringi", "patchwork")
 ipak(libs)
 

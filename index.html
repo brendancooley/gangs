@@ -497,7 +497,7 @@ document.getElementsByTagName('head')[0].appendChild(style);
 <section><section id="introduction" class="title-slide slide level1"><h1>Gunshots and Turf Wars</h1></section><section id="measurement-problem" class="slide level2">
 <h2>Measurement Problem</h2>
 <ul>
-<li>Gangs are responsible for much of the violence in American cities</li>
+<li><strong>Proposition:</strong> understanding gunshots requires understanding gangs</li>
 <li><strong>Problem:</strong> gangs are covert organizations <span class="math inline">\(\implies\)</span> knowledge of gangs remains anecdotal and spatially circumscribed</li>
 </ul>
 <div class="fragment">
@@ -645,7 +645,7 @@ v_N^1 &amp; \cdots &amp; \cdots &amp; \cdots &amp; v_N^T
 <h2>Varieties of Violence</h2>
 <p><strong>Gang-Related Shootings</strong></p>
 <p><span class="math display">\[
-\mathbb{E} [ x_i^t ] = \underbrace{ \frac{m_{\pi(i)}}{n_{\pi(i)}} \mathbb{E} [ \xi_{\pi(i)}^t ]}_{ \text{intra-gang} } + \underbrace{\sum_{k \neq \pi(i)} \frac{m_{\pi(i)}}{n_{\pi(i)}}  \mathbb{E} [ \epsilon_{k, \pi(i)}^t ]}_{ \text{inter-gang} }
+\mathbb{E} [ x_i^t ] = \underbrace{ \frac{m_{\pi(i)}}{n_{\pi(i)}} \mathbb{E} [ \xi_{\pi(i)}^t ]}_{ \text{intra-gang} } + \underbrace{\sum_{k \neq \pi(i)} \frac{m_k}{n_{\pi(i)}}  \mathbb{E} [ \epsilon_{k, \pi(i)}^t ]}_{ \text{inter-gang} }
 \]</span></p>
 <p><strong>Non-Gang Related Shootings</strong></p>
 <p><span class="math display">\[
@@ -725,7 +725,7 @@ b_{21} &amp; b_{22}
 \]</span></p>
 <div class="fragment">
 <p><span class="math display">\[
-Q = \color{bcOrange} \Theta B \Theta^T
+\color{bcOrange} \Theta B \Theta^T
 \]</span></p>
 <p><span class="math display">\[
 \begin{array}{ccc}
@@ -929,7 +929,7 @@ Q - \text{diag}(Q) &amp;= \mathbb{E}[A] - \text{diag}(\mathbb{E}[A]) \\
 Q &amp;= \Theta B \Theta^T \\
 &amp;= \Theta \Delta^{-1} \Delta B \Delta \Delta^{-1} \Theta^T \\
 &amp;= \Theta \Delta^{-1} Z \Lambda Z^T \Delta^{-1} \Theta^T \\
-&amp;= \Theta X \Lambda X^T \Theta^T \\
+&amp;= \Theta X \Lambda X^T \Theta^T
 U D U^T &amp;= \Theta X \Lambda X^T \Theta^T
 \end{align*}\]</span></p>
 <div class="fragment">
@@ -1006,7 +1006,9 @@ U D U^T &amp;= \Theta X \Lambda X^T \Theta^T
 \end{equation}\]</span></li>
 </ol>
 <div class="fragment">
-<p>Alternative approach: eigengaps <span class="citation" data-cites="Ahn2013">(Ahn and Horenstein 2013)</span></p>
+<ul>
+<li>Alternative approach: eigengaps <span class="citation" data-cites="Ahn2013">(Ahn and Horenstein 2013)</span></li>
+</ul>
 <p><a href="#/chen">Details</a></p>
 </div>
 </section><section id="uncertainty-nonparametric-bootstrap" class="slide level2">

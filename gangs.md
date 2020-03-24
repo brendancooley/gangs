@@ -122,7 +122,7 @@ Second, we assume inter-gang shocks are independent across gang dyads.^[Of cours
 
 The expected number of gang-related shootings in district $i$ during period $t$ can then be calculated as 
 $$
-\E [ x_i^t ] = \underbrace{ \frac{m_{\pi(i)}}{n_{\pi(i)}} \E [ \xi_{\pi(i)}^t ]}_{ \text{intra-gang} } + \underbrace{\sum_{k \neq \pi(i)} \frac{m_{\pi(i)}}{n_{\pi(i)}}  \E [ \epsilon_{k, \pi(i)}^t ]}_{ \text{inter-gang} }
+\E [ x_i^t ] = \underbrace{ \frac{m_{\pi(i)}}{n_{\pi(i)}} \E [ \xi_{\pi(i)}^t ]}_{ \text{intra-gang} } + \underbrace{\sum_{k \neq \pi(i)} \frac{m_k}{n_{\pi(i)}}  \E [ \epsilon_{k, \pi(i)}^t ]}_{ \text{inter-gang} }
 $$
 The total number of shootings in district $i$ during period $t$ is
 $$
@@ -138,9 +138,9 @@ In the proceeding section we will show that the covariance in shootings across d
 **Proposition 1:** The covariance in shootings between districts $i$ and $j$ is
 $$
 a_{ij} = \begin{cases} \sum_{k \neq \pi(i)} \left( 
-\left( \frac{m_k}{n_{\pi(i)}} \right)^2 \Var [  \epsilon_{k, \pi(i)}^t ] \right) +  \left( \frac{m_{\pi(i)}}{n_{\pi(i)}} \right)^2 \Var[ \xi_{\pi(i)}^t ] + \psi_i & \text{if } i = j \\
+\left( \frac{m_k}{n_{\pi(i)}} \right)^2 \Var [  \epsilon_{\pi(i), k}^t ] \right) +  \left( \frac{m_{\pi(i)}}{n_{\pi(i)}} \right)^2 \Var[ \xi_{\pi(i)}^t ] + \psi_i & \text{if } i = j \\
 \sum_{k \neq \pi(i)} \left( 
-\left( \frac{m_k}{n_{\pi(i)}} \right)^2 \Var [ \epsilon_{k, \pi(i)}^t ] \right) +  \left( \frac{m_{\pi(i)}}{n_{\pi(i)}} \right)^2 \Var[ \xi_{\pi(i)}^t ] & \text{if } \pi(i) = \pi(j) \\
+\left( \frac{m_k}{n_{\pi(i)}} \right)^2 \Var [ \epsilon_{\pi(i), k}^t ] \right) +  \left( \frac{m_{\pi(i)}}{n_{\pi(i)}} \right)^2 \Var[ \xi_{\pi(i)}^t ] & \text{if } \pi(i) = \pi(j) \\
 \frac{m_{\pi(i)}}{n_{\pi(j)}} \frac{m_{\pi(j)}}{n_{\pi(i)}} \frac{c_{\pi(j)}}{c_{\pi(i)}} \Var [\epsilon_{\pi(i), \pi(j)}^t] & \text{if } \pi(i) \neq \pi(j) \\
 0 & \text{otherwise}
 \end{cases}
