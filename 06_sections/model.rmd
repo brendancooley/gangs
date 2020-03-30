@@ -1,3 +1,5 @@
+In this section we model a data generating process for violence.
+
 ## Primitives and Assumptions
 
 There are $N$ districts in the city ($i, j \in \mathcal{N} = \left\{1, ..., N \right\}$). $r_i$ residents live in each district. The city is also inhabited by $K$ gangs ($k, \ell \in \mathcal{K} = \left\{1, ..., K \right\}$). Each gang is endowed with a $m_k$ soldiers. A partition function $\pi : \mathcal{N} \rightarrow \left\{ 0, \mathcal{K} \right\}$ assigns districts to the gangs that control them, where $\pi(i) = 0$ indicates the absence of any gang activity. $\mathcal{N}_k$ is the set of districts controlled by gang $k$ and $n_k = | \mathcal{N}_k |$ the number of districts controlled by gang $k$. The set of unoccupied districts is $\mathcal{K}_0$. We are interested in estimating the number of groups, $K$, and the territorial partition, $\pi$.
