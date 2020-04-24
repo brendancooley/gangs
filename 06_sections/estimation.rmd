@@ -1,6 +1,8 @@
-We will first show how to estimate the territorial partition, described by the matrix $\Theta$, holding the number of groups, $K$, fixed. We will then proceed to estimate $K$ using cross validation, following @Chen2018. Let $J = K + 1$ for convenience. We will refer to this quantity as the number of clusters.
+We estimate the territorial partition between groups and the number of groups separately. We first show how to estimate the territorial partition, described by the matrix $\Theta$, holding the number of groups, $K$, fixed. We will then proceed to estimate $K$ using a sample-splitting technique suitable for stochastic block models @Chen2018. Throughout we will denote the desired number of communities with $J = K + 1$ which is the number of gangs and an additional community for the peaceful territory. We will refer to this quantity as the number of clusters.
 
 ## Territorial Partition
+
+Given the block structure of our estimand, the number of nonzero eigenvalues in $Q$ is equal to the number of clusters. If there are $K$ gangs in the city, $Q$ will have $J$ nonzero eigenvalues.^[All of the rows of $A$ corresponding to districts owned by gang $k$ will be equivalent and thus linearly dependent.] Spectral clustering relies on this intuition to relate the eigenvalues of the estimand to the eigen-decomposition of the sample analogue.^[@Luxberg2007 provides an overview of this family of methods.] In doing so it transforms the estimation problem to one of k-means clustering. In this section we present these derivations and discuss the properties of the algorithm.
 
 We observe the sample analogue to $A$,
 $$
@@ -19,7 +21,7 @@ Let $\mathbb{R}_{+}^{J \times J}$ be the set of all $J \times J$ symmetric matri
 \end{equation}
 where $\lVert M \rVert_F = \left( \sum_{i} \sum_j M_{ij}^2 \right)^{\frac{1}{2}}$ is the Frobenius norm.
 
-We estimate these quantities using spectral clustering.^[@Luxberg2007 provides an overview of this family of methods.] These methods exploit the eigen-structure of $Q$. If there are $K$ gangs in the city, $Q$ will have $J$ nonzero eigenvalues.^[All of the rows of $A$ corresponding to districts owned by gang $k$ will be equivalent and thus linearly dependent.] Let $\Delta = \text{diag}(\sqrt{n_1}, \dots, \sqrt{n_{J}})$ so that $\Delta B \Delta$ normalizes the connectivity matrix by the number of territories controlled by each group. $Q$ can then be written as
+Let $\Delta = \text{diag}(\sqrt{n_1}, \dots, \sqrt{n_{J}})$ so that $\Delta B \Delta$ normalizes the connectivity matrix by the number of territories controlled by each group. $Q$ can then be written as
 \begin{align*}
 Q &= \Theta B \Theta^T \\
 &= \Theta \Delta^{-1} \Delta B \Delta \Delta^{-1} \Theta^T \\
@@ -56,6 +58,8 @@ where $M^{(k)}$ is the $k$th row of $M$ and $\lVert M^{(k)} \rVert_2$ is the Euc
 As discussed in the previous section, our model differs slightly from the stochastic block model. Where we observe between district covariance matrix, these models instead work with a binomial matrix of interaction counts between nodes (districts). Efforts to prove the consistency of spectral estimators therefore derive asymptotics as the number of nodes grows large.^[@Lei2015, for example, show that the spectral estimator is approximately consistent for $\Theta$. As the number of groups grows large, the estimator misclassifies a vanishing proportion of nodes with probability approaching one.] Intuitively, the off-diagonal entries of our empirical covariance matrix converge to the off diagonal entries of $Q$ as $T$ grows large. In the limit, then $\tilde{U} \rightarrow \Theta X$ and K-means should not have trouble isolating distinct clusters in $\tilde{U}$. We rely on this heuristic for estimation, like @Trebbi2019.
 
 ## Number of Gangs
+
+Several methods exist for estimating the number of clusters when data take the form of a stochastic block model. One set of approaches exploit the intuition discussed in the preceding subsection regarding the eigenvalues of $\tilde{A} - \text{diag}(\tilde{A})$. As $T \rightarrow \infty$, the eigenvalues associated with noise shrink toward zero while those associated with clusters remain positive. This generates a "eigengap" between the eigenvectors associated with true clusters and those associated with noise [@Ahn2013]. We report these and document the existence of such an eigengap. However, we primarily rely on a sample-subsplitting technique to estimate the number of clusters. Both methods produce similiar estimates for $\hat{J}$.
 
 We rely on the cross-validation approach described in @Chen2018 to estimate the number of gangs operating in the city. For each trial $\tilde{K}$, this method iteratively splits the covariance matrix into $V$ rectangular subsets for testing. It then estimates $\Theta$ and $B$ on $V - 1$ subsets and calculates the predictive loss on the square subset of the covariance matrix held out for testing. The $\tilde{K}$ that minimizes predictive loss is chosen as $\hat{J} = \hat{K} + 1$. @Chen2018 provide no theoretical guarantees against overestimating $J$ and in practice, we find that predictive loss stochastically decreases as $\tilde{K}$ grows larger. We therefore select the first $\tilde{K}$ for which predictive loss does not decrease for $\tilde{K} + 1$ as our estimate for $\hat{J}$, averaged over many trial runs of the estimator. Let $\bar{L}_{\tilde{K}}(\tilde{A})$ be the average predictive loss on $\tilde{A}$ when $J = \tilde{K}$ and let $\delta = \left\{ \delta_1, \dots, \delta_{\bar{K}} \right\}$ be a sequence of changes in the predictive loss where $\delta_k = \bar{L}_{k}(\tilde{A}) - \bar{L}_{k+1}(\tilde{A})$. Our estimator for $J$ selects
 \begin{equation} \label{eq:hatJ}
@@ -105,5 +109,3 @@ To summarize, our cross validation algorithm proceeds as follows:
 3. Select $\hat{J}$ using Equation \ref{eq:hatJ}.
 
 In practice, we repeat this algorithm many times and choose the most frequent value for $\hat{J}$ as our estimate.
-
-An alternative set of approaches to estimating $J$ exploit the intuition discussed in the preceding subsection regarding the eigenvalues of $\tilde{A} - \text{diag}(\tilde{A})$. As $T \rightarrow \infty$, the eigenvalues associated with noise shrink toward zero while those associated with clusters remain positive. This generates a "eigengap" between the eigenvectors associated with true clusters and those associated with noise. @Ahn2013 investigate this inuition and construct an estimator for the number of factors in a similar class of models. In the next section, we show that this "eigengap" presents near our estimate for $\hat{J}$, consistent with this intuition.
