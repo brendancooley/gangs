@@ -18,6 +18,9 @@ sectionsTemplate = "templates/cooley-plain.latex"
 figsPath = "05_figs/cartoons/"
 figsTemplate = "templates/cooley-plain.latex"
 
+website_docs = "~/Dropbox\ \(Princeton\)/5_CV/website/static/docs"
+website_docs_github = "~/Github/brendancooley.github.io/docs"
+
 sourcePath = "source/"
 
 def task_source():
@@ -67,6 +70,16 @@ def task_paper():
     			   "R --slave -e \"set.seed(100);knitr::knit('gangs.rmd')\"",
                    "pandoc --template=templates/cooley-paper-template.latex --filter pandoc-citeproc -o gangs.pdf gangs.md"],
                    'verbosity': 2,
+	}
+
+def task_post_to_web():
+	"""
+
+	"""
+	yield {
+		'name': "posting...",
+		'actions': ["cp -a gangs.pdf " + website_docs,
+					"cp -a gangs.pdf " + website_docs_github]
 	}
 
 def task_prep_slides():

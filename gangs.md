@@ -94,7 +94,7 @@ There are $N$ districts in the city ($i, j \in \mathcal{N} = \left\{1, ..., N \r
 
 We observe data on geo-located shootings for $T$ periods, indexed $\left\{ 1, ..., T \right\}$. There are three types of shootings that occur in the city -- inter-gang, intra-gang, and non-gang. Let $y_i^t$ denote non-gang shootings in district $i$ during period $t$ and $x_i^t$ denote gang-related shootings in the same district-period. Non-gang shootings are committed by residents with probability $\eta_i$ and are independent across districts. Then, the expected number of shootings in district $i$ is $\eta_i r_i$ with variance $\psi_i = \eta_i (1 - \eta_i) r_i$.^[In other words, non-gang shootings are distributed i.i.d. binomial.]
   
-Gang-related shootings are determined by the geographic distribution of gang activity and the state of relations between and within gangs. We assume the probability a given soldier from gang $k$ is operating in territory $i$ is constant and given by $n_k^{-1}$. Members of the same gang sometimes commit violence against one another. The probability a member of gang $k$ shoots a member of his own gang during period $t$ is given by $\xi_k^t$. Assumption 1 states that the expected likelihood of such violence is non-zero.
+Gang-related shootings are determined by the geographic distribution of gang activity and the state of relations between and within gangs. Members of the same gang sometimes commit violence against one another. The probability a member of gang $k$ shoots a member of his own gang during period $t$ is given by $\xi_k^t$. Assumption 1 states that the expected likelihood of such violence is non-zero.
 
 
 
@@ -106,7 +106,7 @@ We also assume that conflict within gangs is unrelated to within-gang conflict b
 
 **Assumption 2:** $\E [ \xi_k^t \xi_{\ell}^t ] - \E [ \xi_k^t ] \E [ \xi_{\ell}^t ] = 0$ for all $k \neq \ell$.
 
-We impose no other restrictions on the distribution of intra-gang shocks. The possibility of intra-gang violence allows us to distinguish between districts owned by the same gang and districts whose owners exclusively war with one another.^[Alternatively, we could assume that gangs fight at least two other groups with positive probability. We view this assumption as less restrictive.]
+We impose no other restrictions on the distribution of intra-gang shocks. The possibility of intra-gang violence allows us to distinguish between districts owned by the same gang and districts whose owners exclusively war with one another.^[Alternatively, we could assume that gangs fight at least two other groups with positive probability. We view this assumption as less restrictive and more attuned to the data as our results suggest that there is a significant amount of intra-gang violence.]  
 
 Gangs also war with one another with varying intensity. The probability a member of gang $k$ shoots a member of gang $\ell$ during period $t$ is $\epsilon_{k \ell}^t$. We make two assumptions on the distribution of these inter-gang shocks. First, we assume they are quasi-symmetric. This requires that any increase in the likelihood that members of gang $k$ shoot members of gang $\ell$ is accompanied by a proportionate increase in reciprocal violence. Notably, we allow this retaliation propensity to vary at the level of the gang but not the gang-dyad. Second, we assume that shocks between all gangs and unoccupied territory are zero, consistent with the absence of gang activity in these geographic units.
 
@@ -120,7 +120,7 @@ Second, we assume inter-gang shocks are independent across gang dyads.^[Of cours
 
 **Assumption 4:** $\E \left[ \epsilon_{k, \ell}^t \epsilon_{m, n}^t \right] - \E \left[ \epsilon_{k, \ell}^t  \right] \E \left[ \epsilon_{m, n}^t \right] = 0$ for $m, n \notin \left\{ k, \ell \right\}$.
 
-The expected number of gang-related shootings in district $i$ during period $t$ can then be calculated as 
+We assume the probability a given soldier from gang $k$ is operating in territory $i$ is constant and given by $n_k^{-1}$. This assumption implies that intra-gang violence should be equally distributed throughout its territory. Similarly inter-gang violence should be equally distributed across both gangs' territory. The expected number of gang-related shootings in district $i$ during period $t$ can then be calculated as 
 $$
 \E [ x_i^t ] = \underbrace{ \frac{m_{\pi(i)}}{n_{\pi(i)}} \E [ \xi_{\pi(i)}^t ]}_{ \text{intra-gang} } + \underbrace{\sum_{k \neq \pi(i)} \frac{m_{\pi(i)}}{n_{\pi(i)}}  \E [ \epsilon_{k, \pi(i)}^t ]}_{ \text{inter-gang} }
 $$
@@ -131,7 +131,7 @@ $$
 
 ## Covariance Structure
 
-In the proceeding section we will show that the covariance in shootings across districts is informative about the number of groups and the territorial partition. Let $a_{ij} = \Cov [ v_i^t, v_j^t ]$ Proposition  1 describes the covariance structure of our model. A derivation of this quantity can be found in Appendix A.
+We can use the model described above to derive a covariance structure in shootings. Let $a_{ij} = \Cov [ v_i^t, v_j^t ]$ denote the covariance in violence between territories $i$ and $j$. Proposition 1 describes the $a_{ij}$.^[A derivation can be found in Appendix A.]
 
 
 
@@ -146,7 +146,9 @@ a_{ij} = \begin{cases} \sum_{k \neq \pi(i)} \left(
 \end{cases}
 $$
 
-Each line of this equation has a simple interpretation. The first line describes the within district variance of shootings. This quantity is affected by the variance of all types of violence - non-gang, inter-gang, and intra-gang. The first term describes the variance in violence produced by conflicts between the gang occupying territory $i$ and all other gangs. The second term describes the variance in violence produced by conflict within the gang occupying territory $i$. The finally term describes the variance in violence from random (resident on resident) violence. If no gang occupies territory $i$ then the first two terms are zero by Assumptions 1 and 3. The second line describes the covariance between two distinct districts that are controlled by the same gang. These districts all experience the violence produced when gang $\pi(i) = \pi(j)$ fights wars with any other gang. The also experience the internal violence germane to gang $\pi(i) = \pi(j)$. This quantity is zero if the territory is unoccupied by any gang. The third line descibes the covariance in violence between two districts controlled by different gangs. Violence in these districts covaries when the gangs controlling the two districts are at war. If either district $i$ or district $j$ is not occupied by a gang, then the covariance in violence will be zero, indicated by the last line of the equation. Corollary 1 formalizes the observation that for any pair of districts owned by the same pair of gangs will experience the same covariance in violence in expectation. 
+Each line of this equation has a simple interpretation. The first line describes the within district variance of shootings. This quantity is affected by the variance of all types of violence - non-gang, inter-gang, and intra-gang. The first term describes the variance in violence produced by conflicts between the gang occupying territory $i$ and all other gangs. The second term describes the variance in violence produced by conflict within the gang occupying territory $i$. The finally term describes the variance in violence from random (resident on resident) violence. If no gang occupies territory $i$ then the first two terms are zero by Assumptions 1 and 3. The second line describes the covariance between two distinct districts that are controlled by the same gang. These districts all experience the violence produced when gang $\pi(i) = \pi(j)$ fights wars with any other gang. They also experience the internal violence germane to gang $\pi(i) = \pi(j)$. This quantity is zero if the territory is unoccupied by any gang. The third line descibes the covariance in violence between two districts controlled by different gangs. Violence in these districts covaries when the gangs controlling the two districts are at war. If either district $i$ or district $j$ is not occupied by a gang, then the covariance in violence will be zero, indicated by the last line of the equation.
+
+One implication of Proposition 1, is that districts that are owned by the same gang will experience similar patterns of violence. Corollary 1 formalizes the observation that for any pair of districts owned by the same pair of gangs will experience the same covariance in violence in expectation.   
 
 
 
@@ -155,7 +157,7 @@ Each line of this equation has a simple interpretation. The first line describes
 1. If $\pi(i) = \pi(j) = k$ and $i \neq j$ then $a_{ij} = b_{kk}$ constant for all $i, j$.
 2. If $\pi(i) = k$ and $\pi(j) = \ell$ with $\ell \neq k$ then $a_{ij} = b_{k \ell}$ constant for all $i, j$.
 
-Let $A_{N \times N} = (a_{ij})_{ \left\{ i,j \in \mathcal{N} \right\} }$ be the covariance matrix.^[Note also that this matrix is symmetric and positive definite.] Let $A(k, \ell)_{n_k \times n_\ell} = (a_{ij})_{ \left\{ i,j | \pi(i) = k, \pi(j) = \ell \right\} }$ be the submatrix where the row districts are controlled by $k$ and the column districts are controlled by $\ell$. If the partition function $\pi$ is known then the rows and columns of this matrix can be permuted to reveal the block structure described in Corollary 1. To reveal the block structure, we rearrange district identifiers in accordance with their territorial assignment. Let $f$ be a bijection that maps $\mathcal{N}$ to itself. Specifically, 
+If the partition function $\pi$ is known then the rows and columns of this matrix can be permuted to reveal the block structure described in Corollary 1. Let $A_{N \times N} = (a_{ij})_{ \left\{ i,j \in \mathcal{N} \right\} }$ be the covariance matrix.^[Note also that this matrix is symmetric and positive definite.] Let $A(k, \ell)_{n_k \times n_\ell} = (a_{ij})_{ \left\{ i,j | \pi(i) = k, \pi(j) = \ell \right\} }$ be the submatrix where the row districts are controlled by $k$ and the column districts are controlled by $\ell$. To reveal the block structure, we rearrange district identifiers in accordance with their territorial assignment. Let $f$ be a bijection that maps $\mathcal{N}$ to itself. Specifically, $f$ permutes the district labels such that territories belonging to the same gang will have numerically adjacent labels. 
 $$
 f: \begin{cases}
 \mathcal{K}_k \rightarrow \left\{ \sum_{\ell=1}^{k-1} ( n_{\ell} ) + 1, \dots, \sum_{\ell=1}^{k} ( n_{\ell} ) \right\} & \text{if } k \geq 1 \\
@@ -212,21 +214,23 @@ Figure \ref{fig:blocks} shows a schematic representation of this permutation. In
 
 ![The input covariance matrix $A$ is shown in the left panel. Applying the transformation $P A P$ produces the block diagonal structure shown in the right panel. \label{fig:blocks}](05_figs/cartoons/block_mat.png)
 
-This covariance matrix can be compactly represented as a function of our estimands, $K$ and $\pi$. Let $\Psi = \text{diag}(\psi_1, \dots \psi_N)$ and $Q = A - \Psi$. Let $B_{K + 1 \times K + 1} = (b_{k \ell})_{ \left\{ k, \ell \in \mathcal{K} \right\} }$ store the constant block covariance values defined in Corollary 1 and note that $b_{k0} = b_{0k} = 0$ for all $k$. Finally, let $\Theta_{N \times K + 1} = (\theta_{ik})_{\left\{ i \in \mathcal{N}, k \in \mathcal{K} \cup 0 \right\} }$ be a membership matrix with $\theta_{ik} = 1$ if $\pi(i) = k$ and $0$ otherwise. Then, 
+This covariance matrix can be compactly represented as a function of our estimands, $K$ and $\pi$. Let $\Psi = \text{diag}(\psi_1, \dots \psi_N)$ denote a matrix comprised solely of a diagonal of the covariance generated by the non-gang related violence. Let $Q = A - \Psi$ denote the covariance matrix of the gang-related violence. Let $B_{K + 1 \times K + 1} = (b_{k \ell})_{ \left\{ k, \ell \in \mathcal{K} \right\} }$ store the constant block covariance values defined in Corollary 1 and note that $b_{k0} = b_{0k} = 0$ for all $k$. Finally, let $\Theta_{N \times K + 1} = (\theta_{ik})_{\left\{ i \in \mathcal{N}, k \in \mathcal{K} \cup 0 \right\} }$ be a membership matrix with $\theta_{ik} = 1$ if $\pi(i) = k$ and $0$ otherwise. Then, 
 $$
 Q = \Theta B \Theta^T .
 $$
 
-Readers may recognize this structure as similar in form to a stochastic blockmodel [@Holland1983]. In such models, nodes are partitioned into groups and interact with members of other groups with some latent probability determined by their group membership. These latent probabilities can be expressed in a *connectivity matrix* akin to our $B$. If counts of these interactions are observed, the partition function and connectivity matrix can be estimated using spectral clustering [@Jin2015; @Lei2015].
+Readers may recognize this structure as similar in form to a stochastic blockmodel [@Holland1983]. In such models, nodes are partitioned into groups and interact with members of other groups with some latent probability determined by their group membership. These latent probabilities can be expressed in a *connectivity matrix* akin to our $B$. If counts of these interactions are observed, the partition function and connectivity matrix can be estimated using spectral clustering [@Jin2015; @Lei2015]. 
 
 Here, we do not observe directly these interactions, and our $B$ matrix does not have this simple interpretation. However, under the assumptions of our model, the spatial covariance in shootings mirrors the structure of the stochastic blockmodel, as in @Trebbi2019. We can therefore employ existing methods to estimate our model using these data. 
 
 # Estimation
 
 
-We will first show how to estimate the territorial partition, described by the matrix $\Theta$, holding the number of groups, $K$, fixed. We will then proceed to estimate $K$ using cross validation, following @Chen2018. Let $J = K + 1$ for convenience. We will refer to this quantity as the number of clusters.
+We estimate the territorial partition between groups and the number of groups separately. We first show how to estimate the territorial partition, described by the matrix $\Theta$, holding the number of groups, $K$, fixed. We will then proceed to estimate $K$ using a sample-splitting technique suitable for stochastic block models @Chen2018. Throughout we will denote the desired number of communities with $J = K + 1$ which is the number of gangs and an additional community for the peaceful territory. We will refer to this quantity as the number of clusters.
 
 ## Territorial Partition
+
+Given the block structure of our estimand, the number of nonzero eigenvalues in $Q$ is equal to the number of clusters. If there are $K$ gangs in the city, $Q$ will have $J$ nonzero eigenvalues.^[All of the rows of $A$ corresponding to districts owned by gang $k$ will be equivalent and thus linearly dependent.] Spectral clustering relies on this intuition to relate the eigenvalues of the estimand to the eigen-decomposition of the sample analogue.^[@Luxberg2007 provides an overview of this family of methods.] In doing so it transforms the estimation problem to one of k-means clustering. In this section we present these derivations and discuss the properties of the algorithm.
 
 We observe the sample analogue to $A$,
 $$
@@ -245,7 +249,7 @@ Let $\mathbb{R}_{+}^{J \times J}$ be the set of all $J \times J$ symmetric matri
 \end{equation}
 where $\lVert M \rVert_F = \left( \sum_{i} \sum_j M_{ij}^2 \right)^{\frac{1}{2}}$ is the Frobenius norm.
 
-We estimate these quantities using spectral clustering.^[@Luxberg2007 provides an overview of this family of methods.] These methods exploit the eigen-structure of $Q$. If there are $K$ gangs in the city, $Q$ will have $J$ nonzero eigenvalues.^[All of the rows of $A$ corresponding to districts owned by gang $k$ will be equivalent and thus linearly dependent.] Let $\Delta = \text{diag}(\sqrt{n_1}, \dots, \sqrt{n_{J}})$ so that $\Delta B \Delta$ normalizes the connectivity matrix by the number of territories controlled by each group. $Q$ can then be written as
+Let $\Delta = \text{diag}(\sqrt{n_1}, \dots, \sqrt{n_{J}})$ so that $\Delta B \Delta$ normalizes the connectivity matrix by the number of territories controlled by each group. $Q$ can then be written as
 \begin{align*}
 Q &= \Theta B \Theta^T \\
 &= \Theta \Delta^{-1} \Delta B \Delta \Delta^{-1} \Theta^T \\
@@ -282,6 +286,8 @@ where $M^{(k)}$ is the $k$th row of $M$ and $\lVert M^{(k)} \rVert_2$ is the Euc
 As discussed in the previous section, our model differs slightly from the stochastic block model. Where we observe between district covariance matrix, these models instead work with a binomial matrix of interaction counts between nodes (districts). Efforts to prove the consistency of spectral estimators therefore derive asymptotics as the number of nodes grows large.^[@Lei2015, for example, show that the spectral estimator is approximately consistent for $\Theta$. As the number of groups grows large, the estimator misclassifies a vanishing proportion of nodes with probability approaching one.] Intuitively, the off-diagonal entries of our empirical covariance matrix converge to the off diagonal entries of $Q$ as $T$ grows large. In the limit, then $\tilde{U} \rightarrow \Theta X$ and K-means should not have trouble isolating distinct clusters in $\tilde{U}$. We rely on this heuristic for estimation, like @Trebbi2019.
 
 ## Number of Gangs
+
+Several methods exist for estimating the number of clusters when data take the form of a stochastic block model. One set of approaches exploit the intuition discussed in the preceding subsection regarding the eigenvalues of $\tilde{A} - \text{diag}(\tilde{A})$. As $T \rightarrow \infty$, the eigenvalues associated with noise shrink toward zero while those associated with clusters remain positive. This generates a "eigengap" between the eigenvectors associated with true clusters and those associated with noise [@Ahn2013]. We report these and document the existence of such an eigengap. However, we primarily rely on a sample-subsplitting technique to estimate the number of clusters. Both methods produce similiar estimates for $\hat{J}$.
 
 We rely on the cross-validation approach described in @Chen2018 to estimate the number of gangs operating in the city. For each trial $\tilde{K}$, this method iteratively splits the covariance matrix into $V$ rectangular subsets for testing. It then estimates $\Theta$ and $B$ on $V - 1$ subsets and calculates the predictive loss on the square subset of the covariance matrix held out for testing. The $\tilde{K}$ that minimizes predictive loss is chosen as $\hat{J} = \hat{K} + 1$. @Chen2018 provide no theoretical guarantees against overestimating $J$ and in practice, we find that predictive loss stochastically decreases as $\tilde{K}$ grows larger. We therefore select the first $\tilde{K}$ for which predictive loss does not decrease for $\tilde{K} + 1$ as our estimate for $\hat{J}$, averaged over many trial runs of the estimator. Let $\bar{L}_{\tilde{K}}(\tilde{A})$ be the average predictive loss on $\tilde{A}$ when $J = \tilde{K}$ and let $\delta = \left\{ \delta_1, \dots, \delta_{\bar{K}} \right\}$ be a sequence of changes in the predictive loss where $\delta_k = \bar{L}_{k}(\tilde{A}) - \bar{L}_{k+1}(\tilde{A})$. Our estimator for $J$ selects
 \begin{equation} \label{eq:hatJ}
@@ -331,8 +337,6 @@ To summarize, our cross validation algorithm proceeds as follows:
 3. Select $\hat{J}$ using Equation \ref{eq:hatJ}.
 
 In practice, we repeat this algorithm many times and choose the most frequent value for $\hat{J}$ as our estimate.
-
-An alternative set of approaches to estimating $J$ exploit the intuition discussed in the preceding subsection regarding the eigenvalues of $\tilde{A} - \text{diag}(\tilde{A})$. As $T \rightarrow \infty$, the eigenvalues associated with noise shrink toward zero while those associated with clusters remain positive. This generates a "eigengap" between the eigenvectors associated with true clusters and those associated with noise. @Ahn2013 investigate this inuition and construct an estimator for the number of factors in a similar class of models. In the next section, we show that this "eigengap" presents near our estimate for $\hat{J}$, consistent with this intuition.
 
 # Results
 
