@@ -1,11 +1,3 @@
-# grab functions
-
-helperPath <- "../source/R/"
-helperFiles <- list.files(helperPath)
-for (i in helperFiles) {
-  source(paste0(helperPath, i))
-}
-
 # parameters
 
 aggregation <- "month"
@@ -24,6 +16,8 @@ L <- 100 # number of bootstrap iterations
 
 bruhn_sy <- 2004 # bruhn start year
 bruhn_ey <- 2017 # bruhn end year
+gang_tract_thres <- .1  # gang must own at least this percent of tract to gain binary ownership
+gangs_V <- 6  # number of gangs to include in validation
 
 ### PATHS ###
 
@@ -42,6 +36,8 @@ results_path <- paste0(results_path_base, city, "/")
 results_city_period_path <- paste0(results_path, period, "/")
 bootstrap_path <- paste0(results_city_period_path, "bootstrap/")
 figs_path <- paste0(figs_path_base, city, "/")
+
+gang_correspondence_path <- paste0(data_path_base, "chicago/bruhn/gang_name_correspondence.csv")
 
 # data and output
 
@@ -72,7 +68,16 @@ tadjacency_path <- paste0(output_path, "t_adjacency.csv")
 
 # cpd gang territorial shares by year
 gang_territory_path <- paste0(output_path, "territory/")
+
 turf_shares_path <- paste0(output_path, "turf_shares.csv")
+turf_shares_sy_path <- paste0(output_path, "turf_shares_sy.csv")
+turf_shares_ey_path <- paste0(output_path, "turf_shares_ey.csv")
+
+turf_binary_path <- paste0(output_path, "turf_binary.csv")
+turf_binary_sy_path <- paste0(output_path, "turf_binary_sy.csv")
+turf_binary_ey_path <- paste0(output_path, "turf_binary_ey.csv")
+
+cpd_gangs_N_path <- paste0(output_path, "cpd_gangs_N.csv")  # number of gangs after filtering by mean and threshold
 
 # results
 
@@ -91,15 +96,30 @@ nc_path <- paste0(results_city_period_path, "noise_cluster.csv")
 nc_bs_path <- paste0(bootstrap_path, "noise_cluster/")
 J_path <- paste0(results_city_period_path, "J.csv")
 J_bs_path <- paste0(bootstrap_path, "J/")
+J_all_path <- paste0(results_path, "J_all.csv")
 Bhat_path <- paste0(results_city_period_path, "Bhat.csv")
 Bhat_bs_path <- paste0(bootstrap_path, "Bhat/")
 
 eig_path <- paste0(results_city_period_path, "eig.csv")
+eig_bs_path <- paste0(bootstrap_path, "eig/")
 P_path <- paste0(results_city_period_path, "P.csv")
 P_sorted_path <- paste0(results_city_period_path, "P_sorted.csv")
 
 Bhat_mean_path <- paste0(bootstrap_path, "Bhat_mean.csv")
+Bhat_lb_path <- paste0(bootstrap_path, "Bhat_lb.csv")
+Bhat_ub_path <- paste0(bootstrap_path, "Bhat_ub.csv")
+
 cluster_props_path <- paste0(bootstrap_path, "cluster_props.csv")
+cluster_props4_path <- paste0(bootstrap_path, "cluster_props4.csv")  # subset to K=4
+cluster_binary_path <- paste0(bootstrap_path, "cluster_binary.csv")
+
+label_counts_path <- paste0(results_path, "label_counts.csv")
+gang_frac_path <- paste0(results_path, "gang_frac.csv")
+
+cpd_agreement_ratio_path <- paste0(results_path, "cpd_agreement_ratio.csv")
+cpd_agreement_ratio_gang_path <- paste0(results_path, "cpd_agreement_ratio_gang.csv")
+cpd_agreement_ratio_peaceful_path <- paste0(results_path, "cpd_agreement_ratio_peaceful.csv")
+sample_agreement_ratio_path <- paste0(results_path, "sample_agreement_ratio.csv")
 
 # figures
 
@@ -117,16 +137,20 @@ airport_ids <- c("17031980000", "17031980100", "17031990000")
 drop_ids <- c("17031770700", "17031770602", "17031811701", "17031770800", "17031770500", "17031811600")  # Cook area surrounding airport
 
 # representative suspected districts for each gang
-vl_geoid <- "17031252202"
+# vl_geoid <- "17031252202"
 # gd_geoid <- "17031671500"
-gd_geoid <- "17031834600"
-lk_geoid <- "17031630800"
+# gd_geoid <- "17031834600"
+# lk_geoid <- "17031630800"
+# bps_geoid <- "17031460100"
 
 vl_col <- "#e3052a"
 gd_col <- "#3794d7"
 lk_col <- "#d3cb1c"
 bps_col <- "#8e178b"
-other_col <- "#383838"
+ts_col <- "#88540b"  # two six
+# sd_col <- "#2c493f"
+bd_col <- "#2c493f" # black disciples
+other_col <- "#C0C0C0"
 nc_col <- "#ffffff"
 
 
@@ -134,6 +158,15 @@ nc_col <- "#ffffff"
 if (code_dir %in% strsplit(getwd(), "/")[[1]]) {
   save.image('params.Rdata')
 }
+
+# grab functions
+
+helperPath <- "../source/R/"
+helperFiles <- list.files(helperPath)
+for (i in helperFiles) {
+  source(paste0(helperPath, i))
+}
+
 
 # make directory structure
 
@@ -153,3 +186,4 @@ mkdir(clusters_bs_path)
 mkdir(nc_bs_path)
 mkdir(J_bs_path)
 mkdir(Bhat_bs_path)
+mkdir(eig_bs_path)

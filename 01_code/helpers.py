@@ -225,8 +225,8 @@ def est_J(P, V, S=50):
                     # Solution: this estimator implies asymmetry but is consistent. Need to do as Lei code does and just do upper triangular loop
 
                 P_hat = theta @ Bhat @ theta.transpose()
-                if np.any(np.isnan(Bhat)):
-                    print("warning: nan in Bhat")
+                # if np.any(np.isnan(Bhat)):
+                #     print("warning: nan in Bhat")
                 P_hat = P_hat - np.diag(np.diag(P_hat))
                 Pv_hat = P_hat[rowN:,rowN:]
                 # print(Pv_hat)
@@ -243,6 +243,8 @@ def est_J(P, V, S=50):
 
             Loss.append(np.mean(loss_v))
 
+        # print("Loss vec " + str(s) + ":")
+        # print(Loss)
         Ldelta = Loss - np.append(Loss[1:], 0)
         # len(np.where(np.array([1, 0, 0]) == 2)[0])
         if len(np.where(Ldelta < 0)[0]) > 0:
@@ -253,7 +255,9 @@ def est_J(P, V, S=50):
             Jvec.append(Kbar)
 
     Jhat_counts = np.bincount(Jvec)
-    out = np.argmax(Jhat_counts)
+    print("Jhat_counts:")
+    print(Jhat_counts)
+    out = np.argmax(Jhat_counts) + 1
 
     return(out)
 

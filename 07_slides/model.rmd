@@ -1,0 +1,307 @@
+# Model {id="model"}
+
+<div class="fragment">
+
+**Observables**
+
+- $\mathcal{N} = \left\{1, ..., N \right\}$ -- districts
+- $1, ..., T$ -- periods (months)
+- $r_i$ -- the number of residents in territory $i$
+- $v_i^t = x_i^t + y_i^t$
+  - $y_i^t$ -- non-gang related shootings
+  - $x_i^t$ -- gang-related shootings 
+
+</div>
+<div class="fragment">
+
+**Unobservables**
+
+- $\mathcal{K} = \left\{1, ..., K \right\}$ -- gangs
+- $\pi : \mathcal{N} \rightarrow \left\{ 0, \mathcal{K} \right\}$ - partition function
+  + $\pi(i) = 0$ indicates the absence of any gang activity. 
+  + $\mathcal{N}_k$ -- the set of territories controlled by gang $k$ 
+  + $n_k = | \mathcal{K}_k |$ -- the number of territories controlled by gang $k$
+  + $\mathcal{K}_0$ -- the set of unoccupied territories. 
+  + $m_k$ -- the number of members of gang $k$
+
+</div>
+
+## Varieties of Violence
+
+**Non-Gang**
+
+- $\eta_i$ -- the probability a resident commits a shooting 
+  + independent across districts
+
+. . .
+
+**Intra-Gang**
+
+- $\xi_k^t$ -- probability a member of gang $k$ shoots a member of his own gang
+- **Assumption `r Aintragang_nz` (Positivity):** $\mathbb{E} [ \xi_k^t ] > 0$ for all $k \neq 0$ and $\xi_0^t = 0$ for all $t$
+- **Assumption `r Aintragang_iid` (Independence):** $\mathbb{E} [ \xi_k^t \xi_{\ell}^t ] - \mathbb{E} [ \xi_k^t ] \mathbb{E}[ \xi_{\ell}^t ] = 0$ for all $k \neq \ell$
+
+. . .
+
+**Inter-Gang**
+
+- $\epsilon_{k, \ell}^t$ -- the probability a member of gang $k$ shoots a member of gang $\ell$
+- **Assumption `r Aintergang_symmetry` (Quasi-symmetry):** $c_{k} \epsilon_{k, \ell}^t = c_{\ell} \epsilon_{\ell, k}^{t}$ with the normalization $c_1 = 1$. If $k = 0$ or $\ell = 0$ then $\epsilon_{k, \ell}^t = 0$ for all $t$
+- **Assumption `r Aintergang_iid` (Independence):** $\mathbb{E} [ \epsilon_{k, \ell}^t \epsilon_{m, n}^t ] - \mathbb{E} [ \epsilon_{k, \ell}^t ] \mathbb{E} [ \epsilon_{m, n}^t ] = 0$ for $m, n \notin \left\{ k, \ell \right\}$
+
+. . . 
+
+- Probability a member of gang $\pi(i)$ is operating on territory $i$
+$$
+\frac{1}{n_{\pi(i)}}
+$$
+
+## Varieties of Violence
+
+**Gang-Related Shootings**
+
+$$
+\mathbb{E} [ x_i^t ] = \underbrace{ \frac{m_{\pi(i)}}{n_{\pi(i)}} \mathbb{E} [ \xi_{\pi(i)}^t ]}_{ \text{intra-gang} } + \underbrace{\sum_{k \neq \pi(i)} \frac{m_{\pi(i)}}{n_{\pi(i)}}  \mathbb{E} [ \epsilon_{k, \pi(i)}^t ]}_{ \text{inter-gang} }
+$$
+
+**Non-Gang Related Shootings**
+
+$$
+\mathbb{E} [y_i^t] = \eta_i r_i
+$$
+$$
+\text{Var} [ y_i^t ] = \psi_i = \eta_i (1 - \eta_i) r_i
+$$
+
+## Covariance Structure
+
+**Proposition `r Pcov`:** The covariance in shootings between districts $i$ and $j$ is
+$$
+a_{ij} = \begin{cases} \sum_{k \neq \pi(i)} \left( 
+\left( \frac{m_{\pi(i)}}{n_{\pi(i)}} \right)^2 \text{Var} [  \epsilon_{k, \pi(i)}^t ] \right) +  \left( \frac{m_{\pi(i)}}{n_{\pi(i)}} \right)^2 \text{Var}[ \xi_{\pi(i)}^t ] + \psi_i & \text{if } i = j \\
+\color{bcOrange} \sum_{k \neq \pi(i)} \left( 
+\left( \frac{m_{\pi(i)}}{n_{\pi(i)}} \right)^2 \text{Var} [ \epsilon_{k, \pi(i)}^t ] \right) +  \left( \frac{m_{\pi(i)}}{n_{\pi(i)}} \right)^2 \text{Var} [ \xi_{\pi(i)}^t ] & \text{if } \pi(i) = \pi(j) \\
+\color{bcOrange} \frac{m_{\pi(i)}}{n_{\pi(j)}} \frac{m_{\pi(j)}}{n_{\pi(i)}} \frac{c_{\pi(j)}}{c_{\pi(i)}} \text{Var} [\epsilon_{\pi(i), \pi(j)}^t] & \text{if } \pi(i) \neq \pi(j) \\
+0 & \text{otherwise}
+\end{cases}
+$$
+
+. . . 
+
+**Corollary `r Ccov` (Block Structure):** 
+
+1. If $\pi(i) = \pi(j) = k$ and $i \neq j$ then $a_{ij} = b_{kk}$ constant for all $i, j$.
+2. If $\pi(i) = k$ and $\pi(j) = \ell$ with $\ell \neq k$ then $a_{ij} = b_{k \ell}$ constant for all $i, j$.
+
+## Covariance Structure
+
+$$
+A_{N \times N} = (a_{ij})_{ \left\{ i,j \in \mathcal{N} \right\} }
+$$
+
+. . . 
+
+![](05_figs/cartoons/block_mat.png)
+
+$$
+\bar{A} = P A P
+$$
+
+## Covariance Structure and Latent Variables
+
+- Variance of non-gang shootings
+$$
+\Psi = \text{diag}(\psi_1, \dots \psi_N)
+$$
+- Gang-related spatial covariance matrix
+$$
+Q = A - \Psi
+$$
+
+. . .
+
+- Within-gang variance and cross-gang covariances
+$$
+B_{K + 1 \times K + 1} = (b_{k \ell})_{ \left\{ k, \ell \in \mathcal{K} \right\} }
+$$ 
+- Binary membership matrix, $\theta_{ik} = 1$ if $\pi(i) = k$ and $0$ otherwise
+$$
+\Theta_{N \times K + 1} = (\theta_{ik})_{\left\{ i \in \mathcal{N}, k \in \mathcal{K} \cup 0 \right\} }
+$$
+
+. . .
+
+- Stochastic blockmodel [@Holland1983; @Jin2015; @Lei2015]
+$$
+Q = \Theta B \Theta^T
+$$
+
+## Example
+
+$$
+\Theta = \begin{pmatrix}
+1 & 0 \\
+1 & 0 \\
+0 & 1 \\
+0 & 1 \\
+0 & 1
+\end{pmatrix}
+\qquad
+B = \begin{pmatrix}
+b_{11} & b_{12} \\
+b_{21} & b_{22}
+\end{pmatrix}
+$$
+
+. . . 
+
+$$
+\color{bcOrange} Q = \Theta B \Theta^T
+$$
+
+$$
+\begin{array}{ccc}
+~ & 
+\begin{pmatrix}
+b_{11} & b_{12} \\
+b_{21} & b_{22}
+\end{pmatrix} & 
+\begin{pmatrix}
+1_{\color{white} 11} & 1_{\color{white} 11} & 0_{\color{white} 11} & 0_{\color{white} 11} & 0_{\color{white} 11} \\
+0_{\color{white} 11} & 0_{\color{white} 11} & 1_{\color{white} 11} & 1_{\color{white} 11} & 1_{\color{white} 11} 
+\end{pmatrix} \\
+\begin{pmatrix}
+1 & 0 \\
+1 & 0 \\
+0 & 1 \\
+0 & 1 \\
+0 & 1
+\end{pmatrix} &
+\begin{pmatrix}
+\color{white} b_{11} & \color{white} b_{12} \\
+\color{white} b_{11} & \color{white} b_{12} \\
+\color{white} b_{21} & \color{white} b_{22} \\
+\color{white} b_{21} & \color{white} b_{22} \\
+\color{white} b_{21} & \color{white} b_{22}
+\end{pmatrix} &
+\begin{pmatrix}
+\color{white} b_{11} & \color{white} b_{11} & \color{white} b_{12} & \color{white} b_{12} & \color{white} b_{12} \\
+\color{white} b_{11} & \color{white} b_{11} & \color{white} b_{12} & \color{white} b_{12} & \color{white} b_{12} \\
+\color{white} b_{21} & \color{white} b_{21} & \color{white} b_{22} & \color{white} b_{22} & \color{white} b_{22} \\
+\color{white} b_{21} & \color{white} b_{21} & \color{white} b_{22} & \color{white} b_{22} & \color{white} b_{22} \\
+\color{white} b_{21} & \color{white} b_{21} & \color{white} b_{22} & \color{white} b_{22} & \color{white} b_{22}
+\end{pmatrix}
+\end{array}
+$$
+
+## Example
+
+$$
+\Theta = \begin{pmatrix}
+1 & 0 \\
+1 & 0 \\
+0 & 1 \\
+0 & 1 \\
+0 & 1
+\end{pmatrix}
+\qquad
+B = \begin{pmatrix}
+b_{11} & b_{12} \\
+b_{21} & b_{22}
+\end{pmatrix}
+$$
+
+$$
+\color{bcOrange} Q = \Theta B \Theta^T
+$$
+
+$$
+\begin{array}{ccc}
+~ & 
+\begin{pmatrix}
+b_{11} & b_{12} \\
+b_{21} & b_{22}
+\end{pmatrix} & 
+\begin{pmatrix}
+1_{\color{white} 11} & 1_{\color{white} 11} & 0_{\color{white} 11} & 0_{\color{white} 11} & 0_{\color{white} 11} \\
+0_{\color{white} 11} & 0_{\color{white} 11} & 1_{\color{white} 11} & 1_{\color{white} 11} & 1_{\color{white} 11} 
+\end{pmatrix} \\
+\begin{pmatrix}
+1 & 0 \\
+1 & 0 \\
+0 & 1 \\
+0 & 1 \\
+0 & 1
+\end{pmatrix} &
+\begin{pmatrix}
+\color{bcOrange} b_{11} & \color{black} b_{12} \\
+\color{bcOrange} b_{11} & \color{black} b_{12} \\
+\color{black} b_{21} & \color{bcOrange} b_{22} \\
+\color{black} b_{21} & \color{bcOrange} b_{22} \\
+\color{black} b_{21} & \color{bcOrange} b_{22}
+\end{pmatrix} &
+\begin{pmatrix}
+\color{white} b_{11} & \color{white} b_{11} & \color{white} b_{12} & \color{white} b_{12} & \color{white} b_{12} \\
+\color{white} b_{11} & \color{white} b_{11} & \color{white} b_{12} & \color{white} b_{12} & \color{white} b_{12} \\
+\color{white} b_{21} & \color{white} b_{21} & \color{white} b_{22} & \color{white} b_{22} & \color{white} b_{22} \\
+\color{white} b_{21} & \color{white} b_{21} & \color{white} b_{22} & \color{white} b_{22} & \color{white} b_{22} \\
+\color{white} b_{21} & \color{white} b_{21} & \color{white} b_{22} & \color{white} b_{22} & \color{white} b_{22}
+\end{pmatrix}
+\end{array}
+$$
+
+## Example
+
+$$
+\Theta = \begin{pmatrix}
+1 & 0 \\
+1 & 0 \\
+0 & 1 \\
+0 & 1 \\
+0 & 1
+\end{pmatrix}
+\qquad
+B = \begin{pmatrix}
+b_{11} & b_{12} \\
+b_{21} & b_{22}
+\end{pmatrix}
+$$
+
+$$
+\color{bcOrange} Q = \Theta B \Theta^T
+$$
+
+$$
+\begin{array}{ccc}
+~ & 
+\begin{pmatrix}
+b_{11} & b_{12} \\
+b_{21} & b_{22}
+\end{pmatrix} & 
+\begin{pmatrix}
+1_{\color{white} 11} & 1_{\color{white} 11} & 0_{\color{white} 11} & 0_{\color{white} 11} & 0_{\color{white} 11} \\
+0_{\color{white} 11} & 0_{\color{white} 11} & 1_{\color{white} 11} & 1_{\color{white} 11} & 1_{\color{white} 11} 
+\end{pmatrix} \\
+\begin{pmatrix}
+1 & 0 \\
+1 & 0 \\
+0 & 1 \\
+0 & 1 \\
+0 & 1
+\end{pmatrix} &
+\begin{pmatrix}
+\color{bcOrange} b_{11} & \color{black} b_{12} \\
+\color{bcOrange} b_{11} & \color{black} b_{12} \\
+\color{black} b_{21} & \color{bcOrange} b_{22} \\
+\color{black} b_{21} & \color{bcOrange} b_{22} \\
+\color{black} b_{21} & \color{bcOrange} b_{22}
+\end{pmatrix} &
+\begin{pmatrix}
+\color{bcOrange} b_{11} & \color{bcOrange} b_{11} & \color{black} b_{12} & \color{black} b_{12} & \color{black} b_{12} \\
+\color{bcOrange} b_{11} & \color{bcOrange} b_{11} & \color{black} b_{12} & \color{black} b_{12} & \color{black} b_{12} \\
+\color{black} b_{21} & \color{black} b_{21} & \color{bcOrange} b_{22} & \color{bcOrange} b_{22} & \color{bcOrange} b_{22} \\
+\color{black} b_{21} & \color{black} b_{21} & \color{bcOrange} b_{22} & \color{bcOrange} b_{22} & \color{bcOrange} b_{22} \\
+\color{black} b_{21} & \color{black} b_{21} & \color{bcOrange} b_{22} & \color{bcOrange} b_{22} & \color{bcOrange} b_{22}
+\end{pmatrix}
+\end{array}
+$$

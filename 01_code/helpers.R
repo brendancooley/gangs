@@ -40,18 +40,20 @@ agg_crimes <- function(crimes_tagged, aggregation) {
 }
 
 permute_clusters <- function(clusters_i, clusters_base) {
+  # require("combinat")
   
-  permutations <- do.call(cbind, permn(unique(clusters_i)))
+  permutations <- do.call(cbind, permn(unique(clusters_base)))
   permutations_c <- apply(permutations, 2, function(x) x[clusters_i])
-  dim(permutations_c)
+  # print(permutations_c)
   
   Loss <- c()
   for (j in 1:ncol(permutations_c)) {
-    loss <- sum(abs(permutations_c[,j] - clusters_base))
+    loss <- sum(permutations_c[,j] != clusters_base)
     Loss <- c(Loss, loss)
   }
   clusters <- permutations_c[,which.min(Loss)]
   labels <- permutations[,which.min(Loss)]
   
-  return(list("clusters"=clusters, "labels"=labels))
+  # print(Loss)
+  return(list("clusters"=clusters, "labels"=labels, "loss"=min(Loss)))
 }

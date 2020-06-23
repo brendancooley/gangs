@@ -1,0 +1,96 @@
+```{r, echo=FALSE, warning=FALSE, message=FALSE, results='hide'}
+
+source("../01_code/00_params.R")
+libs <- c("tidyverse")
+ipak(libs)
+
+tracts <- readOGR(tracts_path, verbose=FALSE)
+all_s <- read_csv(tsa_path)
+gang_area_means <- read_csv(paste0(gang_territory_path, "gang_area_means.csv"))
+
+major_gangs <- read_csv(paste0(gang_territory_path, "major_gangs.csv"), col_names=FALSE) %>% pull()
+gang_area_meansV <- gang_area_means %>% filter(gang %in% major_gangs)
+
+cpd_gangs_N <- read_csv(cpd_gangs_N_path, col_names=FALSE) %>% pull()
+
+```
+
+# Data {id="data"}
+
+<div class="fragment">
+
+**Gunshots (Data):** Victim-based crime reports, `r bruhn_sy`-`r bruhn_ey` (CLEAR)
+
+- Illinois Uniform Crime Reporting code, latitude, longitude, date-time
+- Extract homicides and nonfatal shootings (aggravated battery with firearm), **`r prettyNum(sum(all_s$count), big.mark=",", scientific=FALSE)` events**
+- Project into census **tract-months**: `r nrow(tracts)` tracts, ~4,000 residents each
+
+</div>
+<div class="fragment">
+
+**Turf (Validation):** CPD internal reports, annual [@Bruhn2019]
+
+- Report number of gangs and territorial partition, `r bruhn_sy`-`r bruhn_ey`
+- Collapse panel
+	+ Take average territorial footprint over sample period
+- Preprocessing
+	+ `r nrow(gang_area_means)` gangs total, focus on **`r gangs_V` largest by territorial extent** for validation
+	+ These control `r round(sum(gang_area_meansV$area_mean) / sum(gang_area_means$area_mean) * 100, 0)`% of all gang turf
+- Assign a tract to a gang if 1) it owns plurality of tract area and 2) it owns at least 10 percent of tract
+	+ `r cpd_gangs_N` satisfy criteria for inclusion
+
+<a href="#/turf_distribution">Territorial Distribution</a> 
+
+<a href="#/ethnicity">Ethnicity</a>
+
+</div>
+
+## Gunshots, Spatial Distribution
+
+```{r, echo=FALSE, warning=FALSE, message=FALSE, fig.height=5.5, dpi=400}
+
+source("../05_figs/cross_section.R")
+tsa_map
+
+```
+
+## Gunshots, Panel Construction
+
+<center>
+![](05_figs/chicago/shootings_animated.gif){ width=65% }
+</center>
+
+## Gunshots, Panel Construction
+
+```{r, echo=FALSE, warning=FALSE, message=FALSE, fig.height=5.5, dpi=400}
+
+source("../05_figs/hnfs.R")
+hnfs_ex_mfirst_tracts
+
+```
+
+## Gunshots, Panel Construction
+
+- $N$ tracts
+- $T$ months
+
+$$
+\bm{v} = \begin{pmatrix}
+v_1^1 & \cdots & \cdots & \cdots & v_1^T \\
+\vdots &  &  & & \vdots \\
+\vdots &  &  & & \vdots \\
+\vdots &  & v_i^t & & \vdots \\
+\vdots &  &  & & \vdots \\
+\vdots &  &  & & \vdots \\
+v_N^1 & \cdots & \cdots & \cdots & v_N^T
+\end{pmatrix}
+$$
+
+## Turf, Change over Time {id="turf_evolution"}
+
+```{r, echo=FALSE, warning=FALSE, message=FALSE, fig.height=5, dpi=300}
+
+source("../05_figs/clusters.R")
+turf_evolution_maps
+
+``` 

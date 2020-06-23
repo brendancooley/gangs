@@ -1,0 +1,182 @@
+# Estimation {id="estimation"}
+
+<div class="fragment">
+
+**Targets**
+
+- Partition function, $\pi$ (membership matrix: $\Theta$)
+- Number of groups $K$
+- Non-gang territory, $\mathcal{N}_0$
+
+</div>
+<div class="fragment">
+
+**Method**
+
+1. Hold $K$ fixed, estimate partition ($\color{bcOrange} J = K + 1$)
+2. Cross validate over many trial $K$ to estimate number of groups
+
+</div>
+
+## Sample Covariance Matrix Construction
+
+$$
+\tilde{a}_{ij} = \frac{1}{N} \sum_{t=1}^T (v_i^t - \bar{v}_i) (v_j^t - \bar{v}_j)
+$$
+
+. . .
+
+$$
+\bm{v} =
+\begin{pmatrix}
+v_1^1 & \cdots & \cdots & \cdots & v_1^T \\
+\vdots &  &  & & \vdots \\
+\vdots &  &  & & \vdots \\
+\vdots &  & v_i^t & & \vdots \\
+\vdots &  &  & & \vdots \\
+\vdots &  &  & & \vdots \\
+v_N^1 & \cdots & \cdots & \cdots & v_N^T
+\end{pmatrix}
+\rightarrow
+\begin{pmatrix}
+\tilde{a}_{11} & \cdots & \cdots & \cdots & \tilde{a}_{1N} \\
+\vdots &  &  & & \vdots \\
+\vdots &  & \tilde{a}_{ij} & & \vdots \\
+\vdots &  &  & & \vdots \\
+\tilde{a}_{N1} & \cdots & \cdots & \cdots & \tilde{a}_{NN}
+\end{pmatrix}
+= \tilde{A}
+$$
+
+## Estimation Problem
+
+**Finite Sample Noise**
+
+$$
+\tilde{A} = \mathbb{E} [A] + \Phi
+$$
+
+- $\Phi = (\phi_{ij})_{ \left\{ i, j \in \mathcal{N} \right\} }$
+- $\mathbb{E} [ \phi_{ij} ] = 0$ for all $i, j$
+
+. . .
+
+\begin{align*}
+Q - \text{diag}(Q) &= \mathbb{E}[A] - \text{diag}(\mathbb{E}[A]) \\
+&= \tilde{A} - \Phi - \text{diag}(\mathbb{E}[A]) \\
+\Phi - \text{diag}(\Phi) &= \left( \tilde{A} - \text{diag}(\tilde{A}) \right) - \left( Q - \text{diag}(Q) \right)
+\end{align*}
+
+. . . 
+
+**Moment Estimator**
+
+\begin{equation}
+\left( \hat{\Theta}, \hat{B} \right) = \argmin_{B \in \mathbb{R}^{J \times J}, \Theta \in \mathbb{M}^{N \times J}} \lVert \Phi - \text{diag}(\Phi) \rVert_F
+\end{equation}
+
+## Eigenstructure of $Q$ (@Lei2015)
+
+- $\Delta = \text{diag}(\sqrt{n_1}, \dots, \sqrt{n_{J}})$
+
+\begin{align*}
+Q &= \Theta B \Theta^T \\
+&= \Theta \Delta^{-1} \Delta B \Delta \Delta^{-1} \Theta^T \\
+&= \Theta \Delta^{-1} Z \Lambda Z^T \Delta^{-1} \Theta^T \\
+&= \Theta X \Lambda X^T \Theta^T \\
+U D U^T &= \Theta X \Lambda X^T \Theta^T
+\end{align*}
+
+. . . 
+
+- $\Lambda = \text{diag}(\lambda_1, ..., \lambda_{J})$ eigenvalues of $\Delta B \Delta$
+  - $Z_{N \times J}$ associated eigenvectors
+- $X = \Delta^{-1} Z$
+- $U = \Theta X$ orthonormal $\implies U D U^T$ is eigendecomposition of $Q$
+	+ **$J$ independent rows $\implies J$ non-zero eigenvalues**
+
+. . . 
+
+**Spectral Clustering:** Relate eigenvectors of empirical covariance matrix $\tilde{A}$ to those of $Q$
+
+$$
+\tilde{A} - \text{diag}(\tilde{A}) = \tilde{U} \tilde{\Lambda} \tilde{U}^T
+$$
+
+- $\tilde{\Lambda}_{J \times J}$ -- $J$ leading eigenvalues
+- $\tilde{U}_{N \times J}$ -- associated eigenvectors
+
+## Modified Estimation Problem
+
+\begin{align*}
+\left( \hat{\Lambda}, \hat{X}, \hat{\Theta} \right) &= \argmin_{ \Lambda \in \mathbb{D}^{J \times J}, X \in \mathbb{R}^{J \times J}, \Theta \in \mathbb{M}^{N \times J} } \lVert \Phi - \text{diag}(\Phi) \rVert_F \\
+&= \argmin_{ \Lambda \in \mathbb{D}^{J \times J}, X \in \mathbb{R}^{J \times J}, \Theta \in \mathbb{M}^{N \times J} } \lVert \left( \tilde{A} - \text{diag}(\tilde{A}) \right) - \left( Q - \text{diag}(Q) \right) \rVert_F \\
+&= \argmin_{ \Lambda \in \mathbb{D}^{J \times J}, X \in \mathbb{R}^{J \times J}, \Theta \in \mathbb{M}^{N \times J} } \lVert \tilde{U} \tilde{\Lambda} \tilde{U}^T - \left( \Theta X \Lambda X^T \Theta^T - \text{diag}(Q) \right) \rVert_F \\
+&\approx \argmin_{ \Lambda \in \mathbb{D}^{J \times J}, X \in \mathbb{R}^{J \times J}, \Theta \in \mathbb{M}^{N \times J} } \lVert \color{bcOrange} \tilde{U} \color{black} \tilde{\Lambda} \color{bcOrange} \tilde{U}^T \color{black} - \color{bcOrange} \Theta X \color{black} \Lambda \color{bcOrange} \left( \Theta X \right)^T \color{black} \rVert_F
+\end{align*}
+
+- Set $\hat{\Lambda} = \tilde{\Lambda}$
+
+. . .
+
+\begin{equation} \label{eq:kmeans}
+\left( \hat{X}, \hat{\Theta} \right) = \argmin_{ X \in \mathbb{R}^{J \times J}, \Theta \in \mathbb{M}^{N \times J} } \lVert \color{bcOrange} \Theta X - \tilde{U} \color{black} \rVert_F
+\end{equation}
+
+- K-means problem
+
+. . .
+
+**Inter- and Intra-Gang Conflict Estimates**
+
+\begin{equation} \label{eq:B}
+\hat{B} = \hat{X} \hat{\Lambda} \hat{X}^T
+\end{equation}
+
+## Non-Gang Territory
+
+- No covariance with gang territory in expectation, 
+  + $\mathbb{E} [ b_{0k} ] = 0$ for all $k \neq 0$
+
+**Estimator**
+
+\begin{equation} \label{eq:nc}
+\min_{ k \in \left\{ 1, ..., J \right\} } \lVert ( \hat{B} - \text{diag}(\hat{B}) )^{(k)} \rVert_2
+\end{equation}
+
+## Number of Groups [@Chen2018] {id="J_estimation"}
+
+1. For each $k \in \left\{ 1, ..., \bar{K} \right\}$...
+	+ Randomly split districts into folds $\mathcal{N}_1, \dots, \mathcal{N}_V$.
+	+ For each fold, estimate $\hat{\Theta}(v)$ and $\hat{B}(v)$.
+	+ For each fold, calculate the predictive loss on $\tilde{A}^{(v,v)}$, $L_v(\tilde{A}, \hat{A}(v))$
+	+ Average the predictive loss across folds, $\bar{L}_{k}(\tilde{A})$.
+2. Construct the sequence of changes in predictive loss, $\delta$.
+$$
+\delta_k = \bar{L}_{k}(\tilde{A}) - \bar{L}_{k+1}(\tilde{A})
+$$
+3. Select $\hat{J}$ at first point in sequence where predictive loss does not decrease
+\begin{equation}
+\hat{J} = \argmin_{k} \left\{ k \mid \delta_k < 0 \right\}_{k \in \left\{ 1, \dots, \bar{K} \right\} }
+\end{equation}
+
+. . . 
+
+- Alternative approach: eigengaps [@Ahn2013]
+
+<a href="#/chen">Details</a>
+
+## Uncertainty (Nonparametric Bootstrap)
+
+1. Sample homicides and non-fatal shootings with replacement
+2. Construct sequence of bootstrapped violence matrices
+$$
+\left\{ \bm{v}_1, \dots, \bm{v}_{B} \right\}
+$$
+3. Construct accompanying sequence of covariance matrices
+$$
+\left\{ \tilde{A}_1, \dots, \tilde{A}_{B} \right\}
+$$
+4. Re-estimate $\hat{J}_B$ and $\hat{\Theta}_B$ as above
+	- For validation, match each $\hat{\Theta}_B$ to CPD maps by permuting census tract labels to minimize disagreement
+5. Present 95 percent confidence intervals

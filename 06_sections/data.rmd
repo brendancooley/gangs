@@ -1,0 +1,57 @@
+```{r, echo=FALSE, warning=FALSE, message=FALSE, results='hide'}
+
+source("../01_code/00_params.R")
+libs <- c("tidyverse", "tmap", "rgeos", "rgdal")
+ipak(libs)
+
+tracts <- readOGR(tracts_path, verbose=FALSE)
+gang_area_means <- read_csv(paste0(gang_territory_path, "gang_area_means.csv"))
+
+all_s <- read_csv(tsa_path)
+cpd_gangs_N <- read_csv(cpd_gangs_N_path, col_names=FALSE) %>% pull()
+
+```
+
+For reports on violence, we rely on victim-based reports from the CPD's online data portal.^[We choose to use victim-based crime reports because they provide the best coverage. When dealing with victim-based crime-reporting, the primary concern is that crimes go under-reported. While under-reporting is likely to be a concern in any dataset on crime, there are two concerns which aggravate the bias in our data. First, the crimes we are interested in are those committed by one criminal organization against another, thereby reducing the probability of reporting.  Second is the fact that gangs often exist in areas where members of that racial minority comprise the majority [@Bruhn2019]. It is well documented that racial minorities in the US have relatively lower levels of trust in police which is likely to translate to under-reporting of crimes [@Desmond2016]. Though other measures of violence do ot suffer these short-comings (e.g. @Carr2016), they are available only for narrow time windows.] Each report of a crime contains an Illinois Uniform Reporting code (IUCR) classifying the crime, a date, and a latitude and longitude for each event. We subset the data to focus solely on homicides and gun crime, including first-degree murder, second-degree murder and aggravated battery involving use of a hand-gun or firearm. In data spanning from `r bruhn_sy` to `r bruhn_ey`, there are `r prettyNum(sum(all_s$count), big.mark=",", scientific=FALSE)` such instances of violence. Violence does not follow a uniform spatial distribution as can be seen in the Figure \ref{fig:hnfs}. As is typical in such administrative data, there is no information available about whether individual crimes were committed by gang-members.
+
+```{r, echo=FALSE, warning=FALSE, message=FALSE, fig.cap = paste0("Homicides and non-fatal shootings per capita ", bruhn_sy, "-", bruhn_ey, ". Source: Chicago Police Department CLEAR. \\label{fig:hnfs}"), fig.height=6, dpi=300, fig.pos="t"}
+
+source("../05_figs/cross_section.R")
+tsa_map
+
+```
+
+To generate our "districts" we use the division of Chicago into tracts by the US American Community Survey. Census tracts are the second smallest statistical unit, containing approximately 4,000 people and 1,600 housing units.^[This definition is taken from the census glossary.] There are `r nrow(tracts)` census tracts in Chicago. We aggregate our data by month, so that each individual observation is a count of the amount of violence in a given census tract for a given month. Our data covers Chicago in the years `r bruhn_sy` to `r bruhn_ey` in order to mirror @Bruhn2019 against whom we validate our results. Because census tracts have minor changes from year to year, we fix our districts as they were in 2016. In the course of our sample period, `r nrow(gang_area_means)` gangs operated in Chicago, according to the CPD.^[We aggregate some gang factions into their larger units, such as the Vice Lords, consistent with @Bruhn2019. This quantity refers to the number of gangs remaining after our aggregation procedure.]
+
+The problem with the use of census tracts as an exogenously generated district is that it does not conform with the building blocks used by gangs to construct territories. Anecdotal evidence suggests that gangs fight for and control of blocks [@Levitt2000]. Census tracts aggregate multiple blocks into a single geographic unit. By using census tracts, we reduce the variance of our estimates but introduce the potential for bias in two ways. First, it is possible that a gang’s territory is assigned to a tract that contains "peaceful" areas, i.e. those uninhabited by gangs. Because peaceful areas are assumed not to produce violence in any systematic way, a census tract which incorporates gang territory and peaceful areas will not have the violence from the peaceful area affect the assignment of the territory to the correct gang cluster. However, our method will mistakenly assign the peaceful areas to the gang. Conversely if the amount of territory owned by a gang in the tract is small, then it is possible that its territory will be designated a "peaceful" tract. For purposes of cross-validation we focus on the `r gangs_V` largest gangs reported by the CPD. We consider a tract to be owned by the gang owning the largest share of that tract provided it exceeds ten percent of the total area, averaged over the sample years.^[`r cpd_gangs_N` gangs satisfy this criteria in the full sample.]
+
+Second, it is possible that a tract may comprise territory owned by two gangs. In this case, not only will territory necessarily be distributed incorrectly, it is possible that the algorithm will be unlikely to distinguish between the two gangs. This is more likely to occur for the smallest gangs given the very fractured territorial distribution of gangs in Chicago [@Bruhn2019]. To deal with this issue we bootstrap our estimation and produce an uncertainty measure for each tract with regards to its ownership.
+
+Two important features of gangs are captured by the model but are not explicitly incorporated into the data-generating process. First, gangs in Chicago are loosely organized in two alliances: the “Folks” and “People” Nations. Our data does not incorporate assumptions as two whether two gangs are allied or not, though this is potentially captured by measures of the conflict intensities. Our measures are imprecise but provides no evidence indicating the existence of these alliances. The Black P. Stones, Vice Lords, and Latin Kings, members of the People Nation were not more likely to fight with the Gangster Disciples, members of the Folk Nation.  Second, gangs are often racially homogenous, and control minority-majority areas. Moreover, most inter-gang conflict is intra-racial. The Latin Kings, the largest Latino gang, was the next most likely to be recovered per our estimation procedure, but less reliably so. Figure \ref{fig:cpd_ethnic} compares the distribution of CPD-reported gang territory to the share of blacks and latinos residing in each census tract. Figure \ref{fig:gang_hist} plots the average territorial size of the largest gangs reported by the CPD.
+
+```{r, echo=FALSE, warning=FALSE, message=FALSE, fig.cap = "Average CPD-reported gang turf and black and latino population shares. Source: @Bruhn2019 and American Community Survey. \\label{fig:cpd_ethnic}", fig.height=7, dpi=300, fig.pos="t"}
+
+source("../05_figs/ethnicity.R")
+source("../05_figs/clusters.R")
+
+tmap_arrange(chi_turf_binary_map, ethnicity_map)
+
+```
+
+```{r, echo=FALSE, warning=FALSE, message=FALSE, fig.cap = "Average CPD-reported relative size of gang territorial footprints. Source: @Bruhn2019. \\label{fig:gang_hist}", fig.height=4, dpi=300, fig.pos="t"}
+
+source("../05_figs/chi_gang_areas.R")
+gang_area_plot
+
+``` 
+
+Unfortunately the model is unable to account for the dynamic nature of gang’s boundaries. We assume that gang’s territories are fixed throughout and seek to estimate these boundaries as though they were static. However, if gangs are warring, then it is possible that territory may change hands. Indeed, @Bruhn2019 notes that an average of 29.5 gangs have their boundaries shift in any given year in the period that we examine. We can address this concern in one of two ways. First, we can split the time-series into different estimation periods and see whether or not boundaries differ across the panels. Second, we can treat our uncertainty estimates as measures of contested control, revealing how strong a gang’s grip is on a given territory. Figure \ref{fig:turf_evolution} shows a comparison of the gangs boundaries in the Chicago Police Department’s data in the first and last years of the sample. Despite the turbulence reported by Bruhn and substantial passage of time, the boundaries are qualitatively quite similar in these years. Given that shifts in boundaries are negligible, we opt not to split the sample.^[It is possible that the observed changes are also the result of human error or minor inconsistencies in the construction of the data.]
+
+
+```{r, echo=FALSE, warning=FALSE, message=FALSE, fig.cap = paste0("Changes in CPD-reported gang turf, ", bruhn_sy, "-", bruhn_ey, ". Source: @Bruhn2019. \\label{fig:turf_evolution}"), fig.height=7, dpi=300, fig.pos="t"}
+
+turf_evolution_maps
+
+```
+
+
