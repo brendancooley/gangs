@@ -10,7 +10,7 @@ label_counts$Gang <- stri_trans_totitle(label_counts$Gang)
 
 ```
 
-# Territorial Distribution {id="turf_distribution"}
+## Territorial Distribution {id="turf_distribution"}
 
 ```{r, echo=FALSE, warning=FALSE, message=FALSE, fig.height=4, dpi=300}
 

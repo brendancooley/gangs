@@ -8,7 +8,7 @@ institution: Princeton University
 email: "bcooley (at) princeton.edu | noamg (at) princeton.edu"
 note: These slides available at brendancooley.com/gangs
 
-bibliography: /Users/brendancooley/Dropbox (Princeton)/References/library.bib
+bibliography: bib/library.bib
 biblio-style: apsr
 
 backgroundTitle: "other/chi_aerial.jpg"
@@ -26,33 +26,55 @@ output:
     reveal_options:
       slideNumber: false
       progress: false
-      controls: true
+      controls: false
 ---
 
 
 ```{r references, echo=FALSE, warning=FALSE, message=FALSE, results='hide'}
+
+helperPath <- "~/Dropbox (Princeton)/14_Software/R/"
+helperFiles <- list.files(helperPath)
+for (i in helperFiles) {
+  source(paste0(helperPath, i))
+}
+
+# setup bib
+mkdir("bib/")
+file.copy("~/Dropbox (Princeton)/References/library.bib", "bib/library.bib")
 
 # NOTE: correct compilation seems sensitive to which terminal window is open
 if (file.exists('references.RData')) load('references.RData')
 
 ```
 
+# Introduction {.aligncenter}
+
 ```{r, child = "07_slides/introduction.rmd"}
 ```
+
+# Data {.aligncenter}
 
 ```{r, child = "07_slides/data.rmd"}
 ```
 
+# Model {.aligncenter}
+
 ```{r, child = "07_slides/model.rmd"}
 ```
 
+# Estimation {.aligncenter}
+
 ```{r, child = "07_slides/estimation.rmd"}
 ```
+
+# Results {.aligncenter}
 
 ```{r, child = "07_slides/results.rmd"}
 ```
 
 # Conclusion
+
+## Conclusions
 
 <div class="fragment">
 
@@ -99,6 +121,8 @@ if (file.exists('references.RData')) load('references.RData')
 4. <a href="#/eigengaps">Eigengaps</a>
 5. <a href="#/cpd_match_table">Match Frequencies</a>
 </div>
+
+# Appendix
 
 ```{r, child = "07_slides/appendix.rmd"}
 ```

@@ -35,7 +35,7 @@ cpd_agreement_ratio_gang_ci <- quantile(cpd_agreement_ratio_gang, c(.025, .975))
 
 ```
 
-# Results {id="results"}
+## Results {id="results"}
 
 <div class="fragment">
 
