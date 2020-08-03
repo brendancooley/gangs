@@ -96,9 +96,9 @@ if (file.exists('references.RData')) load('references.RData')
 
 </div>
 
-# Thank You  {.aligncenter}
+## Thank You  {.aligncenter}
 
-# Table of Contents {id="toc"}
+## Table of Contents {id="toc"}
 
 <div id="left">
 
