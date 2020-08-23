@@ -494,7 +494,9 @@ document.getElementsByTagName('head')[0].appendChild(style);
 			</div>
 </section>
 
-<section><section id="introduction" class="title-slide slide level1"><h1>Gunshots and Turf Wars</h1><div class="fragment">
+<section><section id="introduction" class="title-slide slide level1 aligncenter"><h1>Introduction</h1></section><section id="introduction" class="slide level2">
+<h2>Gunshots and Turf Wars</h2>
+<div class="fragment">
 <p><strong>Gunshots</strong></p>
 <blockquote>
 <p>“In 2006 nearly <strong>50 percent of the homicides</strong> and a large percentage of other violent crimes and property crimes committed in Chicago <strong>were attributed to street gangs</strong> that are involved in drug trafficking”</p>
@@ -531,7 +533,8 @@ document.getElementsByTagName('head')[0].appendChild(style);
 <li><span class="citation" data-cites="Brantingham2012">Brantingham et al. (2012)</span>, <span class="citation" data-cites="Papachristos2013">Papachristos, Hureau, and Braga (2013)</span>, <span class="citation" data-cites="Vargas2016">Vargas (2016)</span>, <span class="citation" data-cites="Ebdm2018">Bueno De Mesquita (2018)</span></li>
 </ul></li>
 </ul>
-</div></section><section id="measurement-problem" class="slide level2">
+</div>
+</section><section id="measurement-problem" class="slide level2">
 <h2>Measurement Problem</h2>
 <ul>
 <li>Territorial conflict between rival gangs is responsible for much of the violence in American cities</li>
@@ -612,7 +615,9 @@ document.getElementsByTagName('head')[0].appendChild(style);
 <h2>Bottom Line</h2>
 <p><img data-src="index_files/figure-revealjs/unnamed-chunk-9-1.png" /><!-- --></p>
 </section></section>
-<section><section id="data" class="title-slide slide level1"><h1>Data</h1><div class="fragment">
+<section><section id="data" class="title-slide slide level1 aligncenter"><h1>Data</h1></section><section id="data" class="slide level2">
+<h2>Data</h2>
+<div class="fragment">
 <p><strong>Gunshots (Data):</strong> Victim-based crime reports, 2004-2017 (CLEAR)</p>
 <ul>
 <li>Illinois Uniform Crime Reporting code, latitude, longitude, date-time</li>
@@ -640,7 +645,8 @@ document.getElementsByTagName('head')[0].appendChild(style);
 </ul>
 <p><a href="#/turf_distribution">Territorial Distribution</a></p>
 <p><a href="#/ethnicity">Ethnicity</a></p>
-</div></section><section id="gunshots-spatial-distribution" class="slide level2">
+</div>
+</section><section id="gunshots-spatial-distribution" class="slide level2">
 <h2>Gunshots, Spatial Distribution</h2>
 <p><img data-src="index_files/figure-revealjs/unnamed-chunk-11-1.png" /><!-- --></p>
 </section><section id="gunshots-panel-construction" class="slide level2">
@@ -672,7 +678,9 @@ v_N^1 &amp; \cdots &amp; \cdots &amp; \cdots &amp; v_N^T
 <h2>Turf, Change over Time</h2>
 <p><img data-src="index_files/figure-revealjs/unnamed-chunk-13-1.png" /><!-- --></p>
 </section></section>
-<section><section id="model" class="title-slide slide level1"><h1>Model</h1><div class="fragment">
+<section><section id="model" class="title-slide slide level1 aligncenter"><h1>Model</h1></section><section id="model" class="slide level2">
+<h2>Model</h2>
+<div class="fragment">
 <p><strong>Observables</strong></p>
 <ul>
 <li><span class="math inline">\(\mathcal{N} = \left\{1, ..., N \right\}\)</span> – districts</li>
@@ -698,7 +706,8 @@ v_N^1 &amp; \cdots &amp; \cdots &amp; \cdots &amp; v_N^T
 <li><span class="math inline">\(m_k\)</span> – the number of members of gang <span class="math inline">\(k\)</span></li>
 </ul></li>
 </ul>
-</div></section><section id="varieties-of-violence" class="slide level2">
+</div>
+</section><section id="varieties-of-violence" class="slide level2">
 <h2>Varieties of Violence</h2>
 <p><strong>Non-Gang</strong></p>
 <ul>
@@ -960,7 +969,9 @@ b_{21} &amp; b_{22}
 \end{array}
 \]</span></p>
 </section></section>
-<section><section id="estimation" class="title-slide slide level1"><h1>Estimation</h1><div class="fragment">
+<section><section id="estimation" class="title-slide slide level1 aligncenter"><h1>Estimation</h1></section><section id="estimation" class="slide level2">
+<h2>Estimation</h2>
+<div class="fragment">
 <p><strong>Targets</strong></p>
 <ul>
 <li>Partition function, <span class="math inline">\(\pi\)</span> (membership matrix: <span class="math inline">\(\Theta\)</span>)</li>
@@ -974,7 +985,8 @@ b_{21} &amp; b_{22}
 <li>Hold <span class="math inline">\(K\)</span> fixed, estimate partition (<span class="math inline">\(\color{bcOrange} J = K + 1\)</span>)</li>
 <li>Cross validate over many trial <span class="math inline">\(K\)</span> to estimate number of groups</li>
 </ol>
-</div></section><section id="sample-covariance-matrix-construction" class="slide level2">
+</div>
+</section><section id="sample-covariance-matrix-construction" class="slide level2">
 <h2>Sample Covariance Matrix Construction</h2>
 <p><span class="math display">\[
 \tilde{a}_{ij} = \frac{1}{N} \sum_{t=1}^T (v_i^t - \bar{v}_i) (v_j^t - \bar{v}_j)
@@ -1137,7 +1149,9 @@ U D U^T &amp;= \Theta X \Lambda X^T \Theta^T
 <li>Present 95 percent confidence intervals</li>
 </ol>
 </section></section>
-<section><section id="results" class="title-slide slide level1"><h1>Results</h1><div class="fragment">
+<section><section id="results" class="title-slide slide level1 aligncenter"><h1>Results</h1></section><section id="results" class="slide level2">
+<h2>Results</h2>
+<div class="fragment">
 <p><strong>Number of Gangs</strong></p>
 <ul>
 <li>3-4 gangs detected</li>
@@ -1156,7 +1170,8 @@ U D U^T &amp;= \Theta X \Lambda X^T \Theta^T
 </ul></li>
 <li><a href="#/cpd_match_table">Match Frequencies</a></li>
 </ul>
-</div></section><section id="empirical-covariances" class="slide level2">
+</div>
+</section><section id="empirical-covariances" class="slide level2">
 <h2>Empirical Covariances</h2>
 <p><img data-src="index_files/figure-revealjs/unnamed-chunk-15-1.png" /><!-- --></p>
 </section><section id="empirical-covariances-1" class="slide level2">
@@ -1172,7 +1187,9 @@ U D U^T &amp;= \Theta X \Lambda X^T \Theta^T
 <h2>Conflict Intensities</h2>
 <p><img data-src="index_files/figure-revealjs/unnamed-chunk-19-1.png" /><!-- --></p>
 </section></section>
-<section id="conclusion" class="title-slide slide level1"><h1>Conclusion</h1><div class="fragment">
+<section><section id="conclusion" class="title-slide slide level1"><h1>Conclusion</h1></section><section id="conclusions" class="slide level2">
+<h2>Conclusions</h2>
+<div class="fragment">
 <p><strong>Limitations</strong></p>
 <ul>
 <li>Collapse dynamic process of border adjustment into static representation <span class="citation" data-cites="Bruhn2019">(Bruhn 2019)</span></li>
@@ -1192,9 +1209,12 @@ U D U^T &amp;= \Theta X \Lambda X^T \Theta^T
 </ul></li>
 <li>Building block for substantive research on gangs, violence, poverty, and policing</li>
 </ul>
-</div></section>
-<section id="thank-you" class="title-slide slide level1 aligncenter"><h1>Thank You</h1></section>
-<section id="toc" class="title-slide slide level1"><h1>Table of Contents</h1><div id="left">
+</div>
+</section><section id="thank-you" class="slide level2 aligncenter">
+<h2>Thank You</h2>
+</section><section id="toc" class="slide level2">
+<h2>Table of Contents</h2>
+<div id="left">
 <p><strong>Sections</strong></p>
 <ol type="1">
 <li><a href="#/introduction">Introduction</a></li>
@@ -1213,10 +1233,14 @@ U D U^T &amp;= \Theta X \Lambda X^T \Theta^T
 <li><a href="#/eigengaps">Eigengaps</a></li>
 <li><a href="#/cpd_match_table">Match Frequencies</a></li>
 </ol>
-</div></section>
-<section><section id="turf_distribution" class="title-slide slide level1"><h1>Territorial Distribution</h1><p><img data-src="index_files/figure-revealjs/unnamed-chunk-21-1.png" /><!-- --></p>
+</div>
+</section></section>
+<section><section id="appendix" class="title-slide slide level1"><h1>Appendix</h1></section><section id="turf_distribution" class="slide level2">
+<h2>Territorial Distribution</h2>
+<p><img data-src="index_files/figure-revealjs/unnamed-chunk-21-1.png" /><!-- --></p>
 <p><a href="#/data">Back (Data)</a></p>
-<p><a href="#/toc">Back (TOC)</a></p></section><section id="ethnicity" class="slide level2">
+<p><a href="#/toc">Back (TOC)</a></p>
+</section><section id="ethnicity" class="slide level2">
 <h2>Gang Boundaries and Neighborhood Ethnicity</h2>
 <p><img data-src="index_files/figure-revealjs/unnamed-chunk-22-1.png" /><!-- --></p>
 <p><a href="#/data">Back (Data)</a></p>
@@ -1264,7 +1288,7 @@ L_v(\tilde{A}, \hat{A}(v)) = \left\lVert \left( \tilde{A}^{(v,v)} - \text{diag}(
 <p><a href="#/toc">Back (TOC)</a></p>
 <!-- hide references -->
 <hr style="height:30em; visibility:hidden;" />
-<div id="refs" class="references" role="doc-bibliography">
+<div id="refs" class="references">
 <div id="ref-Ahn2013">
 <p>Ahn, Seung C., and Alex R. Horenstein. 2013. “Eigenvalue Ratio Test for the Number of Factors.” <em>Econometrica</em> 81 (3): 1203–27.</p>
 </div>
@@ -1299,7 +1323,7 @@ L_v(\tilde{A}, \hat{A}(v)) = \left\lVert \left( \tilde{A}^{(v,v)} - \text{diag}(
 <p>Lei, Jing, and Alessandro Rinaldo. 2015. “Consistency of Spectral Clustering in Stochastic Block Models.” <em>The Annals of Statistics</em> 43 (1): 215–37.</p>
 </div>
 <div id="ref-Levitt2000">
-<p>Levitt, Steven D, and Sudhir Alladi Venkatesh. 2000. “An economic analysis of a drug-selling gang’s finances.” <em>Quarterly Journal of Economics</em>, 755–89.</p>
+<p>Levitt, Steven D, and Sudhir Alladi Venkatesh. 2000. “An economic analysis of a drug-selling gang’s finances.” <em>Quarterly Journal of Economics</em>. JSTOR, 755–89.</p>
 </div>
 <div id="ref-Luxberg2007">
 <p>Luxburg, Ulrike von. 2007. “A tutorial on spectral clustering.” <em>Statistics and Computing</em> 17 (4): 395–416.</p>
@@ -1335,7 +1359,7 @@ L_v(\tilde{A}, \hat{A}(v)) = \left\lVert \left( \tilde{A}^{(v,v)} - \text{diag}(
 <p>Vargas, Robert. 2016. <em>Wounded city: Violent turf wars in a Chicago barrio</em>. Oxford University Press.</p>
 </div>
 <div id="ref-Venkatesh2000">
-<p>Venkatesh, Sudhir Alladi, and Steven D. Levitt. 2000. “"Are we a family or a business?" History and disjuncture in the urban American street gang.”</p>
+<p>Venkatesh, Sudhir Alladi, and Steven D. Levitt. 2000. “&quot;Are we a family or a business?&quot; History and disjuncture in the urban American street gang.”</p>
 </div>
 </div>
 </section></section>
@@ -1351,7 +1375,7 @@ L_v(\tilde{A}, \hat{A}(v)) = \left\lVert \left( \tilde{A}^{(v,v)} - \text{diag}(
       // https://github.com/hakimel/reveal.js#configuration
       Reveal.initialize({
         // Display controls in the bottom right corner
-        controls: true,
+        controls: false,
         // Display a presentation progress bar
         progress: false,
         // Display the page number of the current slide

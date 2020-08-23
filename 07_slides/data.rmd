@@ -15,7 +15,7 @@ cpd_gangs_N <- read_csv(cpd_gangs_N_path, col_names=FALSE) %>% pull()
 
 ```
 
-# Data {id="data"}
+## Data {id="data"}
 
 <div class="fragment">
 
