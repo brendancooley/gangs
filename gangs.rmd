@@ -1,5 +1,5 @@
 ---
-title: | 
+title:| 
 	| Gunshots and Turf Wars
 	| \tiny \hfill
     | \Large Inferring Gang Territories from Administrative Data
