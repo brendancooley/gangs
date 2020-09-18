@@ -1,7 +1,7 @@
 ---
 title: "Gunshots and Turf Wars:"
 subtitle: Inferring Gang Territories from Administrative Data
-date: "24 March 2020"
+date: "18 September 2020"
 author: Brendan Cooley | Noam Reich
 position: Ph.D. Candidates
 institution: Princeton University
